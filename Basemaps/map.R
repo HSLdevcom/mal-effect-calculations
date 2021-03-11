@@ -10,8 +10,25 @@ roads <- readr::read_rds(here::here("Basemaps", "roads.rds"))
 municipalities <- readr::read_rds(here::here("Basemaps", "municipalities.rds"))
 water <- readr::read_rds(here::here("Basemaps", "water.rds"))
 
+zones <- readr::read_rds(here::here("Basemaps", "zones.rds"))
+
+centroids <- zones %>%
+  sf::st_centroid()
+
+p <- sf::st_point(c(25492241, 6681165)) %>%
+  sf::st_sfc() %>%
+  sf::st_set_crs(3879)
+
+distances <- centroids %>%
+  sf::st_distance(p)
+
+zones$value <- as.numeric(distances[, 1])
 
 ggplot() +
+  geom_sf(mapping = aes(fill = value),
+          data = zones, color = NA) +
+  scale_fill_distiller("Legendin otsikko", palette = "Greens") +
+
   geom_sf(data = water, fill = "#a6cee3", color = NA, size = 0) +
   geom_sf(data = municipalities, color = "#9b3b6b", fill = NA, size = 0.26) +
   geom_sf(data = roads, color = "#64a5a5", size = 0.2) +
