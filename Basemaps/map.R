@@ -4,6 +4,7 @@ library(tidyverse)
 library(sf)
 
 region <- readr::read_rds(here::here("Basemaps", "region.rds"))
+bonus_region <- readr::read_rds(here::here("Basemaps", "bonus_region.rds"))
 metro <- readr::read_rds(here::here("Basemaps", "metro.rds"))
 train <- readr::read_rds(here::here("Basemaps", "train.rds"))
 roads <- readr::read_rds(here::here("Basemaps", "roads.rds"))
@@ -40,6 +41,7 @@ ggplot() +
   geom_sf(data = metro, color = "#ffffff", linetype = "22", size = 0.53) +
 
   geom_sf(data = region, color = "#000000", fill = NA, size = 0.46) +
+  geom_sf(data = bonus_region, color = "#000000", fill = NA, linetype = "33", size = 0.46) +
 
   coord_sf(
     datum = sf::st_crs(3879)
