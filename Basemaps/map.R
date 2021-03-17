@@ -13,6 +13,8 @@ water <- readr::read_rds(here::here("Basemaps", "water.rds"))
 
 zones <- readr::read_rds(here::here("Basemaps", "zones.rds"))
 
+bbox <- sf::st_bbox(region)
+
 centroids <- zones %>%
   sf::st_centroid()
 
@@ -44,6 +46,9 @@ ggplot() +
   geom_sf(data = bonus_region, color = "#000000", fill = NA, linetype = "33", size = 0.46) +
 
   coord_sf(
+    xlim = c(bbox$xmin - 500, bbox$xmax + 500),
+    ylim = c(bbox$ymin + 20000, bbox$ymax + 500),
+    expand = FALSE,
     datum = sf::st_crs(3879)
   ) +
   labs(
