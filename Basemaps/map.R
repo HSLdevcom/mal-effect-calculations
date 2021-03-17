@@ -51,10 +51,41 @@ ggplot() +
     expand = FALSE,
     datum = sf::st_crs(3879)
   ) +
-  labs(
-    title = "Mittarin otsikko",
-    subtitle = "Alaotsikko",
-    caption = "Aineiston nimi: Lisenssin antaja 20XX"
+  # Title
+  annotate(
+    "text",
+    x = bbox$xmin,
+    y = bbox$ymax,
+    hjust = 0,
+    vjust = 1,
+    label = "Mittarin otsikko",
+    size = 10 / (72.27 / 25.4),
+    colour = "#64BE1E"
+  ) +
+  # Subtitle
+  annotate(
+    "text",
+    x = bbox$xmin,
+    y = bbox$ymax - 4000,
+    hjust = 0,
+    vjust = 1,
+    label = "Alaotsikko",
+    size = 10 / (72.27 / 25.4),
+    colour = "#333333"
+  ) +
+  # Caption
+  annotate(
+    "label",
+    x = bbox$xmax,
+    y = bbox$ymin + 20000,
+    hjust = 1,
+    vjust = 0,
+    label = paste("Kuntajako: Maanmittauslaitos 2021",
+                  "Aineiston nimi: Lisenssin antaja 20XX",
+                  sep = "\n"),
+    size = 10 / (72.27 / 25.4),
+    color = "#333333",
+    label.size = 0
   ) +
   theme_void() +
   theme(
