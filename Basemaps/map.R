@@ -97,10 +97,10 @@ ggplot() +
     plot.title = element_text(colour = "#64BE1E"),
     panel.border = element_rect(colour = "#dddddc", fill = NA),
     panel.grid.major = element_line(colour = "#dddddc"),
-    legend.position = c(0.00, 1.00),
+    legend.position = c(0.00, 0.90),
     legend.justification = c("left", "top"),
     legend.box.just = "left",
-    legend.margin = margin(6, 6, 6, 6),
+    legend.margin = margin(3, 3, 3, 3),
     legend.text = element_text(size = rel(1.0)),
     plot.caption = element_text(size = rel(1.0))
   )
