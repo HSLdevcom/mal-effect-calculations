@@ -110,7 +110,7 @@ ggplot() +
 ggsave(
   here::here("Basemaps", "map.png"),
   width = 148,
-  height = 210,
+  height = 169,
   units = "mm",
   dpi = 600
 )
