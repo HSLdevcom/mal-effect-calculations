@@ -95,8 +95,6 @@ ggplot() +
       size = 10
     ),
     plot.title = element_text(colour = "#64BE1E"),
-    panel.border = element_rect(colour = "#dddddc", fill = NA),
-    panel.grid.major = element_line(colour = "#dddddc"),
     legend.position = c(0.00, 0.90),
     legend.justification = c("left", "top"),
     legend.box.just = "left",
