@@ -65,21 +65,7 @@ ggplot() +
     color = "#333333",
     label.size = 0
   ) +
-  theme_void() +
-  theme(
-    text = element_text(
-      family = "sans",
-      colour = "#333333",
-      size = 10
-    ),
-    plot.title = element_text(colour = "#64BE1E"),
-    legend.position = c(0.00, 0.90),
-    legend.justification = c("left", "top"),
-    legend.box.just = "left",
-    legend.margin = margin(3, 3, 3, 3),
-    legend.text = element_text(size = rel(1.0)),
-    plot.caption = element_text(size = rel(1.0))
-  )
+  theme_mal_map()
 
 # A4: 210 × 297
 # A5: 148 × 210
