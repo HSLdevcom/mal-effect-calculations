@@ -87,4 +87,3 @@ theme_mal_map <- function() {
     )
   )
 }
-
