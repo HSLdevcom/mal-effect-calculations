@@ -23,11 +23,6 @@ ggplot() +
           data = zones, color = NA) +
   scale_fill_distiller("Legendin otsikko", palette = "Greens") +
   geom_basemap() +
-  coord_sf(
-    xlim = c(bbox$xmin - 500, bbox$xmax + 500),
-    ylim = c(bbox$ymin + 20000, bbox$ymax + 500),
-    expand = FALSE,
-    datum = sf::st_crs(3879)) +
   annotate_map(
     title = "Mittarin otsikko",
     subtitle = "Mittarin alaotsikko",
