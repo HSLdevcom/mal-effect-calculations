@@ -27,6 +27,45 @@ geom_basemap <- function() {
   )
 }
 
+annotate_map <- function(title, subtitle, caption) {
+  list(
+    # Title
+    annotate(
+      "text",
+      x = bbox$xmin,
+      y = bbox$ymax,
+      hjust = 0,
+      vjust = 1,
+      label = title,
+      size = 10 / (72.27 / 25.4),
+      colour = "#64BE1E"
+    ),
+    # Subtitle
+    annotate(
+      "text",
+      x = bbox$xmin,
+      y = bbox$ymax - 4000,
+      hjust = 0,
+      vjust = 1,
+      label = subtitle,
+      size = 10 / (72.27 / 25.4),
+      colour = "#333333"
+    ),
+    # Caption
+    annotate(
+      "label",
+      x = bbox$xmax,
+      y = bbox$ymin + 20000,
+      hjust = 1,
+      vjust = 0,
+      label = caption,
+      size = 10 / (72.27 / 25.4),
+      color = "#333333",
+      label.size = 0
+    )
+  )
+}
+
 theme_mal_map <- function() {
   list(
     theme_void(),

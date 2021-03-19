@@ -27,43 +27,11 @@ ggplot() +
     xlim = c(bbox$xmin - 500, bbox$xmax + 500),
     ylim = c(bbox$ymin + 20000, bbox$ymax + 500),
     expand = FALSE,
-    datum = sf::st_crs(3879)
-  ) +
-  # Title
-  annotate(
-    "text",
-    x = bbox$xmin,
-    y = bbox$ymax,
-    hjust = 0,
-    vjust = 1,
-    label = "Mittarin otsikko",
-    size = 10 / (72.27 / 25.4),
-    colour = "#64BE1E"
-  ) +
-  # Subtitle
-  annotate(
-    "text",
-    x = bbox$xmin,
-    y = bbox$ymax - 4000,
-    hjust = 0,
-    vjust = 1,
-    label = "Alaotsikko",
-    size = 10 / (72.27 / 25.4),
-    colour = "#333333"
-  ) +
-  # Caption
-  annotate(
-    "label",
-    x = bbox$xmax,
-    y = bbox$ymin + 20000,
-    hjust = 1,
-    vjust = 0,
-    label = paste("Kuntajako: Maanmittauslaitos 2021",
-                  "Aineiston nimi: Lisenssin antaja 20XX",
-                  sep = "\n"),
-    size = 10 / (72.27 / 25.4),
-    color = "#333333",
-    label.size = 0
+    datum = sf::st_crs(3879)) +
+  annotate_map(
+    title = "Mittarin otsikko",
+    subtitle = "Mittarin alaotsikko",
+    caption = "Kuntajako: Maanmittauslaitos 2021\nAineiston nimi: Lisenssin antaja 20XX"
   ) +
   theme_mal_map()
 
