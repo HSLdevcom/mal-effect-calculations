@@ -36,44 +36,6 @@ agents <- agents %>%
 # Plot ----
 income_names <- c("low 10 %", rep("", 8), "high 10 %")
 
-results <- agents %>%
-  select(income_group, projected, baseline, present) %>%
-  ungroup() %>%
-  gather("scenario", "utility", projected, baseline, present) %>%
-  mutate(
-    scenario = case_when(
-      scenario %in% "projected" ~ config::get("projected_name"),
-      scenario %in% "baseline" ~ config::get("baseline_name"),
-      scenario %in% "present" ~ config::get("present_name")
-    )
-  )
-
-results %>%
-  ggplot(aes(x = income_group, y = utility, fill = scenario)) +
-  geom_bar(
-    stat = "identity",
-    position = "dodge",
-    color = "white",
-    width = 0.8
-  ) +
-  scale_fill_manual(values = hsl_pal("blues")(3)) +
-  scale_x_discrete(labels = income_names) +
-  theme_fig +
-  labs(fill = "Scenario",
-       y = "Expected utility (eur) / tour",
-       x = "Income deciles (eur / month)",
-       title = "Accessibility of tours") +
-  ggsave(
-    here(
-      "results",
-      config::get("projected_scenario"),
-      "access_income.png"
-    ),
-    width = dimensions_fig[1],
-    height = dimensions_fig[2],
-    units = "cm"
-  )
-
 # Plot ----
 
 gap <- agents %>%
@@ -109,7 +71,7 @@ gap %>%
     here(
       "results",
       config::get("projected_scenario"),
-      "age_group_access_gap.png"
+      "access_gap_income.png"
     ),
     width = dimensions_fig[1],
     height = dimensions_fig[2],
