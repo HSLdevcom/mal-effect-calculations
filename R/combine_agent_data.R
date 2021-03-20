@@ -6,7 +6,9 @@ library("here")
 
 # Read files wrapper for agent data
 read <- function(name) {
-  read_delim(file.path(get("helmet_data"), get(name), "agents.txt"),
+  read_delim(file.path(config::get("helmet_data"),
+                       config::get(name),
+                       "agents.txt"),
              delim = "\t",
              col_names = TRUE) %>%
     select(-"X1")
@@ -55,7 +57,12 @@ agents_1 <- agents_1 %>%
   add_inc_group()
 
 # Group data for join ----
-grouping_vars <- c("number", "area", "municipality", "age_group", "gender", "income_group")
+grouping_vars <- c("number",
+                   "area",
+                   "municipality",
+                   "age_group",
+                   "gender",
+                   "income_group")
 
 agents <- agents %>%
   group(grouping_vars)
@@ -67,11 +74,15 @@ agents_1 <- agents_1 %>%
   group(grouping_vars)
 
 # Join agents tables ----
-agents <- left_join(agents, agents_0,
-                    by = grouping_vars, suffix = c("", "0"))
+agents <- left_join(agents,
+                    agents_0,
+                    by = grouping_vars,
+                    suffix = c("", "0"))
 
-agents <- left_join(agents, agents_1,
-                    by = grouping_vars, suffix = c("", "1"))
+agents <- left_join(agents,
+                    agents_1,
+                    by = grouping_vars,
+                    suffix = c("", "1"))
 
 # Factorize grouping variable for plotting ----
 
@@ -92,4 +103,4 @@ agents <- agents %>%
 
 # Write to file ----
 agents %>%
-  write_rds(here("results", get("projected_scenario"), "agents.rds"))
+  write_rds(here("results", config::get("projected_scenario"), "agents.rds"))
