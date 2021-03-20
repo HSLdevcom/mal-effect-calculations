@@ -6,7 +6,7 @@ library(tidyverse)
 # HSL: September 2018
 
 hsl_colors <- c(
-  # from brand book
+  # brand
   blue = "#007AC9",
   lightblue = "#bee4f8",
   pink = "#f092cd",
@@ -17,6 +17,7 @@ hsl_colors <- c(
   lightgray = "#dddddd",
   red = "#dc0451",
   white = "#FFFFFF",
+  # transit modes
   tram = "#00985f",
   ferry = "#00b9e4",
   metro = "#ff6319",
@@ -53,4 +54,3 @@ hsl_blues_percent <- function(p) {
   i <- as.integer(100 * p)
   return(hsl_pal("blues")(101)[i + 1])
 }
-
