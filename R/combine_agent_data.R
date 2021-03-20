@@ -5,57 +5,60 @@ library("here")
 # Helper functions ----
 
 # Read files wrapper for agent data
-read <- function(name){
-  read_delim(file.path(get("helmet_data"), get(name), "agents.txt"), 
-             delim = "\t", 
+read <- function(name) {
+  read_delim(file.path(get("helmet_data"), get(name), "agents.txt"),
+             delim = "\t",
              col_names = TRUE) %>%
     select(-"X1")
 }
 
 # Grouping wrapper for agent data
-group <- function(df, grouping_vars){
+group <- function(df, group_var) {
   df %>%
     mutate(persons = 1) %>%
-    group_by(.dots = grouping_vars) %>%
+    group_by(!!!syms(group_var)) %>%
     summarise_all(sum, na.rm = TRUE) %>%
     ungroup()
 }
 
-# Add deciles for agents
-add_inc_group <- function(df, deciles){
-  df$income_max <- as.numeric(0) 
-  deciles <- c(0, deciles)
-  for (i in 1:(length(deciles)-1))
-    df <- df %>%
-        mutate(income_max = if_else(income > deciles[i] & income < deciles[i+1] ,
-                                    deciles[i+1], 
-                                    income_max))
-  return(df)
+# Add income deciles for agents
+# Separate under 18 years old from calculation
+add_inc_group <- function(df) {
+  df0 <- df %>%
+    filter(!age_group %in% "age_7-17") %>%
+    arrange(income) %>%
+    mutate(income_group = ceiling(10 * row_number() / n()))
+
+  df1 <- df %>%
+    filter(age_group %in% "age_7-17") %>%
+    mutate(income_group = -1)
+
+  df <- bind_rows(df0, df1) %>%
+    mutate(income_group = as.factor(income_group))
 }
-  
+
 # Load data ----
 
+agents <- read("present_scenario")
 agents_0 <- read("baseline_scenario")
 agents_1 <- read("projected_scenario")
 
 # Calculate income group ----
 
-deciles_present <- agents_0 %>% 
-  filter(age_group != "age_7-17") %>%
-  summarise(deciles = quantile(income,
-                               probs = 1:10/10,
-                               names = FALSE),
-            deciles = round(deciles, -2)) %>%
-  pull()
+agents <- agents %>%
+  add_inc_group()
 
 agents_0 <- agents_0 %>%
-  add_inc_group(deciles)
+  add_inc_group()
 
 agents_1 <- agents_1 %>%
-  add_inc_group(deciles)
+  add_inc_group()
 
 # Group data for join ----
-grouping_vars <- c("number", "area", "municipality", "age_group", "gender", "income_max")
+grouping_vars <- c("number", "area", "municipality", "age_group", "gender", "income_group")
+
+agents <- agents %>%
+  group(grouping_vars)
 
 agents_0 <- agents_0 %>%
   group(grouping_vars)
@@ -64,11 +67,29 @@ agents_1 <- agents_1 %>%
   group(grouping_vars)
 
 # Join agents tables ----
-agents <- left_join(agents_0, agents_1, 
-                    by = grouping_vars, suffix = c("0", "1"))
+agents <- left_join(agents, agents_0,
+                    by = grouping_vars, suffix = c("", "0"))
+
+agents <- left_join(agents, agents_1,
+                    by = grouping_vars, suffix = c("", "1"))
+
+# Factorize grouping variable for plotting ----
+
+agents <- agents %>%
+  mutate(age_group = forcats::as_factor(age_group),
+         age_group = forcats::fct_relevel(age_group, c("age_7-17",
+                                                       "age_18-29",
+                                                       "age_30-49",
+                                                       "age_50-64",
+                                                       "age_65-99")))
+
+agents <- agents %>%
+  mutate(area = forcats::as_factor(area),
+         area = forcats::fct_relevel(area, c("helsinki_cbd",
+                                             "helsinki_other",
+                                             "espoo_vant_kau",
+                                             "surrounding")))
 
 # Write to file ----
-agents %>% 
-  write_delim(here("results", get("projected_scenario"), "agents.txt"), 
-              delim = "\t", 
-              col_names = TRUE) 
+agents %>%
+  write_rds(here("results", get("projected_scenario"), "agents.rds"))
