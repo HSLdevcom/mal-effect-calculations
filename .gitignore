@@ -1,5 +1,30 @@
 # R
 .Rproj.user
 .Rhistory
-.RData
 .Ruserdata
+*.RData
+*.rds
+
+# Shapefile
+*.dbf
+*.prj
+*.shp
+*.shx
+
+# MapInfo
+*.dat
+*.ID
+*.MAP
+*.TAB
+*.mid
+*.mif
+
+# QGIS
+*.qpj
+*.qgz
+
+# Images
+*.png
+
+# Other
+*.zip
