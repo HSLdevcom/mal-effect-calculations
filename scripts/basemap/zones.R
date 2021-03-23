@@ -3,7 +3,7 @@ library(here)
 library(tidyverse)
 library(sf)
 
-zones <- here::here("Basemaps", "aluejaot_2019_SHP", "sijoittelualueet2019.shp") %>%
+zones <- here::here("data", "aluejaot_2019_SHP", "sijoittelualueet2019.shp") %>%
   sf::read_sf(options = "ENCODING=UTF-8") %>%
   sf::st_set_crs(3879) %>%
   dplyr::mutate(KUNTANIMI = dplyr::case_when(
@@ -41,4 +41,4 @@ zones <- zones %>%
   dplyr::mutate(KUNTANIMI = factor(KUNTANIMI, levels = hs15))
 
 zones %>%
-  readr::write_rds(here::here("Basemaps", "zones.rds"))
+  readr::write_rds(here::here("results", "zones.rds"))
