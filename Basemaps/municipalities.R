@@ -6,7 +6,7 @@ library(sf)
 municipalities <- here::here("Basemaps", "input", "SuomenKuntajako_2021_100k") %>%
   sf::read_sf(options = "ENCODING=ISO-8859-1") %>%
   sf::st_set_crs(3067) %>%
-  dplyr::mutate(across(is.character, ~iconv(.x, from = "ISO-8859-1", to = "UTF-8")))
+  dplyr::mutate(across(where(is.character), ~iconv(.x, from = "ISO-8859-1", to = "UTF-8")))
 
 hs15 <- c("Helsinki",
           "Espoo",
