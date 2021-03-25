@@ -3,10 +3,10 @@ library(here)
 library(tidyverse)
 library(sf)
 
-roads <- here::here("Basemaps", "input", "päätieverkko_tomtom.shp") %>%
+roads <- here::here("data", "päätieverkko_tomtom.shp") %>%
   sf::read_sf() %>%
   sf::st_transform(3879) %>%
   sf::st_union()
 
 roads %>%
-  readr::write_rds(here::here("Basemaps", "roads.rds"))
+  readr::write_rds(here::here("results", "roads.rds"))

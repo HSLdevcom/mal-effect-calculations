@@ -3,9 +3,9 @@ library(here)
 library(tidyverse)
 library(sf)
 
-bonus_region <- here::here("Basemaps", "municipalities.rds") %>%
+bonus_region <- here::here("results", "municipalities.rds") %>%
   readr::read_rds() %>%
   dplyr::filter(namefin %in% "Siuntio")
 
 bonus_region %>%
-  readr::write_rds(here::here("Basemaps", "bonus_region.rds"))
+  readr::write_rds(here::here("results", "bonus_region.rds"))

@@ -2,9 +2,9 @@
 library(here)
 library(tidyverse)
 library(sf)
-source(here::here("Basemaps", "functions_map.R"), encoding = "utf-8")
+source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
-zones <- readr::read_rds(here::here("Basemaps", "zones.rds"))
+zones <- readr::read_rds(here::here("results", "zones.rds"))
 
 centroids <- zones %>%
   sf::st_centroid()
@@ -33,7 +33,7 @@ ggplot() +
 # A4: 210 × 297
 # A5: 148 × 210
 ggsave(
-  here::here("Basemaps", "map.png"),
+  here::here("figures", "map.png"),
   width = 148,
   height = 169,
   units = "mm",
