@@ -5,7 +5,7 @@ library("here")
 # Helper functions ----
 
 # Read files wrapper for agent data
-read <- function(name) {
+read_helmet_files <- function(name) {
   read_delim(file.path(config::get("helmet_data"),
                        config::get(name),
                        "agents.txt"),
@@ -15,7 +15,7 @@ read <- function(name) {
 }
 
 # Grouping wrapper for agent data
-group <- function(df, group_var) {
+group_agent_data <- function(df, group_var) {
   df %>%
     mutate(persons = 1) %>%
     group_by(!!!syms(group_var)) %>%
@@ -41,9 +41,9 @@ add_inc_group <- function(df) {
 
 # Load data ----
 
-agents <- read("present_scenario")
-agents_0 <- read("baseline_scenario")
-agents_1 <- read("projected_scenario")
+agents <- read_helmet_files("present_scenario")
+agents_0 <- read_helmet_files("baseline_scenario")
+agents_1 <- read_helmet_files("projected_scenario")
 
 # Calculate income group ----
 
@@ -65,13 +65,13 @@ grouping_vars <- c("number",
                    "income_group")
 
 agents <- agents %>%
-  group(grouping_vars)
+  group_agent_data(grouping_vars)
 
 agents_0 <- agents_0 %>%
-  group(grouping_vars)
+  group_agent_data(grouping_vars)
 
 agents_1 <- agents_1 %>%
-  group(grouping_vars)
+  group_agent_data(grouping_vars)
 
 # Join agents tables ----
 agents <- left_join(agents,
