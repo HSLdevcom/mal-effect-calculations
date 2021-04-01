@@ -1,6 +1,6 @@
-library("tidyverse")
-library("config")
-library("here")
+library(tidyverse)
+library(config)
+library(here)
 
 # Read files ----
 
@@ -48,14 +48,14 @@ agents %>%
       "Change in average tours' accessibility: ",
       config::get("projected_name")
     )
-  ) +
-  ggsave(
-    here(
-      "results",
-      config::get("projected_scenario"),
-      "access_change_area.png"
-    ),
-    width = dimensions_fig[1],
-    height = dimensions_fig[2],
-    units = "cm"
   )
+
+ggsave(
+  here("results",
+       config::get("projected_scenario"),
+       "access_change_area.png"
+       ),
+  width = dimensions_fig[1],
+  height = dimensions_fig[2],
+  units = "cm"
+)

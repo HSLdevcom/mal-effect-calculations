@@ -1,6 +1,6 @@
-library("tidyverse")
-library("config")
-library("here")
+library(tidyverse)
+library(config)
+library(here)
 
 # Read files ----
 
@@ -62,14 +62,14 @@ gap %>%
   labs(fill = "Scenario",
        y = "Difference in expected utility (eur) / tour",
        x = NULL,
-       title = "Difference in accessibility compared to average individual") +
-  ggsave(
-    here(
-      "results",
-      config::get("projected_scenario"),
-      "area_access_gap_areas.png"
-    ),
-    width = dimensions_fig[1],
-    height = dimensions_fig[2],
-    units = "cm"
-  )
+       title = "Difference in accessibility compared to average individual")
+
+ggsave(
+  here("results",
+       config::get("projected_scenario"),
+       "area_access_gap_areas.png"
+  ),
+  width = dimensions_fig[1],
+  height = dimensions_fig[2],
+  units = "cm"
+)

@@ -1,19 +1,25 @@
-library("tidyverse")
-library("config")
-library("here")
+library(tidyverse)
+library(config)
+library(here)
 
 # Read files ----
 
 file_path <-
-  file.path(config::get("helmet_data"), config::get("present_scenario"), "agents.txt")
+  file.path(config::get("helmet_data"),
+            config::get("present_scenario"),
+            "agents.txt")
 agents0 <- read_delim(file_path, delim = "\t")
 
 file_path <-
-  file.path(config::get("helmet_data"), config::get("baseline_scenario"), "agents.txt")
+  file.path(config::get("helmet_data"),
+            config::get("baseline_scenario"),
+            "agents.txt")
 agents1 <- read_delim(file_path, delim = "\t")
 
 file_path <-
-  file.path(config::get("helmet_data"), config::get("projected_scenario"), "agents.txt")
+  file.path(config::get("helmet_data"),
+            config::get("projected_scenario"),
+            "agents.txt")
 agents2 <- read_delim(file_path, delim = "\t")
 
 # Calc differences ----
@@ -38,7 +44,9 @@ cumulative1 <- agents1 %>%
 cumulative2 <- agents2 %>%
   calc_cumulative(config::get("projected_name"))
 
-cumulative_dist <- bind_rows(cumulative0, cumulative1, cumulative2)
+cumulative_dist <- bind_rows(cumulative0,
+                             cumulative1,
+                             cumulative2)
 
 # Plot ----
 
@@ -60,15 +68,14 @@ cumulative_dist %>%
   labs(fill = "Scenario",
        y = "Cumulative share of expected utility",
        x = "Cumulative share of persons",
-       title = "Lorenz curve for accessibility") +
-  ggsave(
-    here(
-      "results",
-      config::get("projected_scenario"),
-      "lorenz_curve_util.png"
-    ),
-    width = dimensions_fig[1],
-    height = dimensions_fig[2],
-    units = "cm"
-  )
+       title = "Lorenz curve for accessibility")
 
+ggsave(
+  here("results",
+       config::get("projected_scenario"),
+       "lorenz_curve_util.png"
+       ),
+  width = dimensions_fig[1],
+  height = dimensions_fig[2],
+  units = "cm"
+)

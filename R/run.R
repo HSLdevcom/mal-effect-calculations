@@ -32,5 +32,5 @@ analysis_files <- list.files(path = here("R/plotting"),
 
 for (f in analysis_files) {
   message(sprintf("Running analysis in %s...", f))
-  source(here("R/plotting", f), encoding = "utf-8")
+  source(here("R", "plotting", f), encoding = "utf-8")
 }

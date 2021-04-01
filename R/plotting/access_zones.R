@@ -1,7 +1,7 @@
-library("tidyverse")
-library("config")
-library("here")
-library("sf")
+library(tidyverse)
+library(config)
+library(here)
+library(sf)
 
 # Read files ----
 
@@ -79,17 +79,17 @@ zones %>%
     fill = "Utility (eur) / tour",
     title = config::get("projected_name"),
     subtitle = paste("All tours.", limit_txt)
-  ) +
-  ggsave(
-    here(
-      "results",
-      config::get("projected_scenario"),
-      "zones_access.png"
-    ),
-    width = dimensions_map[1],
-    height = dimensions_map[2],
-    units = "cm"
   )
+
+ggsave(
+  here("results",
+       config::get("projected_scenario"),
+       "zones_access.png"
+       ),
+  width = dimensions_map[1],
+  height = dimensions_map[2],
+  units = "cm"
+)
 
 # car tours
 zones %>%
@@ -106,17 +106,17 @@ zones %>%
     fill = "Utility (eur) / tour",
     title = config::get("projected_name"),
     subtitle = paste("Car tours.", limit_txt)
-  ) +
-  ggsave(
-    here(
-      "results",
-      config::get("projected_scenario"),
-      "zones_car_access.png"
-    ),
-    width = dimensions_map[1],
-    height = dimensions_map[2],
-    units = "cm"
   )
+
+ggsave(
+  here("results",
+       config::get("projected_scenario"),
+       "zones_car_access.png"
+       ),
+  width = dimensions_map[1],
+  height = dimensions_map[2],
+  units = "cm"
+)
 
 # walk, bike and transit tours
 zones %>%
@@ -133,17 +133,17 @@ zones %>%
     fill = "Utility (eur) / tour",
     title = config::get("projected_name"),
     subtitle = paste("Walk, bike and transit", limit_txt)
-  ) +
-  ggsave(
-    here(
-      "results",
-      config::get("projected_scenario"),
-      "zones_sust_access.png"
-    ),
-    width = dimensions_map[1],
-    height = dimensions_map[2],
-    units = "cm"
   )
+
+ggsave(
+  here("results",
+       config::get("projected_scenario"),
+       "zones_sust_access.png"
+       ),
+  width = dimensions_map[1],
+  height = dimensions_map[2],
+  units = "cm"
+)
 
 # Plot differences ----
 
@@ -163,17 +163,17 @@ zones %>%
     fill = "Utility change (eur)",
     title = config::get("projected_name"),
     subtitle = paste("All tours.", limit_txt)
-  ) +
-  ggsave(
-    here(
-      "results",
-      config::get("projected_scenario"),
-      "zones_access_dif.png"
-    ),
-    width = dimensions_map[1],
-    height = dimensions_map[2],
-    units = "cm"
   )
+
+ggsave(
+  here("results",
+       config::get("projected_scenario"),
+       "zones_access_dif.png"
+       ),
+  width = dimensions_map[1],
+  height = dimensions_map[2],
+  units = "cm"
+)
 
 # car tours
 zones %>%
@@ -191,17 +191,17 @@ zones %>%
     fill = "Utility change (eur)",
     title = config::get("projected_name"),
     subtitle = paste("Car tours.", limit_txt)
-  ) +
-  ggsave(
-    here(
-      "results",
-      config::get("projected_scenario"),
-      "zones_car_access_dif.png"
-    ),
-    width = dimensions_map[1],
-    height = dimensions_map[2],
-    units = "cm"
   )
+
+ggsave(
+  here("results",
+       config::get("projected_scenario"),
+       "zones_car_access_dif.png"
+       ),
+  width = dimensions_map[1],
+  height = dimensions_map[2],
+  units = "cm"
+)
 
 # walk, bike and transit tours
 zones %>%
@@ -219,17 +219,17 @@ zones %>%
     fill = "Utility change (eur)",
     title = config::get("projected_name"),
     subtitle = paste("Walk, bike and transit.", limit_txt)
-  ) +
-  ggsave(
-    here(
-      "results",
-      config::get("projected_scenario"),
-      "zones_sust_access_dif.png"
-    ),
-    width = dimensions_map[1],
-    height = dimensions_map[2],
-    units = "cm"
   )
+
+ggsave(
+  here("results",
+       config::get("projected_scenario"),
+       "zones_sust_access_dif.png"
+       ),
+  width = dimensions_map[1],
+  height = dimensions_map[2],
+  units = "cm"
+)
 
 # Plot gap ----
 
@@ -249,14 +249,14 @@ zones %>%
     fill = "Utility difference to avg (eur)",
     title = config::get("projected_name"),
     subtitle = paste("All tours.", limit_txt)
-  ) +
-  ggsave(
-    here(
-      "results",
-      config::get("projected_scenario"),
-      "zones_access_gap.png"
-    ),
-    width = dimensions_map[1],
-    height = dimensions_map[2],
-    units = "cm"
   )
+
+ggsave(
+  here("results",
+       config::get("projected_scenario"),
+       "zones_access_gap.png"
+       ),
+  width = dimensions_map[1],
+  height = dimensions_map[2],
+  units = "cm"
+)

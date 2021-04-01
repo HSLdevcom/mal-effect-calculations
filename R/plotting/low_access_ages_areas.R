@@ -1,6 +1,6 @@
-library("tidyverse")
-library("config")
-library("here")
+library(tidyverse)
+library(config)
+library(here)
 
 # Read files ----
 
@@ -71,12 +71,10 @@ results <- results %>%
   mutate(area = forcats::as_factor(area),
          area = forcats::fct_relevel(
            area,
-           c(
-             "helsinki_cbd",
+           c("helsinki_cbd",
              "helsinki_other",
              "espoo_vant_kau",
-             "surrounding"
-           )
+             "surrounding")
          ))
 
 # Plot ----
@@ -95,14 +93,14 @@ results %>%
   labs(fill = "Scenario",
        y = "Share of people living in area",
        x = NULL,
-       title = "Residents with low accessibility") +
-  ggsave(
-    here(
-      "results",
-      config::get("projected_scenario"),
-      "low_access_area.png"
-    ),
-    width = dimensions_fig[1],
-    height = dimensions_fig[2],
-    units = "cm"
-  )
+       title = "Residents with low accessibility")
+
+ggsave(
+  here("results",
+       config::get("projected_scenario"),
+       "low_access_area.png"
+       ),
+  width = dimensions_fig[1],
+  height = dimensions_fig[2],
+  units = "cm"
+)
