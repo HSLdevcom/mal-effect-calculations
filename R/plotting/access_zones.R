@@ -37,7 +37,14 @@ res_vars <- c(
 
 agents <- agents %>%
   group_by(number) %>%
-  summarise_at(res_vars, sum, na.rm = TRUE) %>%
+  summarise(across(all_of(res_vars),
+                   sum,
+                   na.rm = TRUE)) %>%
+  ungroup()
+
+# Remove when too low amount of trips ----
+
+agents <- agents %>%
   filter(nr_tours1 > limit_trips)
 
 # Calc differences ----

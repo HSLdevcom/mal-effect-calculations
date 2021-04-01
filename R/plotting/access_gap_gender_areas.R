@@ -21,7 +21,9 @@ res_vars <- c(
 
 agents <- agents %>%
   group_by(gender, area) %>%
-  summarise_at(res_vars, sum, na.rm = TRUE) %>%
+  summarise(across(all_of(res_vars),
+                   sum,
+                   na.rm = TRUE)) %>%
   ungroup()
 
 # Calc differences ----

@@ -21,7 +21,14 @@ res_vars <- c(
 
 agents <- agents %>%
   group_by(income_group) %>%
-  summarise_at(res_vars, sum, na.rm = TRUE) %>%
+  summarise(across(all_of(res_vars),
+                   sum,
+                   na.rm = TRUE)) %>%
+  ungroup()
+
+# Remove when income group not defined ----
+
+agents <- agents %>%
   filter(!income_group %in% -1)
 
 # Calc differences ----

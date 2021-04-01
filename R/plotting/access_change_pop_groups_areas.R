@@ -15,7 +15,10 @@ res_vars <- c("nr_tours0", "nr_tours1",
 
 agents <- agents %>%
   group_by(age_group, gender, area) %>%
-  summarise_at(res_vars, sum, na.rm = TRUE)
+  summarise(across(all_of(res_vars),
+                   sum,
+                   na.rm = TRUE)) %>%
+  ungroup()
 
 # Calc differences ----
 

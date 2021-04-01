@@ -19,7 +19,7 @@ group_agent_data <- function(df, group_var) {
   df %>%
     mutate(persons = 1) %>%
     group_by(!!!syms(group_var)) %>%
-    summarise_all(sum, na.rm = TRUE) %>%
+    summarise(across(everything(), sum, na.rm = TRUE)) %>%
     ungroup()
 }
 
