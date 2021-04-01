@@ -2,8 +2,6 @@
 This repository contains scripts for the impact assessment of the MAL Plan.
 Learn more about the MAL Plan here: https://www.hsl.fi/hsl/mal
 
-Scripting language is mainly R so far. R enables easy plotting and manipulating of spatial features.
-
 ## How to run
 1. Clone this repository.
 2. In RStudio, select `File > Open Project... > mal-effect-calculations.Rproj`.
@@ -29,7 +27,7 @@ We using R-package `renv` that locks versions of packages. When doing analysis f
 load packages with command: `renv::restore(repos = "https://cloud.r-project.org", clean = TRUE)`.
 If packages are already loaded, use command `renv::restore()`.
 
-R-version is `4.0.2`. This is not changed by `renv`, so you might want to check R/RStudio Global Options.
+R-version is `4.0.4`. This is not changed by `renv`, so you might want to check R/RStudio Global Options.
 
 Further instructions about using `renv` during development and collaboration,
 see: https://rstudio.github.io/renv/index.html
