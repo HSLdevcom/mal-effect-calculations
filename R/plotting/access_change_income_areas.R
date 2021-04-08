@@ -38,7 +38,7 @@ agents <- agents %>%
 
 # Plot ----
 
-income_names <- c("min 10 %", rep("", 8), "max 10 %")
+income_names <- c("alin 10 %", rep("", 8), "ylin 10 %")
 max_dif <- 3
 
 agents %>%

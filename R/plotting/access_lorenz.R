@@ -68,7 +68,7 @@ cumulative_dist %>%
   labs(fill = "Skenaario",
        y = "Kumulatiivinen osuus matkojen hyödyistä",
        x = "Kumulatiivinen osuus henkilöistä",
-       title = "Saavutettavuuden Lorenz käyrä")
+       title = "Saavutettavuuden Lorenz-käyrä")
 
 ggsave(
   here("results",
