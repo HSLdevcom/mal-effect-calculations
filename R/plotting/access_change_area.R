@@ -44,10 +44,10 @@ agents %>%
   theme_fig +
   geom_abline(slope = 0) +
   labs(
-    y = "Difference in expected utility (eur) / tour",
+    y = "eur / kiertomatka",
     x = NULL,
     title = paste0(
-      "Change in average tours' accessibility: ",
+      "Muutos matkan saavutettavuudessa: ",
       config::get("projected_name")
     )
   )

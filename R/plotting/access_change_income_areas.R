@@ -40,7 +40,7 @@ agents <- agents %>%
 
 # Plot ----
 
-income_name <- c("low 10 %", rep("", 8), "high 10 %")
+income_names <- c("alin 10 %", rep("", 8), "ylin 10 %")
 max_dif <- 1
 
 agents %>%
@@ -55,13 +55,13 @@ agents %>%
   facet_wrap( ~ area, nrow = 1) +
   theme_wide +
   geom_abline(slope = 0) +
-  scale_x_discrete(labels = income_name) +
+  scale_x_discrete(labels = income_names) +
   ylim(-max_dif, max_dif) +
   labs(
-    y = "Difference in expected utility (eur) / tour",
-    x = "Income deciles",
+    y = "eur / kiertomatka",
+    x = "Skenaarion tulodesiilit",
     title = paste0(
-      "Change in average tours' accessibility: ",
+      "Muutos matkan saavutettavuudessa: ",
       config::get("projected_name")
     )
   )

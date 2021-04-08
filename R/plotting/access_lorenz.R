@@ -65,10 +65,10 @@ cumulative_dist %>%
   scale_y_continuous(limits = c(0, 1), labels = scales::percent) +
   scale_x_continuous(limits = c(0, 1), labels = scales::percent) +
   theme_fig +
-  labs(fill = "Scenario",
-       y = "Cumulative share of expected utility",
-       x = "Cumulative share of persons",
-       title = "Lorenz curve for accessibility")
+  labs(fill = "Skenaario",
+       y = "Kumulatiivinen osuus matkojen hyödyistä",
+       x = "Kumulatiivinen osuus henkilöistä",
+       title = "Saavutettavuuden Lorenz-käyrä")
 
 ggsave(
   here("results",

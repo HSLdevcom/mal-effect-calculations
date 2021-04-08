@@ -41,7 +41,7 @@ agents <- agents %>%
   )
 
 # Plot ----
-income_names <- c("low 10 %", rep("", 8), "high 10 %")
+income_names <- c("alin 10 %", rep("", 8), "ylin 10 %")
 
 # Plot ----
 
@@ -70,10 +70,10 @@ gap %>%
   scale_x_discrete(labels = income_names) +
   theme_fig +
   geom_abline(slope = 0) +
-  labs(fill = "Scenario",
-       y = "Difference in expected utility (eur) / tour",
+  labs(fill = "Skenaario",
+       y = "eur / kiertomatka",
        x = NULL,
-       title = "Difference in accessibility compared to average user")
+       title = "Saavutettavuusero suhteessa alueen keskiarvoon")
 
 ggsave(
   here("results",

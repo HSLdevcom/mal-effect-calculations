@@ -77,6 +77,13 @@ results <- results %>%
              "surrounding")
          ))
 
+# Translate factors ----
+
+results <- results %>%
+  mutate(
+    area = forcats::fct_recode(area,!!!levels_areas)
+  )
+
 # Plot ----
 
 results %>%
@@ -90,10 +97,10 @@ results %>%
   scale_y_continuous(limits = c(0, 0.2), labels = scales::percent) +
   scale_fill_manual(values = hsl_pal("blues")(3)) +
   theme_fig +
-  labs(fill = "Scenario",
-       y = "Share of people living in area",
+  labs(fill = "Skenaario",
+       y = "Osuus asukkaista",
        x = NULL,
-       title = "Residents with low accessibility")
+       title = "Saavutettavuus alle vertailutason")
 
 ggsave(
   here("results",

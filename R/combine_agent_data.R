@@ -101,6 +101,15 @@ agents <- agents %>%
                                              "espoo_vant_kau",
                                              "surrounding")))
 
+# Translate factors ----
+
+agents <- agents %>%
+  mutate(
+    area = forcats::fct_recode(area,!!!levels_areas),
+    age_group = forcats::fct_recode(age_group,!!!levels_age_groups),
+    gender = forcats::fct_recode(gender,!!!levels_genders)
+    )
+
 # Write to file ----
 agents %>%
   write_rds(here("results", config::get("projected_scenario"), "agents.rds"))
