@@ -97,7 +97,7 @@ zones %>%
       get("baseline_name"),
       sep = " "
     ),
-    subtitle = "Muutos minimitason alle jäävän väestön määrässä"
+    subtitle = "Muutos vertailutason alle jäävän väestön määrässä"
   )
 
 ggsave(

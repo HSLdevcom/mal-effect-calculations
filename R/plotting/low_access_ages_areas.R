@@ -100,7 +100,7 @@ results %>%
   labs(fill = "Skenaario",
        y = "Osuus asukkaista",
        x = NULL,
-       title = "Saavutettavuus alle minimitason")
+       title = "Saavutettavuus alle vertailutason")
 
 ggsave(
   here("results",
