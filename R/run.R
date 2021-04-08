@@ -8,6 +8,12 @@ options(scipen = 999)
 
 Sys.setenv(R_CONFIG_ACTIVE = "V2030_ve0_rm")
 
+# Read themes and colors for plotting ----
+
+source(here("R", "colors.R"), encoding = "utf-8")
+source(here("R", "themes.R"), encoding = "utf-8")
+source(here("R", "translations.R"), encoding = "utf-8")
+
 # Create output folder ----
 
 dir.create(here("results", config::get("projected_scenario")),
@@ -16,11 +22,6 @@ dir.create(here("results", config::get("projected_scenario")),
 # Combine data from different Helmet-scenarios ----
 
 source(here("R", "combine_agent_data.R"), encoding = "utf-8")
-
-# Read themes and colors for plotting ----
-
-source(here("R", "colors.R"), encoding = "utf-8")
-source(here("R", "themes.R"), encoding = "utf-8")
 
 # Plot results ----
 

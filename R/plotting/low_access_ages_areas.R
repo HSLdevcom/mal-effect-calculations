@@ -77,6 +77,13 @@ results <- results %>%
              "surrounding")
          ))
 
+# Translate factors ----
+
+results <- results %>%
+  mutate(
+    area = forcats::fct_recode(area,!!!levels_areas)
+  )
+
 # Plot ----
 
 results %>%
