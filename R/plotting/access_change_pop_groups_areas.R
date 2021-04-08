@@ -10,7 +10,7 @@ agents <- read_rds(file_path)
 
 # Group agents tables ----
 
-res_vars <- c("nr_tours0", "nr_tours1",
+res_vars <- c("persons0", "persons1",
               "total_access0", "total_access1")
 
 agents <- agents %>%
@@ -24,14 +24,14 @@ agents <- agents %>%
 
 agents <- agents %>%
   mutate(
-    projected = total_access1 / nr_tours1,
-    baseline = total_access0 / nr_tours0,
+    projected = total_access1 / persons1,
+    baseline = total_access0 / persons0,
     util_dif = projected - baseline
   )
 
 # Plot ----
 
-max_dif <- 1
+max_dif <- 5
 
 agents %>%
   ggplot(aes(x = age_group, y = util_dif, fill = gender)) +
