@@ -10,9 +10,7 @@ agents <- read_rds(file_path)
 
 # Group agents tables ----
 
-res_vars <- c("nr_tours0",
-              "nr_tours1",
-              "total_access0",
+res_vars <- c("total_access0",
               "total_access1",
               "persons1",
               "persons0")
@@ -33,15 +31,15 @@ agents <- agents %>%
 
 agents <- agents %>%
   mutate(
-    projected = total_access1 / nr_tours1,
-    baseline = total_access0 / nr_tours0,
+    projected = total_access1 / persons1,
+    baseline = total_access0 / persons0,
     util_dif = projected - baseline
   )
 
 # Plot ----
 
 income_names <- c("alin 10 %", rep("", 8), "ylin 10 %")
-max_dif <- 1
+max_dif <- 3
 
 agents %>%
   ggplot(aes(x = income_group, y = util_dif)) +
@@ -58,10 +56,10 @@ agents %>%
   scale_x_discrete(labels = income_names) +
   ylim(-max_dif, max_dif) +
   labs(
-    y = "eur / kiertomatka",
+    y = "eur / asukas",
     x = "Skenaarion tulodesiilit",
     title = paste0(
-      "Muutos matkan saavutettavuudessa: ",
+      "Muutos asukkaan tekemien matkojen saavutettavuudessa: ",
       config::get("projected_name")
     )
   )
