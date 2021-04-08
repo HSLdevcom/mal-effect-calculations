@@ -89,15 +89,15 @@ zones %>%
     na.value = hsl_cols("lightgray")
   ) +
   labs(
-    fill = "Change of people with low accessibility",
+    fill = "asukasta",
     title = paste(
-      "Projected:",
+      "Suunnitelma:",
       get("projected_name"),
-      "\nBaseline:",
+      "\nVertailu:",
       get("baseline_name"),
       sep = " "
     ),
-    subtitle = paste("All tours.", limit_txt)
+    subtitle = "Muutos minimitason alle jäävän väestön määrässä"
   )
 
 ggsave(

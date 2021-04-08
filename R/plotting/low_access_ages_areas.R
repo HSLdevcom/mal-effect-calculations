@@ -97,10 +97,10 @@ results %>%
   scale_y_continuous(limits = c(0, 0.2), labels = scales::percent) +
   scale_fill_manual(values = hsl_pal("blues")(3)) +
   theme_fig +
-  labs(fill = "Scenario",
-       y = "Share of people living in area",
+  labs(fill = "Skenaario",
+       y = "Osuus asukkaista",
        x = NULL,
-       title = "Residents with low accessibility")
+       title = "Saavutettavuus alle minimitason")
 
 ggsave(
   here("results",

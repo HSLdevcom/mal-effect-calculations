@@ -47,11 +47,11 @@ agents %>%
   geom_abline(slope = 0) +
   ylim(-max_dif, max_dif) +
   labs(
-    fill = "Sex",
-    y = "Difference in expected utility (eur) / tour",
-    x = "Age groups",
+    fill = "Sukupuoli",
+    y = "eur / kiertomatka",
+    x = "Ikäryhmät",
     title = paste0(
-      "Change in average tours' accessibility: ",
+      "Muutos matkan saavutettavuudessa: ",
       config::get("projected_name")
     )
   )

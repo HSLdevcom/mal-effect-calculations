@@ -13,7 +13,7 @@ zones <- st_read(here("data", "helmet_zones_map.shp"))
 # Parameters for plotting ----
 
 limit_trips <- 100
-limit_txt <- paste0("Zones with over ", limit_trips, " tours")
+limit_txt <- paste0("Alueet, joilla yli ", limit_trips, " kiertomatkaa / vrk")
 plot_areas <-
   c("helsinki_cbd",
     "helsinki_other",
@@ -83,9 +83,9 @@ zones %>%
     na.value = hsl_cols("lightgray")
   ) +
   labs(
-    fill = "Utility (eur) / tour",
+    fill = "eur / kiertomatka",
     title = config::get("projected_name"),
-    subtitle = paste("All tours.", limit_txt)
+    subtitle = "Matkustamisesta saatava hyöty (kaikki kulkutavat)"
   )
 
 ggsave(
@@ -110,9 +110,9 @@ zones %>%
     na.value = hsl_cols("lightgray")
   ) +
   labs(
-    fill = "Utility (eur) / tour",
+    fill = "eur / kiertomatka",
     title = config::get("projected_name"),
-    subtitle = paste("Car tours.", limit_txt)
+    subtitle = "Matkustamisesta saatava hyöty (auto)"
   )
 
 ggsave(
@@ -137,9 +137,9 @@ zones %>%
     na.value = hsl_cols("lightgray")
   ) +
   labs(
-    fill = "Utility (eur) / tour",
+    fill = "eur / kiertomatka",
     title = config::get("projected_name"),
-    subtitle = paste("Walk, bike and transit", limit_txt)
+    subtitle = "Matkustamisesta saatava hyöty (kävely, pyöräily, jl)"
   )
 
 ggsave(
@@ -167,9 +167,9 @@ zones %>%
     na.value = hsl_cols("lightgray")
   ) +
   labs(
-    fill = "Utility change (eur)",
+    fill = "eur / kiertomatka",
     title = config::get("projected_name"),
-    subtitle = paste("All tours.", limit_txt)
+    subtitle = "Muutos matkan hyödyissä (kaikki kulkutavat)"
   )
 
 ggsave(
@@ -195,9 +195,9 @@ zones %>%
     na.value = hsl_cols("lightgray")
   ) +
   labs(
-    fill = "Utility change (eur)",
+    fill = "eur / kiertomatka",
     title = config::get("projected_name"),
-    subtitle = paste("Car tours.", limit_txt)
+    subtitle = "Muutos matkan hyödyissä (auto)"
   )
 
 ggsave(
@@ -223,9 +223,9 @@ zones %>%
     na.value = hsl_cols("lightgray")
   ) +
   labs(
-    fill = "Utility change (eur)",
+    fill = "eur / kiertomatka",
     title = config::get("projected_name"),
-    subtitle = paste("Walk, bike and transit.", limit_txt)
+    subtitle = "Muutos matkan hyödyissä (kävely, pyöräily, jl)"
   )
 
 ggsave(
@@ -253,9 +253,9 @@ zones %>%
     na.value = hsl_cols("lightgray")
   ) +
   labs(
-    fill = "Utility difference to avg (eur)",
+    fill = "eur / kiertomatka",
     title = config::get("projected_name"),
-    subtitle = paste("All tours.", limit_txt)
+    subtitle = "Ero seudun keskiarvoon matkoista saatavassa hyödyssä"
   )
 
 ggsave(

@@ -58,10 +58,10 @@ agents %>%
   scale_x_discrete(labels = income_names) +
   ylim(-max_dif, max_dif) +
   labs(
-    y = "Difference in expected utility (eur) / tour",
-    x = "Income deciles",
+    y = "eur / kiertomatka",
+    x = "Skenaarion tulodesiilit",
     title = paste0(
-      "Change in average tours' accessibility: ",
+      "Muutos matkan saavutettavuudessa: ",
       config::get("projected_name")
     )
   )

@@ -65,10 +65,10 @@ gap %>%
   theme_wide +
   ylim(-max_gap, max_gap) +
   geom_abline(slope = 0) +
-  labs(fill = "Scenario",
-       y = "Difference in expected utility (eur) / tour",
+  labs(fill = "Skenaario",
+       y = "eur / kiertomatka",
        x = NULL,
-       title = "Difference in accessibility compared to average individual in area")
+       title = "Saavutettavuusero suhteessa alueen keskiarvoon")
 
 ggsave(
   here("results",
