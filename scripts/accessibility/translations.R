@@ -4,7 +4,8 @@ levels_areas <- c(
   "Helsingin kantakaupunki" = "helsinki_cbd",
   "Muu Helsinki" = "helsinki_other",
   "Espoo, Vantaa, Kau" = "espoo_vant_kau",
-  "Kehyskunnat" = "surrounding"
+  "Kehyskunnat (raide)" = "surround_train",
+  "Kehyskunnat (muut)" = "surround_other"
 )
 
 levels_age_groups <- c(
