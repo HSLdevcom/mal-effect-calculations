@@ -33,6 +33,10 @@ geom_basemap <- function() {
   )
 }
 
+points2mm <- function(x) {
+  return(x / (72.27 / 25.4))
+}
+
 annotate_map <- function(title, subtitle, caption) {
   list(
     # Title
@@ -43,7 +47,7 @@ annotate_map <- function(title, subtitle, caption) {
       hjust = 0,
       vjust = 1,
       label = title,
-      size = 10 / (72.27 / 25.4),
+      size = points2mm(10),
       colour = "#64BE1E"
     ),
     # Subtitle
@@ -54,7 +58,7 @@ annotate_map <- function(title, subtitle, caption) {
       hjust = 0,
       vjust = 1,
       label = subtitle,
-      size = 10 / (72.27 / 25.4),
+      size = points2mm(10),
       colour = "#333333"
     ),
     # Caption
@@ -65,7 +69,7 @@ annotate_map <- function(title, subtitle, caption) {
       hjust = 1,
       vjust = 0,
       label = caption,
-      size = 10 / (72.27 / 25.4),
+      size = points2mm(10),
       color = "#333333",
       label.size = 0
     )
