@@ -53,7 +53,7 @@ agents %>%
   )
 
 ggsave(
-  here("results",
+  here("figures",
        config::get("projected_scenario"),
        "access_change_area.png"
        ),

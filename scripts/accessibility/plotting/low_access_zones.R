@@ -101,7 +101,7 @@ zones %>%
   )
 
 ggsave(
-  here("results",
+  here("figures",
        get("projected_scenario"),
        "zones_mobility_poor.png"
        ),

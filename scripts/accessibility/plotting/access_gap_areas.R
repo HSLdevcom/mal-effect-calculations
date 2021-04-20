@@ -20,16 +20,11 @@ res_vars <- c(
 )
 
 agents <- agents %>%
-  group_by(income_group, area) %>%
+  group_by(area) %>%
   summarise(across(all_of(res_vars),
                    sum,
                    na.rm = TRUE)) %>%
   ungroup()
-
-# Remove when income group not defined ----
-
-agents <- agents %>%
-  filter(!income_group %in% -1)
 
 # Calc differences ----
 
@@ -42,12 +37,10 @@ agents <- agents %>%
 
 # Plot ----
 
-income_names <- c("alin 10 %", rep("", 8), "ylin 10 %")
-
 gap <- agents %>%
-  select(income_group, area, projected, baseline, present) %>%
+  select(area, projected, baseline, present) %>%
   gather("scenario", "utility", projected, baseline, present) %>%
-  group_by(scenario, area) %>%
+  group_by(scenario) %>%
   mutate(
     utility_dif = utility - mean(utility, na.rm = TRUE),
     scenario = case_when(
@@ -57,33 +50,28 @@ gap <- agents %>%
     )
   )
 
-max_gap <- max(abs(gap$utility_dif)) + 1
-
 gap %>%
-  ggplot(aes(x = income_group, y = utility_dif, fill = scenario)) +
+  ggplot(aes(x = area, y = utility_dif, fill = scenario)) +
   geom_bar(
     stat = "identity",
     position = "dodge",
     color = "white",
     width = 0.8
   ) +
-  facet_wrap( ~ area, nrow = 1) +
   scale_fill_manual(values = hsl_pal("blues")(3)) +
-  scale_x_discrete(labels = income_names) +
-  theme_wide +
-  ylim(-max_gap, max_gap) +
+  theme_fig +
   geom_abline(slope = 0) +
   labs(fill = "Skenaario",
        y = "eur / kiertomatka",
        x = NULL,
-       title = "Saavutettavuusero suhteessa alueen keskiarvoon")
+       title = "Saavutettavuusero suhteessa seudun keskiarvoon")
 
 ggsave(
-  here("results",
+  here("figures",
        config::get("projected_scenario"),
-       "access_gap_income_areas.png"
-       ),
-  width = dimensions_wide[1],
-  height = dimensions_wide[2],
+       "area_access_gap_areas.png"
+  ),
+  width = dimensions_fig[1],
+  height = dimensions_fig[2],
   units = "cm"
 )

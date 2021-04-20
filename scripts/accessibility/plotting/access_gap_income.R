@@ -5,7 +5,7 @@ library(here)
 # Read files ----
 
 file_path <-
-  here("results", get("projected_scenario"), "agents.rds")
+  here("results", config::get("projected_scenario"), "agents.rds")
 agents <- read_rds(file_path)
 
 # Group agents tables ----
@@ -20,11 +20,16 @@ res_vars <- c(
 )
 
 agents <- agents %>%
-  group_by(gender, area) %>%
+  group_by(income_group) %>%
   summarise(across(all_of(res_vars),
                    sum,
                    na.rm = TRUE)) %>%
   ungroup()
+
+# Remove when income group not defined ----
+
+agents <- agents %>%
+  filter(!income_group %in% -1)
 
 # Calc differences ----
 
@@ -36,34 +41,34 @@ agents <- agents %>%
   )
 
 # Plot ----
+income_names <- c("alin 10 %", rep("", 8), "ylin 10 %")
+
+# Plot ----
 
 gap <- agents %>%
-  select(gender, area, projected, baseline, present) %>%
+  select(income_group, projected, baseline, present) %>%
   gather("scenario", "utility", projected, baseline, present) %>%
-  group_by(scenario, area) %>%
+  group_by(scenario) %>%
   mutate(
-    utility_dif = utility - mean(utility, na.rm = TRUE),
+    utility_dif = utility - median(utility, na.rm = TRUE),
     scenario = case_when(
-      scenario %in% "projected" ~ get("projected_name"),
-      scenario %in% "baseline" ~ get("baseline_name"),
-      scenario %in% "present" ~ get("present_name")
+      scenario %in% "projected" ~ config::get("projected_name"),
+      scenario %in% "baseline" ~ config::get("baseline_name"),
+      scenario %in% "present" ~ config::get("present_name")
     )
   )
 
-max_gap <- max(abs(gap$utility_dif)) + 1
-
 gap %>%
-  ggplot(aes(x = gender, y = utility_dif, fill = scenario)) +
+  ggplot(aes(x = income_group, y = utility_dif, fill = scenario)) +
   geom_bar(
     stat = "identity",
     position = "dodge",
     color = "white",
     width = 0.8
   ) +
-  facet_wrap( ~ area, nrow = 1) +
   scale_fill_manual(values = hsl_pal("blues")(3)) +
-  theme_wide +
-  ylim(-max_gap, max_gap) +
+  scale_x_discrete(labels = income_names) +
+  theme_fig +
   geom_abline(slope = 0) +
   labs(fill = "Skenaario",
        y = "eur / kiertomatka",
@@ -71,11 +76,11 @@ gap %>%
        title = "Saavutettavuusero suhteessa alueen keskiarvoon")
 
 ggsave(
-  here("results",
-       get("projected_scenario"),
-       "access_gap_gender_areas.png"
+  here("figures",
+       config::get("projected_scenario"),
+       "access_gap_income.png"
        ),
-  width = dimensions_wide[1],
-  height = dimensions_wide[2],
+  width = dimensions_fig[1],
+  height = dimensions_fig[2],
   units = "cm"
 )

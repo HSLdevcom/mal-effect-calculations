@@ -10,15 +10,22 @@ agents <- read_rds(file_path)
 
 # Group agents tables ----
 
-res_vars <- c("persons0", "persons1",
-              "total_access0", "total_access1")
+res_vars <- c("total_access0",
+              "total_access1",
+              "persons1",
+              "persons0")
 
 agents <- agents %>%
-  group_by(age_group, gender, area) %>%
+  group_by(income_group, area) %>%
   summarise(across(all_of(res_vars),
                    sum,
                    na.rm = TRUE)) %>%
   ungroup()
+
+# Remove when income group not defined ----
+
+agents <- agents %>%
+  filter(!income_group %in% -1)
 
 # Calc differences ----
 
@@ -31,25 +38,26 @@ agents <- agents %>%
 
 # Plot ----
 
+income_names <- c("alin 10 %", rep("", 8), "ylin 10 %")
 max_dif <- 3
 
 agents %>%
-  ggplot(aes(x = age_group, y = util_dif, fill = gender)) +
+  ggplot(aes(x = income_group, y = util_dif)) +
   geom_bar(
     stat = "identity",
     position = "dodge",
+    fill = hsl_cols("blue"),
     color = "white",
     width = 0.8
   ) +
-  scale_fill_manual(values = hsl_cols("blue", "green")) +
   facet_wrap( ~ area, nrow = 1) +
   theme_wide +
   geom_abline(slope = 0) +
+  scale_x_discrete(labels = income_names) +
   ylim(-max_dif, max_dif) +
   labs(
-    fill = "Sukupuoli",
     y = "eur / asukas",
-    x = "Ikäryhmät",
+    x = "Skenaarion tulodesiilit",
     title = paste0(
       "Muutos asukkaan tekemien matkojen saavutettavuudessa: ",
       config::get("projected_name")
@@ -57,9 +65,9 @@ agents %>%
   )
 
 ggsave(
-  here("results",
+  here("figures",
        config::get("projected_scenario"),
-       "access_change_pop_group_areas.png"
+       "access_change_income_areas.png"
        ),
   width = dimensions_wide[1],
   height = dimensions_wide[2],

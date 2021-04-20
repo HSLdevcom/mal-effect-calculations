@@ -8,10 +8,10 @@ V2030_mal19_v1:
   baseline_scenario: "V2030_ve0"
   projected_name: "MAL2019 suunnitelma"
   baseline_name: "2030 ve0"
-  
+
 V2030_ve0_rm:
   projected_scenario: "V2030_ve0_rm"
   baseline_scenario: "V2030_ve0"
   projected_name: "ve0 + Ruuhkamaksut"
   baseline_name: "2030 ve0"
-  
+
