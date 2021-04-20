@@ -13,6 +13,7 @@ Sys.setenv(R_CONFIG_ACTIVE = "V2030_ve0_rm")
 source(here("scripts", "accessibility", "colors.R"), encoding = "utf-8")
 source(here("scripts", "accessibility", "themes.R"), encoding = "utf-8")
 source(here("scripts", "accessibility", "translations.R"), encoding = "utf-8")
+source(here("scripts", "accessibility", "data_zones_to_areas.R"), encoding = "utf-8")
 
 # Create output folder ----
 
