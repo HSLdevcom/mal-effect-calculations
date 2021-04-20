@@ -69,13 +69,8 @@ results <- bind_rows(low_access, low_access0, low_access1)
 
 results <- results %>%
   mutate(area = forcats::as_factor(area),
-         area = forcats::fct_relevel(
-           area,
-           c("helsinki_cbd",
-             "helsinki_other",
-             "espoo_vant_kau",
-             "surrounding")
-         ))
+         area = forcats::fct_relevel(area, !!!levels_areas)
+  )
 
 # Translate factors ----
 

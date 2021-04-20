@@ -87,18 +87,13 @@ agents <- left_join(agents,
 
 agents <- agents %>%
   mutate(age_group = forcats::as_factor(age_group),
-         age_group = forcats::fct_relevel(age_group, c("age_7-17",
-                                                       "age_18-29",
-                                                       "age_30-49",
-                                                       "age_50-64",
-                                                       "age_65-99")))
+         age_group = forcats::fct_relevel(age_group, !!!levels_age_groups)
+         )
 
 agents <- agents %>%
   mutate(area = forcats::as_factor(area),
-         area = forcats::fct_relevel(area, c("helsinki_cbd",
-                                             "helsinki_other",
-                                             "espoo_vant_kau",
-                                             "surrounding")))
+         area = forcats::fct_relevel(area, !!!levels_areas)
+         )
 
 # Translate factors ----
 

@@ -18,7 +18,8 @@ plot_areas <-
   c("helsinki_cbd",
     "helsinki_other",
     "espoo_vant_kau",
-    "surrounding")
+    "surround_train",
+    "surround_other")
 
 # Join agents tables ----
 
