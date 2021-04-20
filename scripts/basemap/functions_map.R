@@ -69,7 +69,7 @@ annotate_map <- function(title, subtitle, caption) {
       hjust = 1,
       vjust = 0,
       label = caption,
-      size = points2mm(10),
+      size = points2mm(8),
       color = "#333333",
       label.size = 0
     )
