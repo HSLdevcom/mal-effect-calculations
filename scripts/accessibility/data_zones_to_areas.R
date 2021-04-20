@@ -11,11 +11,11 @@ areas <- zones %>%
   group_by(area) %>%
   summarise(nr_zones = n())
 
-areas <- areas %>% 
+areas <- areas %>%
   st_union(by_feature = TRUE) %>%
   st_simplify(dTolerance = 100)
 
-areas %>% 
+areas %>%
   st_write(here::here("results", "areas.shp"),
            delete_dsn = TRUE)
 
@@ -25,10 +25,10 @@ municipalities <- zones %>%
   group_by(mcp) %>%
   summarise(nr_zones = n())
 
-municipalities <- municipalities %>% 
+municipalities <- municipalities %>%
   st_union(by_feature = TRUE) %>%
   st_simplify(dTolerance = 100)
 
-municipalities %>% 
+municipalities %>%
   st_write(here::here("results", "municipalities.shp"),
            delete_dsn = TRUE)
