@@ -10,8 +10,7 @@ read_helmet_files <- function(name) {
                        config::get(name),
                        "agents.txt"),
              delim = "\t",
-             col_names = TRUE) %>%
-    select(-"X1")
+             col_names = TRUE)
 }
 
 # Grouping wrapper for agent data
