@@ -89,7 +89,7 @@ zones %>%
   )
 
 ggsave(
-  here("results",
+  here("figures",
        config::get("projected_scenario"),
        "zones_access.png"
        ),
@@ -116,7 +116,7 @@ zones %>%
   )
 
 ggsave(
-  here("results",
+  here("figures",
        config::get("projected_scenario"),
        "zones_car_access.png"
        ),
@@ -143,7 +143,7 @@ zones %>%
   )
 
 ggsave(
-  here("results",
+  here("figures",
        config::get("projected_scenario"),
        "zones_sust_access.png"
        ),
@@ -173,7 +173,7 @@ zones %>%
   )
 
 ggsave(
-  here("results",
+  here("figures",
        config::get("projected_scenario"),
        "zones_access_dif.png"
        ),
@@ -201,7 +201,7 @@ zones %>%
   )
 
 ggsave(
-  here("results",
+  here("figures",
        config::get("projected_scenario"),
        "zones_car_access_dif.png"
        ),
@@ -229,7 +229,7 @@ zones %>%
   )
 
 ggsave(
-  here("results",
+  here("figures",
        config::get("projected_scenario"),
        "zones_sust_access_dif.png"
        ),
@@ -259,7 +259,7 @@ zones %>%
   )
 
 ggsave(
-  here("results",
+  here("figures",
        config::get("projected_scenario"),
        "zones_access_gap.png"
        ),

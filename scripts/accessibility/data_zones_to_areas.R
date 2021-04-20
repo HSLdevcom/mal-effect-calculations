@@ -16,7 +16,7 @@ areas <- areas %>%
   st_simplify(dTolerance = 100)
 
 areas %>% 
-  st_write(here::here("data", "areas.shp"),
+  st_write(here::here("results", "areas.shp"),
            delete_dsn = TRUE)
 
 # municipalities ----
@@ -30,5 +30,5 @@ municipalities <- municipalities %>%
   st_simplify(dTolerance = 100)
 
 municipalities %>% 
-  st_write(here::here("data", "municipalities.shp"),
+  st_write(here::here("results", "municipalities.shp"),
            delete_dsn = TRUE)

@@ -67,7 +67,7 @@ gap %>%
        title = "Saavutettavuusero suhteessa seudun keskiarvoon")
 
 ggsave(
-  here("results",
+  here("figures",
        config::get("projected_scenario"),
        "area_access_gap_areas.png"
   ),

@@ -3,7 +3,7 @@ library(sf)
 library(tidyverse)
 
 # load data ----
-areas <- st_read(here::here("data", "areas.shp"))
+areas <- st_read(here::here("results", "areas.shp"))
 
 # plot ----
 ggplot() +
@@ -16,7 +16,7 @@ ggplot() +
   theme_maps
 
 ggsave(
-  here::here("results", "areas.png"),
+  here::here("figures", "areas.png"),
   width = dimensions_map[1],
   height = dimensions_map[2],
   units = "cm"
@@ -34,14 +34,14 @@ ggplot() +
   theme_maps
 
 ggsave(
-  here::here("results", "areas_mal.png"),
+  here::here("figures", "areas_mal.png"),
   width = dimensions_map[1],
   height = dimensions_map[2],
   units = "cm"
 )
 
 # load data ----
-municipalities <- st_read(here::here("data", "municipalities.shp"))
+municipalities <- st_read(here::here("results", "municipalities.shp"))
 
 # plot ----
 ggplot() +
@@ -54,7 +54,7 @@ ggplot() +
   theme_maps
 
 ggsave(
-  here::here("results", "municipalities.png"),
+  here::here("figures", "municipalities.png"),
   width = dimensions_map[1],
   height = dimensions_map[2],
   units = "cm"
@@ -74,7 +74,7 @@ ggplot() +
   theme_maps
 
 ggsave(
-  here::here("results", "municipalities_pks.png"),
+  here::here("figures", "municipalities_pks.png"),
   width = dimensions_map[1],
   height = dimensions_map[2],
   units = "cm"

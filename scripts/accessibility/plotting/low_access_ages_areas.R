@@ -103,7 +103,7 @@ results %>%
        title = "Saavutettavuus alle vertailutason")
 
 ggsave(
-  here("results",
+  here("figures",
        config::get("projected_scenario"),
        "low_access_area.png"
        ),

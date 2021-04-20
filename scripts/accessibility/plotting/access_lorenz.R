@@ -71,7 +71,7 @@ cumulative_dist %>%
        title = "Saavutettavuuden Lorenz-käyrä")
 
 ggsave(
-  here("results",
+  here("figures",
        config::get("projected_scenario"),
        "lorenz_curve_util.png"
        ),
