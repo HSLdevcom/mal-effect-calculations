@@ -37,7 +37,10 @@ points2mm <- function(x) {
   return(x / (72.27 / 25.4))
 }
 
-annotate_map <- function(title, subtitle, caption) {
+annotate_map <- function(title, subtitle) {
+  # Aineiston nimi: Lisenssin antaja 20XX
+  caption <- paste(c("Maastotietokanta: Maanmittauslaitos 2021"),
+                   collapse = "\n")
   list(
     # Title
     annotate(
