@@ -5,6 +5,6 @@
 .Ruserdata
 
 # Folders
-data/
-figures/
-results/
+/data/
+/figures/
+/results/
