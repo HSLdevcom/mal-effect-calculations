@@ -25,8 +25,7 @@ ggplot() +
   geom_basemap() +
   annotate_map(
     title = "Mittarin otsikko",
-    subtitle = "Mittarin alaotsikko",
-    caption = "Kuntajako: Maanmittauslaitos 2021\nAineiston nimi: Lisenssin antaja 20XX"
+    subtitle = "Mittarin alaotsikko"
   ) +
   theme_mal_map()
 
