@@ -6,14 +6,15 @@ library(sf)
 # Read files ----
 
 file_path <-
-  here("results", config::get("projected_scenario"), "agents.rds")
+  here("results", config::get("projected_scenario"), "agents.Rdata")
+
+load(file_path)
+
 agents <- read_rds(file_path)
 zones <- st_read(here("data", "helmet_zones_map.shp"))
 
 # Parameters for plotting ----
 
-limit_trips <- 100
-limit_txt <- paste0("Alueet, joilla yli ", limit_trips, " kiertomatkaa / vrk")
 plot_areas <-
   c("helsinki_cbd",
     "helsinki_other",
@@ -21,32 +22,47 @@ plot_areas <-
     "surround_train",
     "surround_other")
 
-# Join agents tables ----
+# Calc zone residents ----
 
-res_vars <- c(
-  "nr_tours0",
-  "nr_tours1",
-  "sustainable_access0",
-  "sustainable_access1",
-  "car_access0",
-  "car_access1",
-  "total_access0",
-  "total_access1",
-  "persons1",
-  "persons0"
-)
-
-agents <- agents %>%
+zone_persons <- agents %>%
   group_by(number) %>%
-  summarise(across(all_of(res_vars),
-                   sum,
-                   na.rm = TRUE)) %>%
-  ungroup()
+  summarise(n = n())
 
-# Remove when too low amount of trips ----
+# Sum results ----
+
+res_var <- c("nr_tours", "sustainable_access", "total_access")
+group_var <- c("number")
+
+sum_agents <- function(df){
+  df <- df %>%
+    group_by(!!!syms(group_var)) %>%
+    summarise(across(all_of(res_var), sum, na.rm = TRUE)) %>%
+    ungroup()
+  }
 
 agents <- agents %>%
-  filter(nr_tours1 > limit_trips)
+  sum_agents %>%
+  slice(which(zone_persons$n > 50))
+
+agents_0 <- agents_0 %>%
+  sum_agents %>%
+  slice(which(zone_persons$n > 50))
+
+agents_1 <- agents_1 %>%
+  sum_agents %>%
+  slice(which(zone_persons$n > 50))
+
+# Join tables ----
+
+agents <- full_join(agents,
+                    agents_0,
+                    by = group_var,
+                    suffix = c("", "0"))
+
+agents <- full_join(agents,
+                    agents_1,
+                    by = group_var,
+                    suffix = c("", "1"))
 
 # Calc differences ----
 
@@ -58,12 +74,9 @@ agents <- agents %>%
     tour_access_gap0 = tour_access0 - mean(tour_access0, na.rm = TRUE),
     tour_sust_access1 = sustainable_access1 / nr_tours1,
     tour_sust_access0 = sustainable_access0 / nr_tours0,
-    tour_car_access1 = car_access1 / nr_tours1,
-    tour_car_access0 = car_access0 / nr_tours0,
     tour_access_dif = tour_access1 - tour_access0,
-    tour_sust_access_dif = tour_sust_access1 - tour_sust_access0,
-    tour_car_access_dif = tour_car_access1 - tour_car_access0
-  )
+    tour_sust_access_dif = tour_sust_access1 - tour_sust_access0
+    )
 
 # Combine to shapefile ----
 
@@ -93,33 +106,6 @@ ggsave(
   here("figures",
        config::get("projected_scenario"),
        "zones_access.png"
-       ),
-  width = dimensions_map[1],
-  height = dimensions_map[2],
-  units = "cm"
-)
-
-# car tours
-zones %>%
-  filter(area %in% plot_areas) %>%
-  ggplot(aes(fill = tour_car_access1)) +
-  geom_sf(size = 0.1, color = "gray") +
-  theme_maps +
-  scale_fill_gradient(
-    high = hsl_cols("red"),
-    low = hsl_cols("white"),
-    na.value = hsl_cols("lightgray")
-  ) +
-  labs(
-    fill = "eur / kiertomatka",
-    title = config::get("projected_name"),
-    subtitle = "Matkustamisesta saatava hyöty (auto)"
-  )
-
-ggsave(
-  here("figures",
-       config::get("projected_scenario"),
-       "zones_car_access.png"
        ),
   width = dimensions_map[1],
   height = dimensions_map[2],
@@ -177,34 +163,6 @@ ggsave(
   here("figures",
        config::get("projected_scenario"),
        "zones_access_dif.png"
-       ),
-  width = dimensions_map[1],
-  height = dimensions_map[2],
-  units = "cm"
-)
-
-# car tours
-zones %>%
-  filter(area %in% plot_areas) %>%
-  ggplot(aes(fill = tour_car_access_dif)) +
-  geom_sf(size = 0.1, color = "gray") +
-  theme_maps +
-  scale_fill_gradient2(
-    high = hsl_cols("red"),
-    low = hsl_cols("blue"),
-    mid = hsl_cols("white"),
-    na.value = hsl_cols("lightgray")
-  ) +
-  labs(
-    fill = "eur / kiertomatka",
-    title = config::get("projected_name"),
-    subtitle = "Muutos matkan hyödyissä (auto)"
-  )
-
-ggsave(
-  here("figures",
-       config::get("projected_scenario"),
-       "zones_car_access_dif.png"
        ),
   width = dimensions_map[1],
   height = dimensions_map[2],

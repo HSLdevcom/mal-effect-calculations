@@ -5,27 +5,51 @@ library(here)
 # Read files ----
 
 file_path <-
-  here("results", config::get("projected_scenario"), "agents.rds")
-agents <- read_rds(file_path)
+  here("results", config::get("projected_scenario"), "agents.Rdata")
+
+load(file_path)
 
 # Group agents tables ----
 
-res_vars <- c("persons0", "persons1",
-              "total_access0", "total_access1")
+res_var <- c("total_access")
+group_var <- c("age_group",
+               "gender",
+               "area")
+
+mean_agents <- function(df){
+  df <- df %>%
+    group_by(!!!syms(group_var)) %>%
+    summarise(across(all_of(res_var), mean, na.rm = TRUE)) %>%
+    ungroup()
+}
 
 agents <- agents %>%
-  group_by(age_group, gender, area) %>%
-  summarise(across(all_of(res_vars),
-                   sum,
-                   na.rm = TRUE)) %>%
-  ungroup()
+  mean_agents()
+
+agents_0 <- agents_0 %>%
+  mean_agents()
+
+agents_1 <- agents_1 %>%
+  mean_agents()
+
+# Join tables ----
+
+agents <- full_join(agents,
+                    agents_0,
+                    by = group_var,
+                    suffix = c("", "0"))
+
+agents <- full_join(agents,
+                    agents_1,
+                    by = group_var,
+                    suffix = c("", "1"))
 
 # Calc differences ----
 
 agents <- agents %>%
   mutate(
-    projected = total_access1 / persons1,
-    baseline = total_access0 / persons0,
+    projected = total_access1,
+    baseline = total_access0,
     util_dif = projected - baseline
   )
 

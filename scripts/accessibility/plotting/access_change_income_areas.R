@@ -5,41 +5,55 @@ library(here)
 # Read files ----
 
 file_path <-
-  here("results", config::get("projected_scenario"), "agents.rds")
-agents <- read_rds(file_path)
+  here("results", config::get("projected_scenario"), "agents.Rdata")
+
+load(file_path)
 
 # Group agents tables ----
 
-res_vars <- c("total_access0",
-              "total_access1",
-              "persons1",
-              "persons0")
+res_var <- c("total_access")
+group_var <- c("area", "income_group")
+
+mean_agents <- function(df){
+  df <- df %>%
+    group_by(!!!syms(group_var)) %>%
+    summarise(across(all_of(res_var), mean, na.rm = TRUE)) %>%
+    ungroup()
+}
 
 agents <- agents %>%
-  group_by(income_group, area) %>%
-  summarise(across(all_of(res_vars),
-                   sum,
-                   na.rm = TRUE)) %>%
-  ungroup()
+  mean_agents()
 
-# Remove when income group not defined ----
+agents_0 <- agents_0 %>%
+  mean_agents()
 
-agents <- agents %>%
-  filter(!income_group %in% -1)
+agents_1 <- agents_1 %>%
+  mean_agents()
+
+# Join tables ----
+
+agents <- full_join(agents,
+                    agents_0,
+                    by = group_var,
+                    suffix = c("", "0"))
+
+agents <- full_join(agents,
+                    agents_1,
+                    by = group_var,
+                    suffix = c("", "1"))
 
 # Calc differences ----
 
 agents <- agents %>%
   mutate(
-    projected = total_access1 / persons1,
-    baseline = total_access0 / persons0,
+    projected = total_access1,
+    baseline = total_access0,
     util_dif = projected - baseline
   )
 
 # Plot ----
 
 income_names <- c("alin 10 %", rep("", 8), "ylin 10 %")
-max_dif <- 3
 
 agents %>%
   ggplot(aes(x = income_group, y = util_dif)) +
@@ -54,7 +68,6 @@ agents %>%
   theme_wide +
   geom_abline(slope = 0) +
   scale_x_discrete(labels = income_names) +
-  ylim(-max_dif, max_dif) +
   labs(
     y = "eur / asukas",
     x = "Skenaarion tulodesiilit",

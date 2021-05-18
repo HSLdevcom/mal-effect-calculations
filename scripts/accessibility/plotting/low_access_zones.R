@@ -6,23 +6,14 @@ library(sf)
 # Read files ----
 
 file_path <-
-  file.path(get("helmet_data"), get("present_scenario"), "agents.txt")
-agents <- read_delim(file_path, delim = "\t")
+  here("results", config::get("projected_scenario"), "agents.Rdata")
 
-file_path <-
-  file.path(get("helmet_data"), get("baseline_scenario"), "agents.txt")
-agents0 <- read_delim(file_path, delim = "\t")
-
-file_path <-
-  file.path(get("helmet_data"), get("projected_scenario"), "agents.txt")
-agents1 <- read_delim(file_path, delim = "\t")
+load(file_path)
 
 zones <- st_read(here("data", "helmet_zones_map.shp"))
 
 # Parameters for plotting ----
 
-limit_persons <- 30
-limit_txt <- paste0("Zones with over ", limit_persons, " persons")
 plot_areas <-
   c("helsinki_cbd",
     "helsinki_other",
@@ -30,24 +21,28 @@ plot_areas <-
     "surround_train",
     "surround_other")
 
-# Calculate tour access ----
+# Calc zone residents ----
+
+zone_persons <- agents %>%
+  group_by(number) %>%
+  summarise(n = n())
+
+
+# Sum results ----
 
 agents <- agents %>%
-  filter(nr_tours > 0) %>%
   mutate(tour_access = total_access / nr_tours)
 
-agents0 <- agents0 %>%
-  filter(nr_tours > 0) %>%
+agents_0 <- agents_0 %>%
   mutate(tour_access = total_access / nr_tours)
 
-agents1 <- agents1 %>%
-  filter(nr_tours > 0) %>%
+agents_1 <- agents_1 %>%
   mutate(tour_access = total_access / nr_tours)
 
 # Calc differences ----
 
 low_limit <-
-  quantile(agents0$tour_access, probs = 0.05, na.rm = TRUE)[[1]]
+  quantile(agents_0$tour_access, probs = 0.05, na.rm = TRUE)[[1]]
 
 calc_low_access <- function(df, name) {
   df <- df %>%
@@ -60,51 +55,43 @@ calc_low_access <- function(df, name) {
     select(-nr_tours)
 }
 
-low_access0 <- agents0 %>%
+low_access_0 <- agents_0 %>%
   calc_low_access("baseline")
 
-low_access1 <- agents1 %>%
+low_access_1 <- agents_1 %>%
   calc_low_access("projected")
 
 # Combine to shapefile ----
 
 zones <- zones %>%
-  left_join(low_access0, by = c("zone" = "number")) %>%
-  left_join(low_access1, by = c("zone" = "number"))
+  left_join(low_access_0, by = c("zone" = "number")) %>%
+  left_join(low_access_1, by = c("zone" = "number"))
 
 zones <- zones %>%
-  mutate(change = projected - baseline) %>%
-  mutate(change = if_else(projected - baseline > 500, 0, as.numeric(change)))
+  mutate(change = projected - baseline)
 
 # Plot accessibility ----
 
 zones %>%
   filter(area %in% plot_areas) %>%
-  ggplot(aes(fill = change)) +
+  ggplot(aes(fill = projected)) +
   geom_sf(size = 0.1, color = "gray") +
   theme_maps +
-  scale_fill_gradient2(
+  scale_fill_gradient(
     high = hsl_cols("red"),
-    low = hsl_cols("blue"),
-    mid = hsl_cols("white"),
+    low = hsl_cols("white"),
     na.value = hsl_cols("lightgray")
   ) +
   labs(
     fill = "asukasta",
-    title = paste(
-      "Suunnitelma:",
-      get("projected_name"),
-      "\nVertailu:",
-      get("baseline_name"),
-      sep = " "
-    ),
-    subtitle = "Muutos vertailutason alle jäävän väestön määrässä"
+    title = get("projected_name"),
+    subtitle = "Vertailutason alle jäävän väestön määrä"
   )
 
 ggsave(
   here("figures",
        get("projected_scenario"),
-       "zones_mobility_poor.png"
+       "zones_access_poor.png"
        ),
   width = dimensions_map[1],
   height = dimensions_map[2],

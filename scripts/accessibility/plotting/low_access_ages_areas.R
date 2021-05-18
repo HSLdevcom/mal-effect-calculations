@@ -5,22 +5,9 @@ library(here)
 # Read files ----
 
 file_path <-
-  file.path(config::get("helmet_data"),
-            config::get("present_scenario"),
-            "agents.txt")
-agents <- read_delim(file_path, delim = "\t")
+  here("results", config::get("projected_scenario"), "agents.Rdata")
 
-file_path <-
-  file.path(config::get("helmet_data"),
-            config::get("baseline_scenario"),
-            "agents.txt")
-agents0 <- read_delim(file_path, delim = "\t")
-
-file_path <-
-  file.path(config::get("helmet_data"),
-            config::get("projected_scenario"),
-            "agents.txt")
-agents1 <- read_delim(file_path, delim = "\t")
+load(file_path)
 
 # Calculate tour access ----
 
@@ -28,11 +15,11 @@ agents <- agents %>%
   filter(nr_tours > 0) %>%
   mutate(tour_access = total_access / nr_tours)
 
-agents0 <- agents0 %>%
+agents_0 <- agents_0 %>%
   filter(nr_tours > 0) %>%
   mutate(tour_access = total_access / nr_tours)
 
-agents1 <- agents1 %>%
+agents_1 <- agents_1 %>%
   filter(nr_tours > 0) %>%
   mutate(tour_access = total_access / nr_tours)
 
@@ -55,29 +42,15 @@ calc_low_access <- function(df, name) {
 low_access <- agents %>%
   calc_low_access(config::get("present_name"))
 
-low_access0 <- agents0 %>%
+low_access_0 <- agents_0 %>%
   calc_low_access(config::get("baseline_name"))
 
-low_access1 <- agents1 %>%
+low_access_1 <- agents_1 %>%
   calc_low_access(config::get("projected_name"))
 
 # Calc differences ----
 
-results <- bind_rows(low_access, low_access0, low_access1)
-
-# As factor for plotting ----
-
-results <- results %>%
-  mutate(area = forcats::as_factor(area),
-         area = forcats::fct_relevel(area, !!!levels_areas)
-  )
-
-# Translate factors ----
-
-results <- results %>%
-  mutate(
-    area = forcats::fct_recode(area,!!!levels_areas)
-  )
+results <- bind_rows(low_access, low_access_0, low_access_1)
 
 # Plot ----
 
