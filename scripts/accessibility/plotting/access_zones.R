@@ -10,7 +10,6 @@ file_path <-
 
 load(file_path)
 
-agents <- read_rds(file_path)
 zones <- st_read(here("data", "helmet_zones_map.shp"))
 
 # Parameters for plotting ----
