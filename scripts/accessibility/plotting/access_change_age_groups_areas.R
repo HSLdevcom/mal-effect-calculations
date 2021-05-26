@@ -33,9 +33,7 @@ agents_1 <- agents_1 %>%
 # Group agents tables ----
 
 res_var <- c("total_access")
-group_var <- c("age_group",
-               "gender",
-               "area")
+group_var <- c("age_group", "area")
 
 group_mean <- function(df){
   df <- df %>%
@@ -79,20 +77,19 @@ agents <- agents %>%
 max_dif <- 3
 
 agents %>%
-  ggplot(aes(x = age_group, y = util_dif, fill = gender)) +
+  ggplot(aes(x = age_group, y = util_dif)) +
   geom_bar(
     stat = "identity",
     position = "dodge",
     color = "white",
+    fill = hsl_cols("blue"),
     width = 0.8
   ) +
-  scale_fill_manual(values = hsl_cols("blue", "green")) +
   facet_wrap( ~ area, nrow = 1) +
   theme_wide +
   geom_abline(slope = 0) +
   ylim(-max_dif, max_dif) +
   labs(
-    fill = "Sukupuoli",
     y = "eur / asukas",
     x = "Ikäryhmät",
     title = paste0(
@@ -104,7 +101,7 @@ agents %>%
 ggsave(
   here("figures",
        config::get("projected_scenario"),
-       "access_change_pop_group_areas.png"
+       "access_change_age_group_areas.png"
        ),
   width = dimensions_wide[1],
   height = dimensions_wide[2],
