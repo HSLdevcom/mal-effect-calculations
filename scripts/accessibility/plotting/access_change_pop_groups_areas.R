@@ -9,6 +9,27 @@ file_path <-
 
 load(file_path)
 
+# Join tours to agents data ----
+
+join_tours <- function(agents, tours, res_var){
+  agents %>%
+    left_join(
+      tours %>%
+        group_by(person_id) %>%
+        summarise(across(all_of(res_var), sum, na.rm = TRUE)),
+      by = c("id" = "person_id")
+    )
+}
+
+agents <- agents %>%
+  join_tours(tours, "total_access")
+
+agents_0 <- agents_0 %>%
+  join_tours(tours_0, "total_access")
+
+agents_1 <- agents_1 %>%
+  join_tours(tours_1, "total_access")
+
 # Group agents tables ----
 
 res_var <- c("total_access")
@@ -16,7 +37,7 @@ group_var <- c("age_group",
                "gender",
                "area")
 
-mean_agents <- function(df){
+group_mean <- function(df){
   df <- df %>%
     group_by(!!!syms(group_var)) %>%
     summarise(across(all_of(res_var), mean, na.rm = TRUE)) %>%
@@ -24,13 +45,13 @@ mean_agents <- function(df){
 }
 
 agents <- agents %>%
-  mean_agents()
+  group_mean()
 
 agents_0 <- agents_0 %>%
-  mean_agents()
+  group_mean()
 
 agents_1 <- agents_1 %>%
-  mean_agents()
+  group_mean()
 
 # Join tables ----
 

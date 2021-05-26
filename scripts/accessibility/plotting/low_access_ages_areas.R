@@ -9,6 +9,29 @@ file_path <-
 
 load(file_path)
 
+# Join tours to agents data ----
+
+join_filter_tours <- function(agents, tours, res_var){
+  agents %>%
+    left_join(
+      tours %>%
+        filter(purpose_name == "hw") %>%
+        group_by(person_id) %>%
+        summarise(across(all_of(res_var), sum, na.rm = TRUE),
+                  nr_tours = n()),
+      by = c("id" = "person_id")
+    )
+}
+
+agents <- agents %>%
+  join_filter_tours(tours, "total_access")
+
+agents_0 <- agents_0 %>%
+  join_filter_tours(tours_0, "total_access")
+
+agents_1 <- agents_1 %>%
+  join_filter_tours(tours_1, "total_access")
+
 # Calculate tour access ----
 
 agents <- agents %>%
@@ -62,7 +85,7 @@ results %>%
     color = "white",
     width = 0.8
   ) +
-  scale_y_continuous(limits = c(0, 0.2), labels = scales::percent) +
+  scale_y_continuous(limits = c(0, 0.5), labels = scales::percent) +
   scale_fill_manual(values = hsl_pal("blues")(3)) +
   theme_fig +
   labs(fill = "Skenaario",

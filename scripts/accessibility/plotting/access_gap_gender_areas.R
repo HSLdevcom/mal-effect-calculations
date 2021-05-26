@@ -9,12 +9,35 @@ file_path <-
 
 load(file_path)
 
+# Join tours to agents data ----
+
+join_filter_tours <- function(agents, tours, res_var){
+  agents %>%
+    left_join(
+      tours %>%
+        filter(purpose_name == "ho") %>%
+        group_by(person_id) %>%
+        summarise(across(all_of(res_var), sum, na.rm = TRUE),
+                  nr_tours = n()),
+      by = c("id" = "person_id")
+    )
+}
+
+agents <- agents %>%
+  join_filter_tours(tours, "total_access")
+
+agents_0 <- agents_0 %>%
+  join_filter_tours(tours_0, "total_access")
+
+agents_1 <- agents_1 %>%
+  join_filter_tours(tours_1, "total_access")
+
 # Group agents tables ----
 
 res_var <- c("total_access", "nr_tours")
 group_var <- c("area", "gender")
 
-sum_agents <- function(df){
+group_sum <- function(df){
   df <- df %>%
     group_by(!!!syms(group_var)) %>%
     summarise(across(all_of(res_var), sum, na.rm = TRUE)) %>%
@@ -22,13 +45,13 @@ sum_agents <- function(df){
 }
 
 agents <- agents %>%
-  sum_agents()
+  group_sum()
 
 agents_0 <- agents_0 %>%
-  sum_agents()
+  group_sum()
 
 agents_1 <- agents_1 %>%
-  sum_agents()
+  group_sum()
 
 # Join tables ----
 

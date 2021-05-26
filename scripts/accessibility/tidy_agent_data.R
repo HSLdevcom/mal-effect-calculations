@@ -7,12 +7,13 @@ source(here("scripts", "accessibility", "translations.R"),
 # Helper functions ----
 
 # Read files wrapper for agent data
-read_helmet_files <- function(name) {
-  read_delim(file.path(config::get("helmet_data"),
-                       config::get(name),
-                       "agents.txt"),
-             delim = "\t",
-             col_names = TRUE)
+read_helmet_files <- function(scenario, table) {
+  read_delim(
+    file.path(config::get("helmet_data"),
+              config::get(scenario),
+              paste0(table, ".txt")),
+    delim = "\t",
+    col_names = TRUE)
 }
 
 # Add income deciles for agents
@@ -32,56 +33,74 @@ add_inc_group <- function(df) {
 }
 
 # Factorize grouping variable for plotting
-add_factors <- function(df) {
-  df <- df %>%
-    mutate(age_group = forcats::as_factor(age_group),
-           age_group = forcats::fct_relevel(age_group, !!!levels_age_groups)
-    )
-
-  df <- df %>%
-    mutate(area = forcats::as_factor(area),
-           area = forcats::fct_relevel(area, !!!levels_areas)
-    )
+add_factors <- function(df, colname, factors) {
+  df %>%
+    dplyr::mutate(
+      !!colname := forcats::as_factor(!!sym(colname)),
+      !!colname := forcats::fct_relevel(!!sym(colname), !!!factors)
+      )
 }
 
 # Translate factors
-translate_variables <- function(df) {
-  df <- df %>%
-    mutate(
-      area = forcats::fct_recode(area,!!!levels_areas),
-      age_group = forcats::fct_recode(age_group,!!!levels_age_groups),
-      gender = forcats::fct_recode(gender,!!!levels_genders)
+translate_vars <- function(df, colname, factors) {
+  df %>%
+    dplyr::mutate(
+      !!colname := forcats::fct_recode(!!sym(colname), !!!factors)
     )
+}
+
+agent_data_factors <- function(df){
+  df %>%
+    add_factors("age_group", levels_age_groups) %>%
+    add_factors("area", levels_areas) %>%
+    translate_vars("age_group", levels_age_groups) %>%
+    translate_vars("area", levels_areas) %>%
+    translate_vars("gender", levels_genders)
+}
+
+tour_data_factors <- function(df){
+  df %>%
+    add_factors("mode", levels_modes) %>%
+    translate_vars("mode", levels_modes)
 }
 
 # Load data ----
 
-agents <- read_helmet_files("present_scenario")
-agents_0 <- read_helmet_files("baseline_scenario")
-agents_1 <- read_helmet_files("projected_scenario")
+agents <- read_helmet_files("present_scenario", "agents")
+agents_0 <- read_helmet_files("baseline_scenario", "agents")
+agents_1 <- read_helmet_files("projected_scenario", "agents")
+
+tours <- read_helmet_files("present_scenario", "tours")
+tours_0 <- read_helmet_files("baseline_scenario", "tours")
+tours_1 <- read_helmet_files("projected_scenario", "tours")
 
 # Calculate income group ----
 
 agents <- agents %>%
   add_inc_group() %>%
-  add_factors() %>%
-  translate_variables()
+  agent_data_factors()
 
 agents_0 <- agents_0 %>%
   add_inc_group() %>%
-  add_factors() %>%
-  translate_variables()
+  agent_data_factors()
 
 agents_1 <- agents_1 %>%
   add_inc_group() %>%
-  add_factors() %>%
-  translate_variables()
+  agent_data_factors()
+
+tours <- tours %>%
+  tour_data_factors()
+
+tours_0 <- tours_0 %>%
+  tour_data_factors()
+
+tours_1 <- tours_1 %>%
+  tour_data_factors()
 
 # Write to file ----
 
-save(agents,
-     agents_0,
-     agents_1,
+save(agents, agents_0, agents_1,
+     tours, tours_0, tours_1,
      file = here(
        "results",
        config::get("projected_scenario"),

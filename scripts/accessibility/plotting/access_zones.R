@@ -21,6 +21,32 @@ plot_areas <-
     "surround_train",
     "surround_other")
 
+# Join tours to agents data ----
+
+join_tours <- function(agents, tours, res_var){
+  agents %>%
+    left_join(
+      tours %>%
+        group_by(person_id) %>%
+        summarise(across(all_of(res_var), sum, na.rm = TRUE),
+                  nr_tours = n()
+                  ),
+      by = c("id" = "person_id")
+    )
+}
+
+agents <- agents %>%
+  join_tours(tours,
+             c("total_access", "sustainable_access"))
+
+agents_0 <- agents_0 %>%
+  join_tours(tours_0,
+             c("total_access", "sustainable_access"))
+
+agents_1 <- agents_1 %>%
+  join_tours(tours_1,
+             c("total_access", "sustainable_access"))
+
 # Calc zone residents ----
 
 zone_persons <- agents %>%
@@ -32,7 +58,7 @@ zone_persons <- agents %>%
 res_var <- c("nr_tours", "sustainable_access", "total_access")
 group_var <- c("number")
 
-sum_agents <- function(df){
+group_sum <- function(df){
   df <- df %>%
     group_by(!!!syms(group_var)) %>%
     summarise(across(all_of(res_var), sum, na.rm = TRUE)) %>%
@@ -40,15 +66,15 @@ sum_agents <- function(df){
   }
 
 agents <- agents %>%
-  sum_agents %>%
+  group_sum() %>%
   slice(which(zone_persons$n > 50))
 
 agents_0 <- agents_0 %>%
-  sum_agents %>%
+  group_sum() %>%
   slice(which(zone_persons$n > 50))
 
 agents_1 <- agents_1 %>%
-  sum_agents %>%
+  group_sum() %>%
   slice(which(zone_persons$n > 50))
 
 # Join tables ----
