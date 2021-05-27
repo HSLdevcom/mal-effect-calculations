@@ -91,14 +91,20 @@ results <- agent_sums %>%
     type %in% "time_cost" ~ "Liikkumisen aikakustannus"))
 
 results %>%
-  ggplot(aes(x = scenario, y = cost, fill = type)) +
+  ggplot(aes(
+    x = scenario,
+    y = cost,
+    fill = type,
+    label = round(cost)
+  )) +
   geom_bar(
     stat = "identity",
     position = "stack",
     color = "white",
     width = 0.8
   ) +
-  facet_wrap( ~ area, nrow = 1) +
+  geom_text(size = 2, position = position_stack(vjust = 0.5)) +
+  facet_wrap(~ area, nrow = 1) +
   scale_fill_manual(values = hsl_pal("blues")(3)) +
   theme_wide +
   geom_abline(slope = 0) +
@@ -133,14 +139,20 @@ results <- agent_sums %>%
     type %in% "cost" ~ "Liikkuminen"))
 
 results %>%
-  ggplot(aes(x = scenario, y = cost, fill = type)) +
+  ggplot(aes(
+    x = scenario,
+    y = cost,
+    fill = type,
+    label = round(cost)
+  )) +
   geom_bar(
     stat = "identity",
     position = "stack",
     color = "white",
     width = 0.8
   ) +
-  facet_wrap( ~ area, nrow = 1) +
+  geom_text(size = 2, position = position_stack(vjust = 0.5)) +
+  facet_wrap(~ area, nrow = 1) +
   scale_fill_manual(values = hsl_pal("blues")(2)) +
   theme_wide +
   geom_abline(slope = 0) +
