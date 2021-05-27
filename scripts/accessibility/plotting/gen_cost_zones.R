@@ -26,11 +26,18 @@ plot_areas <-
     "surround_train",
     "surround_other")
 
+# Cost to month ----
+
+agents <- agents %>%
+  mutate(gen_cost = gen_cost * 30,
+         cost = cost * 30)
+
 # Join agents tables ----
 
-res_var <- c("gen_cost")
+res_var <- c("gen_cost", "cost", "time_cost")
 
 agent_sums <- agents %>%
+  mutate(time_cost = gen_cost - cost) %>%
   group_mean("number", res_var) %>%
   filter_outliers("gen_cost")
 
@@ -52,16 +59,13 @@ zones <- zones %>%
             suffix = c("", "1")) %>%
   left_join(housing_cost, by = c("zone" = "zone"))
 
-# Calculate measures ----
 zones <- zones %>%
-  mutate(gen_cost = gen_cost * 30,
-         h_t_cost = askust_kalib + gen_cost)
+  filter(zone %in% agent_sums$number)
 
 # Plot costs in zones ----
 
 # transport costs
 zones %>%
-  filter(area %in% plot_areas) %>%
   ggplot(aes(fill = gen_cost)) +
   geom_sf(size = 0.1, color = "gray") +
   theme_maps +
@@ -89,8 +93,7 @@ ggsave(
 
 # housing + transport costs
 zones %>%
-  filter(area %in% plot_areas) %>%
-  ggplot(aes(fill = h_t_cost)) +
+  ggplot(aes(fill = gen_cost + askust_kalib)) +
   geom_sf(size = 0.1, color = "gray") +
   theme_maps +
   scale_fill_gradient(
@@ -110,6 +113,92 @@ ggsave(
     "figures",
     config::get("projected_scenario"),
     "gen_cost_housing_transport.png"
+  ),
+  width = dimensions_map[1],
+  height = dimensions_map[2],
+  units = "cm"
+)
+
+# transport costs
+zones %>%
+  filter(area %in% plot_areas) %>%
+  ggplot(aes(fill = cost)) +
+  geom_sf(size = 0.1, color = "gray") +
+  theme_maps +
+  scale_fill_gradient(
+    high = hsl_cols("blue"),
+    low = hsl_cols("white"),
+    na.value = hsl_cols("lightgray")
+  ) +
+  labs(
+    fill = "eur / asukas / kk",
+    title = config::get("present_name"),
+    subtitle = "Liikkumisen suorat kustannukset (eur)"
+  )
+
+ggsave(
+  here(
+    "figures",
+    config::get("projected_scenario"),
+    "cost_transport_zone.png"
+  ),
+  width = dimensions_long[1],
+  height = dimensions_long[2],
+  units = "cm"
+)
+
+
+# housing costs
+zones %>%
+  filter(area %in% plot_areas) %>%
+  ggplot(aes(fill = askust_kalib)) +
+  geom_sf(size = 0.1, color = "gray") +
+  theme_maps +
+  scale_fill_gradient(
+    high = hsl_cols("red"),
+    low = hsl_cols("white"),
+    na.value = hsl_cols("lightgray")
+  ) +
+  labs(
+    fill = "eur / asukas / kk",
+    title = config::get("present_name"),
+    subtitle = "Asumisen kustannukset (eur)"
+  )
+
+ggsave(
+  here(
+    "figures",
+    config::get("projected_scenario"),
+    "cost_housing_zone.png"
+  ),
+  width = dimensions_long[1],
+  height = dimensions_long[2],
+  units = "cm"
+)
+
+# housing + transport costs
+zones %>%
+  filter(area %in% plot_areas) %>%
+  ggplot(aes(fill = cost + askust_kalib)) +
+  geom_sf(size = 0.1, color = "gray") +
+  theme_maps +
+  scale_fill_gradient(
+    high = hsl_cols("red"),
+    low = hsl_cols("white"),
+    na.value = hsl_cols("lightgray")
+  ) +
+  labs(
+    fill = "eur / asukas / kk",
+    title = config::get("present_name"),
+    subtitle =
+      "Asumisen ja liikkumisen suorat kustannukset (eur)"
+  )
+
+ggsave(
+  here(
+    "figures",
+    config::get("projected_scenario"),
+    "cost_housing_transport_zone.png"
   ),
   width = dimensions_map[1],
   height = dimensions_map[2],
