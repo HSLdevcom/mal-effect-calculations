@@ -58,14 +58,19 @@ tours_1 <- tours_1 %>%
 
 # Join tours to agents data ----
 
+res_var <- c("total_access",
+             "sustainable_access",
+             "gen_cost",
+             "cost")
+
 agents <- agents %>%
-  join_tours(tours, c("total_access", "sustainable_access"))
+  join_tours(tours, res_var)
 
 agents_0 <- agents_0 %>%
-  join_tours(tours_0, c("total_access", "sustainable_access"))
+  join_tours(tours_0, res_var)
 
 agents_1 <- agents_1 %>%
-  join_tours(tours_1, c("total_access", "sustainable_access"))
+  join_tours(tours_1, res_var)
 
 # Write to file ----
 
