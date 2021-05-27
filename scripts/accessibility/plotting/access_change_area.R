@@ -1,6 +1,8 @@
 library(tidyverse)
 library(config)
 library(here)
+source(here("scripts", "accessibility", "helpers.R"),
+       encoding = "utf-8")
 
 # Read files ----
 
@@ -9,63 +11,35 @@ file_path <-
 
 load(file_path)
 
-# Join tours to agents data ----
-
-join_tours <- function(agents, tours, res_var){
-  agents %>%
-    left_join(
-      tours %>%
-        group_by(person_id) %>%
-        summarise(across(all_of(res_var), sum, na.rm = TRUE)),
-      by = c("id" = "person_id")
-    )
-}
-
-agents <- agents %>%
-  join_tours(tours, "total_access")
-
-agents_0 <- agents_0 %>%
-  join_tours(tours_0, "total_access")
-
-agents_1 <- agents_1 %>%
-  join_tours(tours_1, "total_access")
-
 # Group agents tables ----
 
 res_var <- c("total_access")
 group_var <- c("area")
 
-group_mean <- function(df){
-  df <- df %>%
-    group_by(!!!syms(group_var)) %>%
-    summarise(across(all_of(res_var), mean, na.rm = TRUE)) %>%
-    ungroup()
-}
+agent_sums <- agents %>%
+  group_mean(group_var, res_var)
 
-agents <- agents %>%
-  group_mean()
+agent_sums_0 <- agents_0 %>%
+  group_mean(group_var, res_var)
 
-agents_0 <- agents_0 %>%
-  group_mean()
-
-agents_1 <- agents_1 %>%
-  group_mean()
+agent_sums_1 <- agents_1 %>%
+  group_mean(group_var, res_var)
 
 # Join tables ----
 
-agents <- full_join(agents,
-                    agents_0,
-                    by = group_var,
-                    suffix = c("", "0"))
+agent_sums <- full_join(agent_sums,
+                        agent_sums_0,
+                        by = group_var,
+                        suffix = c("", "0"))
 
-agents <- full_join(agents,
-                    agents_1,
-                    by = group_var,
-                    suffix = c("", "1"))
+agent_sums <- full_join(agent_sums,
+                        agent_sums_1,
+                        by = group_var,
+                        suffix = c("", "1"))
 
 # Calc differences ----
 
-agents <- agents %>%
+agent_sums <- agent_sums %>%
   mutate(
     projected = total_access1,
     baseline = total_access0,
@@ -75,7 +49,7 @@ agents <- agents %>%
 # Plot ----
 max_dif <- 10
 
-agents %>%
+agent_sums %>%
   ggplot(aes(x = area, y = util_dif)) +
   geom_bar(
     stat = "identity",

@@ -1,6 +1,8 @@
 library(tidyverse)
 library(config)
 library(here)
+source(here("scripts", "accessibility", "helpers.R"),
+       encoding = "utf-8")
 
 # Read files ----
 
@@ -11,77 +13,58 @@ load(file_path)
 
 # Join tours to agents data ----
 
-join_filter_tours <- function(agents, tours, res_var){
-  agents %>%
-    left_join(
-      tours %>%
-        filter(purpose_name == "hw") %>%
-        group_by(person_id) %>%
-        summarise(across(all_of(res_var), sum, na.rm = TRUE),
-                  nr_tours = n()),
-      by = c("id" = "person_id")
-    )
-}
-
 agents <- agents %>%
-  join_filter_tours(tours, "total_access") %>%
-  filter(income_group %in% 1:10)
+  join_purpose_tours(tours, "total_access", "hw")
 
 agents_0 <- agents_0 %>%
-  join_filter_tours(tours_0, "total_access") %>%
-  filter(income_group %in% 1:10)
+  join_purpose_tours(tours_0, "total_access", "hw")
 
 agents_1 <- agents_1 %>%
-  join_filter_tours(tours_1, "total_access") %>%
-  filter(income_group %in% 1:10)
+  join_purpose_tours(tours_1, "total_access", "hw")
 
 # Group agents tables ----
 
-res_var <- c("total_access", "nr_tours")
+res_var <- c("total_access_hw", "nr_tours_hw")
 group_var <- c("income_group", "area")
 
-group_sum <- function(df){
-  df <- df %>%
-    group_by(!!!syms(group_var)) %>%
-    summarise(across(all_of(res_var), sum, na.rm = TRUE)) %>%
-    ungroup()
-}
+agent_sums <- agents %>%
+  filter(income_group %in% 1:10) %>%
+  group_sum(group_var, res_var)
 
-agents <- agents %>%
-  group_sum()
+agent_sums_0 <- agents_0 %>%
+  filter(income_group %in% 1:10) %>%
+  group_sum(group_var, res_var)
 
-agents_0 <- agents_0 %>%
-  group_sum()
-
-agents_1 <- agents_1 %>%
-  group_sum()
+agent_sums_1 <- agents_1 %>%
+  filter(income_group %in% 1:10) %>%
+  group_sum(group_var, res_var)
 
 # Join tables ----
 
-agents <- full_join(agents,
-                    agents_0,
-                    by = group_var,
-                    suffix = c("", "0"))
+agent_sums <- full_join(agent_sums,
+                        agent_sums_0,
+                        by = group_var,
+                        suffix = c("", "0"))
 
-agents <- full_join(agents,
-                    agents_1,
-                    by = group_var,
-                    suffix = c("", "1"))
+agent_sums <- full_join(agent_sums,
+                        agent_sums_1,
+                        by = group_var,
+                        suffix = c("", "1"))
 
 # Calc differences ----
 
-agents <- agents %>%
+agent_sums <- agent_sums %>%
   mutate(
-    present = total_access / nr_tours,
-    projected = total_access1 / nr_tours1,
-    baseline = total_access0 / nr_tours0
+    present = total_access_hw / nr_tours_hw,
+    projected = total_access_hw1 / nr_tours_hw1,
+    baseline = total_access_hw0 / nr_tours_hw0
   )
 
 # Plot ----
 
 income_names <- c("alin 10 %", rep("", 8), "ylin 10 %")
 
-gap <- agents %>%
+gap <- agent_sums %>%
   select(income_group, area, projected, baseline, present) %>%
   gather("scenario", "utility", projected, baseline, present) %>%
   group_by(scenario, area) %>%

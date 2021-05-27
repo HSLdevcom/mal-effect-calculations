@@ -3,51 +3,10 @@ library(config)
 library(here)
 source(here("scripts", "accessibility", "translations.R"),
        encoding = "utf-8")
+source(here("scripts", "accessibility", "helpers.R"),
+       encoding = "utf-8")
 
-# Helper functions ----
-
-# Read files wrapper for agent data
-read_helmet_files <- function(scenario, table) {
-  read_delim(
-    file.path(config::get("helmet_data"),
-              config::get(scenario),
-              paste0(table, ".txt")),
-    delim = "\t",
-    col_names = TRUE)
-}
-
-# Add income deciles for agents
-# Separate under 18 years old from calculation
-add_inc_group <- function(df) {
-  df0 <- df %>%
-    filter(!age_group %in% "age_7-17") %>%
-    arrange(income) %>%
-    mutate(income_group = ceiling(10 * row_number() / n()))
-
-  df1 <- df %>%
-    filter(age_group %in% "age_7-17") %>%
-    mutate(income_group = -1)
-
-  df <- bind_rows(df0, df1) %>%
-    mutate(income_group = as.factor(income_group))
-}
-
-# Factorize grouping variable for plotting
-add_factors <- function(df, colname, factors) {
-  df %>%
-    dplyr::mutate(
-      !!colname := forcats::as_factor(!!sym(colname)),
-      !!colname := forcats::fct_relevel(!!sym(colname), !!!factors)
-      )
-}
-
-# Translate factors
-translate_vars <- function(df, colname, factors) {
-  df %>%
-    dplyr::mutate(
-      !!colname := forcats::fct_recode(!!sym(colname), !!!factors)
-    )
-}
+# Factorize tables with helpers ----
 
 agent_data_factors <- function(df){
   df %>%
@@ -96,6 +55,17 @@ tours_0 <- tours_0 %>%
 
 tours_1 <- tours_1 %>%
   tour_data_factors()
+
+# Join tours to agents data ----
+
+agents <- agents %>%
+  join_tours(tours, c("total_access", "sustainable_access"))
+
+agents_0 <- agents_0 %>%
+  join_tours(tours_0, c("total_access", "sustainable_access"))
+
+agents_1 <- agents_1 %>%
+  join_tours(tours_1, c("total_access", "sustainable_access"))
 
 # Write to file ----
 
