@@ -59,13 +59,11 @@ zones <- zones %>%
             suffix = c("", "1")) %>%
   left_join(housing_cost, by = c("zone" = "zone"))
 
-zones <- zones %>%
-  filter(zone %in% agent_sums$number)
-
 # Plot costs in zones ----
 
 # transport costs
 zones %>%
+  filter(area %in% plot_areas) %>%
   ggplot(aes(fill = gen_cost)) +
   geom_sf(size = 0.1, color = "gray") +
   theme_maps +
@@ -93,6 +91,7 @@ ggsave(
 
 # housing + transport costs
 zones %>%
+  filter(area %in% plot_areas) %>%
   ggplot(aes(fill = gen_cost + askust_kalib)) +
   geom_sf(size = 0.1, color = "gray") +
   theme_maps +
@@ -114,8 +113,8 @@ ggsave(
     config::get("projected_scenario"),
     "gen_cost_housing_transport.png"
   ),
-  width = dimensions_map[1],
-  height = dimensions_map[2],
+  width = dimensions_long[1],
+  height = dimensions_long[2],
   units = "cm"
 )
 
@@ -200,7 +199,7 @@ ggsave(
     config::get("projected_scenario"),
     "cost_housing_transport_zone.png"
   ),
-  width = dimensions_map[1],
-  height = dimensions_map[2],
+  width = dimensions_long[1],
+  height = dimensions_long[2],
   units = "cm"
 )
