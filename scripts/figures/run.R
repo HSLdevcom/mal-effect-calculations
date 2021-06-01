@@ -8,7 +8,7 @@ verbose_source <- function(file, ...) {
 
 # When running maps and graphs, the order of the files does not matter.
 files_in <- list.files(here::here("scripts", "figures"),
-                       pattern = ".R$",
+                       pattern = "^map.*R$|^graph.*R$",
                        full.names = TRUE)
 
 lapply(files_in, verbose_source, encoding = "utf-8")
