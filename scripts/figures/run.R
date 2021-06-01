@@ -6,6 +6,7 @@ verbose_source <- function(file, ...) {
   invisible(source(file, ...))
 }
 
+# When running maps and graphs, the order of the files does not matter.
 files_in <- list.files(here::here("scripts", "figures"),
                        pattern = ".R$",
                        full.names = TRUE)
