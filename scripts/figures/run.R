@@ -6,5 +6,8 @@ verbose_source <- function(file, ...) {
   invisible(source(file, ...))
 }
 
-files_in <- list.files(here::here("scripts", "figures"), pattern = ".R$", full.names = TRUE)
+files_in <- list.files(here::here("scripts", "figures"),
+                       pattern = ".R$",
+                       full.names = TRUE)
+
 lapply(files_in, verbose_source, encoding = "utf-8")
