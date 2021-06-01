@@ -54,10 +54,7 @@ ggplot() +
   geom_basemap() +
   annotate_map(
     title = "Kestävillä kulkutavoilla tehtyjen kiertomatkojen osuus alueelta alkavista kiertomatkoista",
-    subtitle = "helmet_4.0.4_2018_results",
-    caption = paste(c("Kuntajako: Maanmittauslaitos 2021",
-                      "Aineiston nimi: Lisenssin antaja 20XX"),
-                    collapse = "\n")
+    subtitle = "helmet_4.0.4_2018_results"
   ) +
   theme_mal_map()
 
