@@ -2,7 +2,7 @@
 library(here)
 
 verbose_source <- function(file, ...) {
-  message(sprintf("Running analysis in %s...", file))
+  message(sprintf("Running analysis in %s...", basename(file)))
   invisible(source(file, ...))
 }
 
