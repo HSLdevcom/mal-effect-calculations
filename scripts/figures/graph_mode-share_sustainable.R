@@ -78,10 +78,4 @@ ggplot(zones, aes(x = scenario, y = value)) +
     panel.spacing = unit(0, "lines")
   )
 
-ggsave(
-  here::here("figures", "graph_mode-share_sustainable.png"),
-  width = 148,
-  height = 105,
-  units = "mm",
-  dpi = 600
-)
+ggsave_graph(here::here("figures", "graph_mode-share_sustainable.png"))

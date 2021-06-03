@@ -53,10 +53,4 @@ ggplot() +
   ) +
   theme_mal_map()
 
-ggsave(
-  here::here("figures", "map_workforce-accessibility.png"),
-  width = 148,
-  height = 169,
-  units = "mm",
-  dpi = 600
-)
+ggsave_map(here::here("figures", "map_workforce-accessibility.png"))

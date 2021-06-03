@@ -73,10 +73,4 @@ ggplot(results, aes(x = scenario, y = value)) +
     panel.spacing = unit(0, "lines")
   )
 
-ggsave(
-  here::here("figures", "graph_workforce-accessibility.png"),
-  width = 148,
-  height = 105,
-  units = "mm",
-  dpi = 600
-)
+ggsave_graph(here::here("figures", "graph_workforce-accessibility.png"))

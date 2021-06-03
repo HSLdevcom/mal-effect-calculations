@@ -94,3 +94,29 @@ theme_mal_map <- function() {
     )
   )
 }
+
+ggsave_map <- function(filename,
+                       width = 148,
+                       height = 169,
+                       units = "mm",
+                       dpi = 600, ...) {
+  ggsave(filename = filename,
+         width = width,
+         height = height,
+         units = units,
+         dpi = dpi,
+         ...)
+}
+
+ggsave_graph <- function(filename,
+                         width = 148,
+                         height = 105,
+                         units = "mm",
+                         dpi = 600, ...) {
+  ggsave(filename = filename,
+         width = width,
+         height = height,
+         units = units,
+         dpi = dpi,
+         ...)
+}
