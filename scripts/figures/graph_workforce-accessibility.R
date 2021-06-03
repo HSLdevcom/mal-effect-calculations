@@ -5,6 +5,9 @@ library(tidyverse)
 
 # Data --------------------------------------------------------------------
 
+translations <- here::here("utilities", "areas.tsv") %>%
+  readr::read_tsv(col_types = "cc")
+
 results <- here::here("data",
                       "helmet_4.0.4_2018_results",
                       "workforce_accessibility_per_area.txt") %>%
@@ -16,17 +19,10 @@ results <- here::here("data",
 
 results <- results %>%
   dplyr::filter(area != "peripheral") %>%
-  dplyr::add_row(area = "Helsingin seutu",
+  dplyr::add_row(area = "helsinki_region",
                  value = 20000000,
                  .before = 1) %>%
-  dplyr::mutate(area = forcats::as_factor(area)) %>%
-  dplyr::mutate(area = forcats::fct_recode(area,
-                                           `Helsingin kantakaupunki` = "helsinki_cbd",
-                                           `Muu Helsinki` = "helsinki_other",
-                                           `Muu pääkaupunkiseutu` = "espoo_vant_kau",
-                                           `Junaliikenteen kehyskunnat` = "surround_train",
-                                           `Bussiliikenteen kehyskunnat` = "surround_other"
-  ))
+  dplyr::mutate(area = factor(area, levels = translations$level, labels = translations$label))
 
 results1 <- results
 results1$scenario <- "2023"

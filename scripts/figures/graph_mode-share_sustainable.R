@@ -7,6 +7,9 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
+translations <- here::here("data", "translations", "modes.tsv") %>%
+  readr::read_tsv(col_types = "cc")
+
 results <- here::here("data",
                       "helmet_4.0.4_2018_results",
                       "origins_demand.txt") %>%
@@ -17,7 +20,7 @@ results <- here::here("data",
   ) %>%
   dplyr::select(zone, car, transit, bike, walk) %>%
   tidyr::pivot_longer(cols = -zone, names_to = "mode", values_to = "demand") %>%
-  dplyr::mutate(mode = factor(mode, levels = c("car", "transit", "bike", "walk"), labels = c("Henkilöauto", "Joukkoliikenne", "Pyöräily", "Kävely")))
+  dplyr::mutate(mode = factor(mode, levels = translations$level, labels = translations$label))
 
 zones <- readr::read_rds(here::here("results", "zones.rds")) %>%
   sf::st_drop_geometry() %>%
