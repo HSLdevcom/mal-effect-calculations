@@ -48,10 +48,8 @@ agent_sums <- agent_sums %>%
 
 # Plot ----
 
-max_dif <- 3
-
 agent_sums %>%
-  ggplot(aes(x = age_group, y = util_dif, fill = gender)) +
+  ggplot(aes(x = age_group, y = util_dif)) +
   geom_bar(
     stat = "identity",
     position = "dodge",
@@ -62,20 +60,19 @@ agent_sums %>%
   facet_wrap( ~ area, nrow = 1) +
   theme_wide +
   geom_abline(slope = 0) +
-  ylim(-max_dif, max_dif) +
   labs(
-    y = "eur / asukas",
+    y = "hyöty (eur / asukas)",
     x = "Ikäryhmät",
     title = paste0(
       "Muutos asukkaan tekemien matkojen saavutettavuudessa: ",
-      config::get("projected_name")
-    )
+      config::get("projected_name")),
+    subtitle = "Kaikki matkaryhmät"
   )
 
 ggsave(
   here("figures",
        config::get("projected_scenario"),
-       "access_change_age_group_areas.png"
+       "access_change_age_groups.png"
        ),
   width = dimensions_wide[1],
   height = dimensions_wide[2],

@@ -67,18 +67,18 @@ agent_sums %>%
   geom_abline(slope = 0) +
   scale_x_discrete(labels = income_names) +
   labs(
-    y = "eur / asukas",
+    y = "hyöty (eur / asukas)",
     x = "Skenaarion tulodesiilit",
     title = paste0(
       "Muutos asukkaan tekemien matkojen saavutettavuudessa: ",
-      config::get("projected_name")
-    )
+      config::get("projected_name")),
+    subtitle = "Kaikki matkaryhmät"
   )
 
 ggsave(
   here("figures",
        config::get("projected_scenario"),
-       "access_change_income_areas.png"
+       "access_change_income_groups.png"
        ),
   width = dimensions_wide[1],
   height = dimensions_wide[2],

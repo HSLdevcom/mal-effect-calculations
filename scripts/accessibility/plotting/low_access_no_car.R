@@ -118,7 +118,7 @@ results %>%
        y = "Asukkaat",
        x = NULL,
        title = "Autoriippumaton saavutettavuus alle vertailutason",
-       subtitle = "Asukkaat, joilla ei autoa käytössä")
+       subtitle = "Kotiperäiset muut matkat, joilla ei autoa käytössä")
 
 ggsave(
   here("figures",

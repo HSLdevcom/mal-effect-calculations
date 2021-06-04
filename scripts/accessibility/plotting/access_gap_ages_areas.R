@@ -88,7 +88,7 @@ gap %>%
   ylim(-max_gap, max_gap) +
   geom_abline(slope = 0) +
   labs(fill = "Skenaario",
-       y = "eur / kiertomatka",
+       y = "hyöty (eur / kiertomatka)",
        x = NULL,
        title = "Saavutettavuusero suhteessa alueen keskiarvoon",
        subtitle = "Kotiperäiset muut matkat")
@@ -96,7 +96,7 @@ gap %>%
 ggsave(
   here("figures",
        config::get("projected_scenario"),
-       "age_group_access_gap_areas.png"
+       "access_gap_age_groups.png"
        ),
   width = dimensions_wide[1],
   height = dimensions_wide[2],
