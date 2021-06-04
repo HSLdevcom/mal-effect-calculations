@@ -31,10 +31,4 @@ ggplot() +
 
 # A4: 210 × 297
 # A5: 148 × 210
-ggsave(
-  here::here("figures", "map.png"),
-  width = 148,
-  height = 169,
-  units = "mm",
-  dpi = 600
-)
+ggsave_map(here::here("figures", "map.png"))
