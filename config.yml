@@ -2,11 +2,13 @@ default:
   helmet_data: "C:/../helmet-results"
   present_scenario: "V2018"
   present_name: "2018"
+  housing_cost: "AsKustannukset_01062021.xlsx"
+  income_data: "tulotiedot_2016_korjattu.xlsx"
 
 V2030_mal19_v1:
   projected_scenario: "V2030_mal19"
   baseline_scenario: "V2030_ve0"
-  projected_name: "MAL2019 suunnitelma"
+  projected_name: "MAL2019"
   baseline_name: "2030 ve0"
 
 V2030_ve0_rm:
