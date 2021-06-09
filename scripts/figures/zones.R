@@ -42,6 +42,11 @@ wrk <- wrk %>%
   dplyr::rename(total_wrk = total)
 workforce_accessibility <- workforce_accessibility %>%
   dplyr::rename(accessibility_wh = wh)
+origins_shares <- origins_shares %>%
+  dplyr::rename(mode_share_car = car,
+                mode_share_transit = transit,
+                mode_share_bike = bike,
+                mode_share_walk = walk)
 
 zones <- zones %>%
   dplyr::rename(zone = SIJ2019) %>%
@@ -53,7 +58,8 @@ zones <- zones %>%
   dplyr::left_join(prk, by = "zone") %>%
   dplyr::left_join(savu, by = "zone") %>%
   dplyr::left_join(workforce_accessibility, by = "zone") %>%
-  dplyr::left_join(car_density, by = "zone")
+  dplyr::left_join(car_density, by = "zone") %>%
+  dplyr::left_join(origins_shares, by = "zone")
 
 
 # Impact assessment columns  ----------------------------------------------
@@ -77,6 +83,15 @@ zones <- zones %>%
 # people".
 zones <- zones %>%
   dplyr::mutate(car_density = 1000 * car_density)
+
+zones <- zones %>%
+  dplyr::mutate(
+    mode_share_sustainable = (mode_share_transit +
+                                mode_share_bike +
+                                mode_share_walk),
+    mode_share_bike_walk = (mode_share_bike +
+                              mode_share_walk)
+  )
 
 
 # Output ------------------------------------------------------------------
