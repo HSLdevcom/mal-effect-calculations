@@ -52,7 +52,8 @@ zones <- zones %>%
   dplyr::left_join(wrk, by = "zone") %>%
   dplyr::left_join(prk, by = "zone") %>%
   dplyr::left_join(savu, by = "zone") %>%
-  dplyr::left_join(workforce_accessibility, by = "zone")
+  dplyr::left_join(workforce_accessibility, by = "zone") %>%
+  dplyr::left_join(car_density, by = "zone")
 
 
 # Impact assessment columns  ----------------------------------------------
@@ -71,6 +72,11 @@ zones <- zones %>%
     TRUE ~ "SAVU heikko"
   )) %>%
   dplyr::mutate(savu_goodness = factor(savu_goodness, levels = c("SAVU hyvä", "SAVU heikko")))
+
+# Change unit from "number of cars per 1 person" to "number of cars per 1000
+# people".
+zones <- zones %>%
+  dplyr::mutate(car_density = 1000 * car_density)
 
 
 # Output ------------------------------------------------------------------
