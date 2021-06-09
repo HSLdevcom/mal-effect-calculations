@@ -7,7 +7,7 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-translations <- here::here("data", "translations", "modes.tsv") %>%
+translations <- here::here("utilities", "modes.tsv") %>%
   readr::read_tsv(col_types = "cc")
 
 results <- here::here("data",
