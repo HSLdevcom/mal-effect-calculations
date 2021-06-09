@@ -1,43 +1,75 @@
 library(tidyverse)
 library(config)
 library(here)
+source(here("scripts", "accessibility", "helpers.R"),
+       encoding = "utf-8")
+
+# Parameters for plotting ----
+
+areas <-
+  c("Helsingin kantakaupunki",
+    "Muu Helsinki",
+    "Espoo, Vantaa, Kau")
 
 # Read files ----
 
 file_path <-
-  here("results", config::get("projected_scenario"), "agents.rds")
-agents <- read_rds(file_path)
+  here("results", config::get("projected_scenario"), "agents.Rdata")
+
+load(file_path)
+
+# Join tours to agents data ----
+
+agents <- agents %>%
+  join_purpose_tours(tours, "total_access", "hw")
+
+agents_0 <- agents_0 %>%
+  join_purpose_tours(tours_0, "total_access", "hw")
+
+agents_1 <- agents_1 %>%
+  join_purpose_tours(tours_1, "total_access", "hw")
 
 # Group agents tables ----
 
-res_vars <- c(
-  "nr_tours",
-  "nr_tours0",
-  "nr_tours1",
-  "total_access",
-  "total_access0",
-  "total_access1"
-)
+res_var <- c("total_access_hw", "nr_tours_hw")
+group_var <- c("area")
 
-agents <- agents %>%
-  group_by(area) %>%
-  summarise(across(all_of(res_vars),
-                   sum,
-                   na.rm = TRUE)) %>%
-  ungroup()
+agent_sums <- agents %>%
+  group_sum(group_var, res_var) %>%
+  filter(area %in% areas)
+
+agent_sums_0 <- agents_0 %>%
+  group_sum(group_var, res_var) %>%
+  filter(area %in% areas)
+
+agent_sums_1 <- agents_1 %>%
+  group_sum(group_var, res_var) %>%
+  filter(area %in% areas)
+
+# Join tables ----
+
+agent_sums <- full_join(agent_sums,
+                        agent_sums_0,
+                        by = group_var,
+                        suffix = c("", "0"))
+
+agent_sums <- full_join(agent_sums,
+                        agent_sums_1,
+                        by = group_var,
+                        suffix = c("", "1"))
 
 # Calc differences ----
 
-agents <- agents %>%
+agent_sums <- agent_sums %>%
   mutate(
-    present = total_access / nr_tours,
-    projected = total_access1 / nr_tours1,
-    baseline = total_access0 / nr_tours0
+    present = total_access_hw / nr_tours_hw,
+    projected = total_access_hw1 / nr_tours_hw1,
+    baseline = total_access_hw0 / nr_tours_hw0
   )
 
 # Plot ----
 
-gap <- agents %>%
+gap <- agent_sums %>%
   select(area, projected, baseline, present) %>%
   gather("scenario", "utility", projected, baseline, present) %>%
   group_by(scenario) %>%
@@ -64,7 +96,8 @@ gap %>%
   labs(fill = "Skenaario",
        y = "eur / kiertomatka",
        x = NULL,
-       title = "Saavutettavuusero suhteessa seudun keskiarvoon")
+       title = "Saavutettavuusero suhteessa seudun keskiarvoon",
+       subtitle = "Kotiperäiset työmatkat")
 
 ggsave(
   here("figures",

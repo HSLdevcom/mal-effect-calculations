@@ -1,6 +1,7 @@
 # libraries ----
-library(sf)
+
 library(tidyverse)
+library(sf)
 
 # load data ----
 zones<- st_read(here::here("data", "helmet_zones_map.shp"))

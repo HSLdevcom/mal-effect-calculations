@@ -14,7 +14,7 @@ load(file_path)
 # Group agents tables ----
 
 res_var <- c("total_access")
-group_var <- c("area")
+group_var <- c("age_group", "area")
 
 agent_sums <- agents %>%
   group_mean(group_var, res_var)
@@ -47,10 +47,11 @@ agent_sums <- agent_sums %>%
   )
 
 # Plot ----
-max_dif <- 10
+
+max_dif <- 3
 
 agent_sums %>%
-  ggplot(aes(x = area, y = util_dif)) +
+  ggplot(aes(x = age_group, y = util_dif, fill = gender)) +
   geom_bar(
     stat = "identity",
     position = "dodge",
@@ -58,14 +59,15 @@ agent_sums %>%
     fill = hsl_cols("blue"),
     width = 0.8
   ) +
-  ylim(-max_dif, max_dif) +
-  theme_fig +
+  facet_wrap( ~ area, nrow = 1) +
+  theme_wide +
   geom_abline(slope = 0) +
+  ylim(-max_dif, max_dif) +
   labs(
     y = "eur / asukas",
-    x = NULL,
+    x = "Ikäryhmät",
     title = paste0(
-      "Muutos asukkaan matkojen saavutettavuudessa: ",
+      "Muutos asukkaan tekemien matkojen saavutettavuudessa: ",
       config::get("projected_name")
     )
   )
@@ -73,9 +75,9 @@ agent_sums %>%
 ggsave(
   here("figures",
        config::get("projected_scenario"),
-       "access_change_area.png"
+       "access_change_age_group_areas.png"
        ),
-  width = dimensions_fig[1],
-  height = dimensions_fig[2],
+  width = dimensions_wide[1],
+  height = dimensions_wide[2],
   units = "cm"
 )

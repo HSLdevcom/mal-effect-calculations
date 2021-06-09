@@ -1,43 +1,65 @@
 library(tidyverse)
 library(config)
 library(here)
+source(here("scripts", "accessibility", "helpers.R"),
+       encoding = "utf-8")
 
 # Read files ----
 
 file_path <-
-  here("results", config::get("projected_scenario"), "agents.rds")
-agents <- read_rds(file_path)
+  here("results", config::get("projected_scenario"), "agents.Rdata")
+
+load(file_path)
+
+# Join tours to agents data ----
+
+agents <- agents %>%
+  join_purpose_tours(tours, "total_access", "ho")
+
+agents_0 <- agents_0 %>%
+  join_purpose_tours(tours_0, "total_access", "ho")
+
+agents_1 <- agents_1 %>%
+  join_purpose_tours(tours_1, "total_access", "ho")
 
 # Group agents tables ----
 
-res_vars <- c(
-  "nr_tours",
-  "nr_tours0",
-  "nr_tours1",
-  "total_access",
-  "total_access0",
-  "total_access1"
-)
+res_var <- c("total_access_ho", "nr_tours_ho")
+group_var <- c("area", "age_group")
 
-agents <- agents %>%
-  group_by(age_group, area) %>%
-  summarise(across(all_of(res_vars),
-                   sum,
-                   na.rm = TRUE)) %>%
-  ungroup()
+agent_sums <- agents %>%
+  group_sum(group_var, res_var)
+
+agent_sums_0 <- agents_0 %>%
+  group_sum(group_var, res_var)
+
+agent_sums_1 <- agents_1 %>%
+  group_sum(group_var, res_var)
+
+# Join tables ----
+
+agent_sums <- full_join(agent_sums,
+                        agent_sums_0,
+                        by = group_var,
+                        suffix = c("", "0"))
+
+agent_sums <- full_join(agent_sums,
+                        agent_sums_1,
+                        by = group_var,
+                        suffix = c("", "1"))
 
 # Calc differences ----
 
-agents <- agents %>%
+agent_sums <- agent_sums %>%
   mutate(
-    present = total_access / nr_tours,
-    projected = total_access1 / nr_tours1,
-    baseline = total_access0 / nr_tours0
+    present = total_access_ho / nr_tours_ho,
+    projected = total_access_ho1 / nr_tours_ho1,
+    baseline = total_access_ho0 / nr_tours_ho0
   )
 
 # Plot ----
 
-gap <- agents %>%
+gap <- agent_sums %>%
   select(age_group, area, projected, baseline, present) %>%
   gather("scenario", "utility", projected, baseline, present) %>%
   group_by(scenario, area) %>%
@@ -50,7 +72,7 @@ gap <- agents %>%
     )
   )
 
-max_gap <- max(abs(gap$utility_dif)) + 1
+max_gap <- max(abs(gap$utility_dif), na.rm = TRUE) + 1
 
 gap %>%
   ggplot(aes(x = age_group, y = utility_dif, fill = scenario)) +
@@ -68,7 +90,8 @@ gap %>%
   labs(fill = "Skenaario",
        y = "eur / kiertomatka",
        x = NULL,
-       title = "Saavutettavuusero suhteessa alueen keskiarvoon")
+       title = "Saavutettavuusero suhteessa alueen keskiarvoon",
+       subtitle = "Kotiperäiset muut matkat")
 
 ggsave(
   here("figures",

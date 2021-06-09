@@ -6,14 +6,7 @@ options(scipen = 999)
 
 # Set envinronment for config file ----
 
-Sys.setenv(R_CONFIG_ACTIVE = "V2030_ve0_rm")
-
-# Read themes and colors for plotting ----
-
-source(here("scripts", "accessibility", "colors.R"), encoding = "utf-8")
-source(here("scripts", "accessibility", "themes.R"), encoding = "utf-8")
-source(here("scripts", "accessibility", "translations.R"), encoding = "utf-8")
-source(here("scripts", "accessibility", "data_zones_to_areas.R"), encoding = "utf-8")
+Sys.setenv(R_CONFIG_ACTIVE = "V2030_mal19_v1")
 
 # Create output folder ----
 
@@ -24,7 +17,17 @@ dir.create(here("figures", config::get("projected_scenario")),
 
 # Combine data from different Helmet-scenarios ----
 
-source(here("scripts", "accessibility", "combine_agent_data.R"), encoding = "utf-8")
+source(here("scripts", "accessibility", "tidy_agent_data.R"),
+       encoding = "utf-8")
+source(here("scripts", "accessibility", "tidy_cost_data.R"),
+       encoding = "utf-8")
+
+# Read themes and colors for plotting ----
+
+source(here("scripts", "accessibility", "colors.R"),
+       encoding = "utf-8")
+source(here("scripts", "accessibility", "themes.R"),
+       encoding = "utf-8")
 
 # Plot results ----
 

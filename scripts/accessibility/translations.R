@@ -18,3 +18,8 @@ levels_age_groups <- c(
 
 levels_genders <- c("naiset" = "female",
                     "miehet" = "male")
+
+levels_modes <- c("kävely" = "walk",
+                  "pyöräily" = "bike",
+                  "auto" = "car",
+                  "joukkoliikenne" = "transit")
