@@ -64,6 +64,11 @@ zones <- zones %>%
 
 # Impact assessment columns  ----------------------------------------------
 
+levels <- sort(unique(zones$savu_zone))
+labels <- as.character(as.roman(levels))
+zones <- zones %>%
+  dplyr::mutate(savu_zone = factor(savu_zone, levels = levels, labels = labels))
+
 zones <- zones %>%
   dplyr::mutate(capital_region = zone %in% 1:5999)
 
@@ -73,8 +78,8 @@ zones <- zones %>%
 # https://hslfi.azureedge.net/contentassets/7352e50fa96b4f4c9d017860c4363eaf/liite2_mal_2019_vaikutusten_arviointiselostus_liitteineen.pdf
 zones <- zones %>%
   dplyr::mutate(savu_goodness = dplyr::case_when(
-    capital_region & savu_zone %in% 1:3 ~ "SAVU hyvä",
-    !capital_region & savu_zone %in% 1:5 ~ "SAVU hyvä",
+    capital_region & savu_zone %in% c("I", "II", "III") ~ "SAVU hyvä",
+    !capital_region & savu_zone %in% c("I", "II", "III", "IV", "V") ~ "SAVU hyvä",
     TRUE ~ "SAVU heikko"
   )) %>%
   dplyr::mutate(savu_goodness = factor(savu_goodness, levels = c("SAVU hyvä", "SAVU heikko")))
