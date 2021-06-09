@@ -40,6 +40,8 @@ pop <- pop %>%
   dplyr::rename(total_pop = total)
 wrk <- wrk %>%
   dplyr::rename(total_wrk = total)
+workforce_accessibility <- workforce_accessibility %>%
+  dplyr::rename(accessibility_wh = wh)
 
 zones <- zones %>%
   dplyr::rename(zone = SIJ2019) %>%
@@ -49,7 +51,8 @@ zones <- zones %>%
   dplyr::left_join(car, by = "zone") %>%
   dplyr::left_join(wrk, by = "zone") %>%
   dplyr::left_join(prk, by = "zone") %>%
-  dplyr::left_join(savu, by = "zone")
+  dplyr::left_join(savu, by = "zone") %>%
+  dplyr::left_join(workforce_accessibility, by = "zone")
 
 
 # Impact assessment columns  ----------------------------------------------
