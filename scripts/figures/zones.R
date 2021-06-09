@@ -48,7 +48,26 @@ zones <- zones %>%
   dplyr::left_join(edu, by = "zone") %>%
   dplyr::left_join(car, by = "zone") %>%
   dplyr::left_join(wrk, by = "zone") %>%
-  dplyr::left_join(prk, by = "zone")
+  dplyr::left_join(prk, by = "zone") %>%
+  dplyr::left_join(savu, by = "zone")
+
+
+# Impact assessment columns  ----------------------------------------------
+
+zones <- zones %>%
+  dplyr::mutate(capital_region = zone %in% 1:5999)
+
+# MAL 2019 vaikutusten arviointiselostus: "Työpaikkamäärien kohdistuminen
+# pääkaupunkiseudulla SAVU-vyöhykkeille I-III ja muualla I-V. Mittarina  näille
+# vyöhykkeille sijoittuvien työpaikkojen osuus kaikista työpaikoista (%)."
+# https://hslfi.azureedge.net/contentassets/7352e50fa96b4f4c9d017860c4363eaf/liite2_mal_2019_vaikutusten_arviointiselostus_liitteineen.pdf
+zones <- zones %>%
+  dplyr::mutate(savu_goodness = dplyr::case_when(
+    capital_region & savu_zone %in% 1:3 ~ "SAVU hyvä",
+    !capital_region & savu_zone %in% 1:5 ~ "SAVU hyvä",
+    TRUE ~ "SAVU heikko"
+  )) %>%
+  dplyr::mutate(savu_goodness = factor(savu_goodness, levels = c("SAVU hyvä", "SAVU heikko")))
 
 
 # Output ------------------------------------------------------------------
