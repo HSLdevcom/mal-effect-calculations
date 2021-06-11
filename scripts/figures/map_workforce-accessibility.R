@@ -12,7 +12,7 @@ zones <- readr::read_rds(here::here("results", "zones_2018.rds"))
 
 # Plot --------------------------------------------------------------------
 
-breaks <- quantile(zones$accessibility_wh, probs = seq(0, 1, 0.05), names = FALSE)
+breaks <- quantile(zones$workforce_accessibility, probs = seq(0, 1, 0.05), names = FALSE)
 colors <- c("#fef0d9", "#fdcc8a", "#fc8d59", "#e34a33", "#000000")
 nbreaks <- length(breaks)
 values <- scales::rescale(
@@ -20,11 +20,11 @@ values <- scales::rescale(
           to = mean(breaks[c(nbreaks - 1, nbreaks)]),
           length.out = 5),
   to = c(0,1),
-  from = range(zones$accessibility_wh)
+  from = range(zones$workforce_accessibility)
 )
 
 ggplot() +
-  geom_sf(mapping = aes(fill = accessibility_wh),
+  geom_sf(mapping = aes(fill = workforce_accessibility),
           data = zones, color = NA) +
   scale_fill_stepsn(
     name = "Henkilöä",

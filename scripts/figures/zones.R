@@ -41,7 +41,7 @@ pop <- pop %>%
 wrk <- wrk %>%
   dplyr::rename(total_wrk = total)
 workforce_accessibility <- workforce_accessibility %>%
-  dplyr::rename(accessibility_wh = wh)
+  dplyr::rename(workforce_accessibility = wh)
 origins_shares <- origins_shares %>%
   dplyr::rename(mode_share_car = car,
                 mode_share_transit = transit,
