@@ -13,24 +13,75 @@ read_tsv_helmet <- function(..., comment = "#") {
 
 zones <- readr::read_rds(here::here("results", "zones.rds"))
 
-pop <- read_tsv_helmet(here::here("data", "Lahtodata", "2016_zonedata", "2017.pop"), col_types = "iiddddd")
-lnd <- read_tsv_helmet(here::here("data", "Lahtodata", "2016_zonedata", "2017.lnd"), col_types = "idd")
-edu <- read_tsv_helmet(here::here("data", "Lahtodata", "2016_zonedata", "2017.edu"), col_types = "iiii---")
-car <- read_tsv_helmet(here::here("data", "Lahtodata", "2016_zonedata", "2017.car"), col_types = "idd")
-wrk <- read_tsv_helmet(here::here("data", "Lahtodata", "2016_zonedata", "2016.wrk"), col_types = "iidddd")
-prk <- read_tsv_helmet(here::here("data", "Lahtodata", "2016_zonedata", "2016.prk"), col_types = "iii")
+pop <- read_tsv_helmet(
+  here::here("data", "Lahtodata", "2016_zonedata", "2017.pop"),
+  col_types = "iiddddd"
+)
+lnd <- read_tsv_helmet(
+  here::here("data", "Lahtodata", "2016_zonedata", "2017.lnd"),
+  col_types = "idd"
+)
+edu <- read_tsv_helmet(
+  here::here("data", "Lahtodata", "2016_zonedata", "2017.edu"),
+  col_types = "iiii---"
+)
+car <- read_tsv_helmet(
+  here::here("data", "Lahtodata", "2016_zonedata", "2017.car"),
+  col_types = "idd"
+)
+wrk <- read_tsv_helmet(
+  here::here("data", "Lahtodata", "2016_zonedata", "2016.wrk"),
+  col_types = "iidddd"
+)
+prk <- read_tsv_helmet(
+  here::here("data", "Lahtodata", "2016_zonedata", "2016.prk"),
+  col_types = "iii"
+)
 
-accessibility <- read_tsv_helmet(here::here("data", "helmet_4.0.4_2018_results", "accessibility.txt"), col_types = "iddddddddddddddddddddddddddddddddddddddddddddddddd")
-attraction <- read_tsv_helmet(here::here("data", "helmet_4.0.4_2018_results", "attraction.txt"), col_types = "iddddddddddddd")
-car_density <- read_tsv_helmet(here::here("data", "helmet_4.0.4_2018_results", "car_density.txt"), col_types = "id")
-car_use <- read_tsv_helmet(here::here("data", "helmet_4.0.4_2018_results", "car_use.txt"), col_types = "id")
-generation <- read_tsv_helmet(here::here("data", "helmet_4.0.4_2018_results", "generation.txt"), col_types = "iddddddddddddd")
-impedance_ratio <- read_tsv_helmet(here::here("data", "helmet_4.0.4_2018_results", "impedance_ratio.txt"), col_types = "idd")
-origins_demand <- read_tsv_helmet(here::here("data", "helmet_4.0.4_2018_results", "origins_demand.txt"), col_types = "idddd")
-origins_shares <- read_tsv_helmet(here::here("data", "helmet_4.0.4_2018_results", "origins_shares.txt"), col_types = "idddd")
-savu <- read_tsv_helmet(here::here("data", "helmet_4.0.4_2018_results", "savu.txt"), col_types = "id")
-sustainable_accessibility <- read_tsv_helmet(here::here("data", "helmet_4.0.4_2018_results", "sustainable_accessibility.txt"), col_types = "iddddddddddd")
-workforce_accessibility <- read_tsv_helmet(here::here("data", "helmet_4.0.4_2018_results", "workforce_accessibility.txt"), col_types = "id")
+accessibility <- read_tsv_helmet(
+  here::here("data", "helmet_4.0.4_2018_results", "accessibility.txt"),
+  col_types = "iddddddddddddddddddddddddddddddddddddddddddddddddd"
+)
+attraction <- read_tsv_helmet(
+  here::here("data", "helmet_4.0.4_2018_results", "attraction.txt"),
+  col_types = "iddddddddddddd"
+)
+car_density <- read_tsv_helmet(
+  here::here("data", "helmet_4.0.4_2018_results", "car_density.txt"),
+  col_types = "id"
+)
+car_use <- read_tsv_helmet(
+  here::here("data", "helmet_4.0.4_2018_results", "car_use.txt"),
+  col_types = "id"
+)
+generation <- read_tsv_helmet(
+  here::here("data", "helmet_4.0.4_2018_results", "generation.txt"),
+  col_types = "iddddddddddddd"
+)
+impedance_ratio <- read_tsv_helmet(
+  here::here("data", "helmet_4.0.4_2018_results", "impedance_ratio.txt"),
+  col_types = "idd"
+)
+origins_demand <- read_tsv_helmet(
+  here::here("data", "helmet_4.0.4_2018_results", "origins_demand.txt"),
+  col_types = "idddd"
+)
+origins_shares <- read_tsv_helmet(
+  here::here("data", "helmet_4.0.4_2018_results", "origins_shares.txt"),
+  col_types = "idddd"
+)
+savu <- read_tsv_helmet(
+  here::here("data", "helmet_4.0.4_2018_results", "savu.txt"),
+  col_types = "id"
+)
+sustainable_accessibility <- read_tsv_helmet(
+  here::here("data", "helmet_4.0.4_2018_results", "sustainable_accessibility.txt"),
+  col_types = "iddddddddddd"
+)
+workforce_accessibility <- read_tsv_helmet(
+  here::here("data", "helmet_4.0.4_2018_results", "workforce_accessibility.txt"),
+  col_types = "id"
+)
 
 
 # Join data ---------------------------------------------------------------
