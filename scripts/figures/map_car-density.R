@@ -7,21 +7,7 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-zones <- readr::read_rds(here::here("results", "zones.rds"))
-
-results <- here::here("data",
-                      "helmet_4.0.4_2018_results",
-                      "car_density.txt") %>%
-  readr::read_tsv(
-    col_names = c("zone", "value"),
-    col_types = "id",
-    skip = 1
-  ) %>%
-  dplyr::mutate(value = 1000 * value)
-
-zones <- zones %>%
-  dplyr::rename(zone = SIJ2019) %>%
-  dplyr::left_join(results, by = "zone")
+results <- readr::read_rds(here::here("results", "zones_2018.rds"))
 
 
 # Plot --------------------------------------------------------------------
@@ -38,7 +24,7 @@ values <- scales::rescale(
 )
 
 ggplot() +
-  geom_sf(mapping = aes(fill = value),
+  geom_sf(mapping = aes(fill = car_density),
           data = zones, color = NA) +
   scale_fill_stepsn(
     name = "autoa per 1000 asukasta",
