@@ -18,7 +18,7 @@ add_inc_group <- function(df) {
   df0 <- df %>%
     filter(!age_group %in% "age_7-17") %>%
     arrange(income) %>%
-    mutate(income_group = ceiling(10 * row_number() / n()))
+    mutate(income_group = ceiling(5 * row_number() / n()))
 
   df1 <- df %>%
     filter(age_group %in% "age_7-17") %>%
