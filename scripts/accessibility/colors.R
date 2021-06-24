@@ -39,7 +39,8 @@ hsl_palettes <- list(
   red_to_blue = hsl_cols("red", "white", "blue"),
   grey_red_blue = hsl_cols("gray", "red", "blue"),
   reds = hsl_cols("lightpink","pink"),
-  blues = hsl_cols("lightblue", "blue")
+  blues = hsl_cols("lightblue", "blue"),
+  greens = hsl_cols("lightgreen", "green")
 )
 
 hsl_pal <- function(palette = "blues", reverse = FALSE, ...) {
