@@ -68,7 +68,7 @@ theme_long <- theme_minimal() +
     strip.text = element_text(size = 15, face = "bold")
   )
 
-dimensions_fig <- c(16, 8.5) # cm
-dimensions_wide <- c(31, 8.5) # cm
+dimensions_fig <- c(17.5, 9.5) # cm
+dimensions_wide <- c(31, 9.5) # cm
 dimensions_long <- c(15, 16) # cm
 dimensions_map <- c(13, 12) # cm

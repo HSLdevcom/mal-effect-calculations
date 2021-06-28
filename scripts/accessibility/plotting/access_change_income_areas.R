@@ -51,7 +51,7 @@ agent_sums <- agent_sums %>%
 
 # Plot ----
 
-income_names <- c("alin 10 %", rep("", 8), "ylin 10 %")
+income_names <- c("alin 20 %", rep("", 3), "ylin 20 %")
 
 agent_sums %>%
   ggplot(aes(x = income_group, y = util_dif)) +
