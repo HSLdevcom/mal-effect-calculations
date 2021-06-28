@@ -13,11 +13,8 @@ load(file_path)
 
 # Group agents tables ----
 
-res_var <- c("gen_cost", "cost", "nr_tours")
+res_var <- c("cost")
 group_var <- c("area")
-
-agent_sums <- agents %>%
-  group_mean(group_var, res_var)
 
 agent_sums_0 <- agents_0 %>%
   group_mean(group_var, res_var)
@@ -27,15 +24,10 @@ agent_sums_1 <- agents_1 %>%
 
 # Join tables ----
 
-agent_sums <- full_join(agent_sums,
-                        agent_sums_0,
-                        by = group_var,
-                        suffix = c("", "0"))
-
-agent_sums <- full_join(agent_sums,
+agent_sums <- full_join(agent_sums_0,
                         agent_sums_1,
                         by = group_var,
-                        suffix = c("", "1"))
+                        suffix = c("0", "1"))
 
 # Calc differences ----
 
