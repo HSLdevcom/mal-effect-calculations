@@ -21,7 +21,7 @@ names(income_data) <- tolower(names(income_data))
 # Select only columns needed in analysis ----
 
 housing_cost <- housing_cost %>%
-  select(sij2019, kuntanimi, askust_kalib_hlo, asmenot_kalib_hlo)
+  select(sij2019, kotitaloudet, kuntanimi, askust_kalib_hlo, asmenot_kalib_hlo)
 
 income_data <- income_data %>%
   select(sij2019, kuntanimi, hr_ktu, hr_mtu)
@@ -41,7 +41,15 @@ income_data <- income_data %>%
 
 income_data <- income_data %>%
   mutate(hr_ktu = hr_ktu / 12,
-         hr_mtu = hr_mtu /12)
+         hr_mtu = hr_mtu / 12)
+
+# Filter too low number of residents ----
+
+housing_cost <- housing_cost %>%
+  filter(kotitaloudet > 10)
+
+income_data <- income_data %>%
+  filter(sij2019 %in% housing_cost$sij2019)
 
 # Write to file ----
 
