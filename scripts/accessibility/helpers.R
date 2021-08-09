@@ -17,8 +17,7 @@ read_helmet_files <- function(scenario, table) {
 add_inc_group <- function(df) {
   df0 <- df %>%
     filter(!age_group %in% "age_7-17") %>%
-    arrange(income) %>%
-    mutate(income_group = ceiling(5 * row_number() / n()))
+    mutate(income_group = ntile(income, 5))
 
   df1 <- df %>%
     filter(age_group %in% "age_7-17") %>%
