@@ -11,25 +11,18 @@ file_path <-
 
 load(file_path)
 
-# Join tours to agents data ----
-
-
-agents_0 <- agents_0 %>%
-  join_purpose_tours(tours_0, "total_access", "ho")
-
-agents_1 <- agents_1 %>%
-  join_purpose_tours(tours_1, "total_access", "ho")
-
 # Group agents tables ----
 
-res_var <- c("total_access_ho", "nr_tours_ho")
-group_var <- c("area", "age_group")
+res_var <- c("cost")
+group_var <- c("area", "income_group")
 
 agent_sums_0 <- agents_0 %>%
-  group_sum(group_var, res_var)
+  filter(income_group %in% 1:10) %>%
+  group_mean(group_var, res_var)
 
 agent_sums_1 <- agents_1 %>%
-  group_sum(group_var, res_var)
+  filter(income_group %in% 1:10) %>%
+  group_mean(group_var, res_var)
 
 # Join tables ----
 
@@ -42,17 +35,18 @@ agent_sums <- full_join(agent_sums_0,
 
 agent_sums <- agent_sums %>%
   mutate(
-    projected = total_access_ho1 / nr_tours_ho1,
-    baseline = total_access_ho0 / nr_tours_ho0,
-    util_dif = projected - baseline
+    projected = 30 * cost1,
+    baseline = 30 * cost0,
+    cost_dif = projected - baseline
   )
 
 # Plot ----
 
-max_gap <- max(abs(agent_sums$util_dif)) + 1
+max_value <- max(agent_sums$cost_dif, na.rm = TRUE)
+income_names <- c("alin 20 %", rep("", 3), "ylin 20 %")
 
 agent_sums %>%
-  ggplot(aes(x = age_group, y = util_dif, fill = gender)) +
+  ggplot(aes(x = income_group, y = cost_dif)) +
   geom_bar(
     stat = "identity",
     position = "dodge",
@@ -60,25 +54,27 @@ agent_sums %>%
     fill = hsl_cols("blue"),
     width = 0.8
   ) +
+  ylim(-max_value, max_value) +
   facet_wrap( ~ area, nrow = 1) +
   theme_wide +
-  ylim(-max_gap, max_gap) +
   geom_abline(slope = 0) +
+  scale_x_discrete(labels = income_names) +
   labs(
-    y = "hyöty (eur / kiertomatka)",
-    x = "Ikäryhmät",
+    y = "kustannus (eur / asukas / kk)",
+    x = NULL,
     title = paste0(
-      "Muutos asukkaan tekemien matkojen saavutettavuudessa: ",
-      config::get("projected_name")
-    ),
-    subtitle = "Kotiperäiset muut matkat"
+      "Muutos asukkaan matkojen kustannuksissa: ",
+      config::get("projected_name"),
+      " - ",
+      config::get("baseline_name")),
+    subtitle = "Kaikki matkaryhmät"
   )
 
 ggsave(
   here("figures",
        config::get("projected_scenario"),
-       "access_change_age_group_areas.png"
-       ),
+       "cost_change_income_group.png"
+  ),
   width = dimensions_wide[1],
   height = dimensions_wide[2],
   units = "cm"
