@@ -25,7 +25,7 @@ values <- scales::rescale(
 
 ggplot() +
   geom_sf(mapping = aes(fill = mode_share_bike_walk),
-          data = zones, color = NA) +
+          data = results, color = NA) +
   scale_fill_stepsn(
     name = "%",
     labels = scales::label_percent(accuracy = 1, suffix = ""),

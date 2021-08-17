@@ -20,7 +20,7 @@ results <- here::here("data",
 results <- results %>%
   dplyr::filter(area != "peripheral") %>%
   dplyr::add_row(area = "helsinki_region",
-                 value = 20000000,
+                 value = 0,
                  .before = 1) %>%
   dplyr::mutate(area = factor(area, levels = translations$level, labels = translations$label))
 

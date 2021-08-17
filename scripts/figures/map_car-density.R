@@ -25,7 +25,7 @@ values <- scales::rescale(
 
 ggplot() +
   geom_sf(mapping = aes(fill = car_density),
-          data = zones, color = NA) +
+          data = results, color = NA) +
   scale_fill_stepsn(
     name = "autoa per 1000 asukasta",
     labels = scales::label_number(accuracy = 1),

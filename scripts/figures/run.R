@@ -1,6 +1,7 @@
 # -*- coding: utf-8-unix -*-
 library(here)
 
+source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
 
 verbose_source <- function(file, ...) {
