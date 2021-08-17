@@ -14,7 +14,7 @@ results <- readr::read_rds(here::here("results", "zones_2018.rds"))
 
 ggplot() +
   geom_sf(mapping = aes(fill = savu_zone),
-          data = zones, color = NA) +
+          data = results, color = NA) +
   scale_fill_manual(
     name = "Saavutettavuus",
     values = c("#bd0026", "#f54026", "#fd9f44", "#fede80", "#ffffcc", "#bdbdbd", "#ffffff")
