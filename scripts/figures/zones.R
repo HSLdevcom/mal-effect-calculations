@@ -115,6 +115,18 @@ zones <- zones %>%
 
 # Impact assessment columns  ----------------------------------------------
 
+zones <- zones %>%
+  dplyr::mutate(
+    area = dplyr::case_when(
+      zone %in% 0:999 ~ "helsinki_cbd",
+      zone %in% 1000:1999 ~ "helsinki_other",
+      zone %in% 2000:5999 ~ "espoo_vant_kau",
+      zone %in% c(6000:6999, 10000:11999, 13000:14999, 15500:15999) ~ "surround_train",
+      zone %in% c(7000:9999, 12000:12999, 15000:15499) ~ "surround_other",
+      TRUE ~ NA_character_
+    ),
+  )
+
 levels <- sort(unique(zones$savu_zone))
 labels <- as.character(as.roman(levels))
 zones <- zones %>%
