@@ -9,7 +9,8 @@ translations <- here::here("utilities", "areas.tsv") %>%
   readr::read_tsv(col_types = "cc")
 
 results <- here::here("data",
-                      "helmet_4.0.4_2018_results",
+                      "Tulokset",
+                      "2020",
                       "workforce_accessibility_per_area.txt") %>%
   readr::read_tsv(
     col_names = c("area", "value"),

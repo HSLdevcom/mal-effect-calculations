@@ -13,7 +13,8 @@ zones <- here::here("results", "zones.rds") %>%
   dplyr::rename(zone = SIJ2019)
 
 demand_path <- here::here("data",
-                          "helmet_4.0.4_2018_results",
+                          "Tulokset",
+                          "2020",
                           "Matrices",
                           "demand_aht.omx")
 
@@ -30,7 +31,8 @@ distance_lookup <- demand_path %>%
   omxr::read_lookup(name = "zone_number")
 
 distance <- here::here("data",
-                      "helmet_4.0.4_2018_results",
+                       "Tulokset",
+                       "2020",
                       "Matrices",
                       "dist_aht.omx") %>%
   omxr::read_all_omx() %>%
@@ -50,8 +52,8 @@ results <- matrices %>%
   dplyr::rename(zone = origin)
 
 population <- here::here("data",
-                         "Lahtodata",
-                         "2016_zonedata",
+                         "Syottodata",
+                         "2020",
                          "2017.pop") %>%
   readr::read_tsv(
     col_types = "iiddddd",

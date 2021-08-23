@@ -12,7 +12,7 @@ translations <- here::here("utilities", "vdfs.tsv") %>%
   readr::read_tsv(col_types = "ic")
 
 vdfs <- read_tsv_helmet(
-  here::here("data", "helmet_4.0.4_2018_results", "vehicle_kms_vdfs_areas.txt"),
+  here::here("data", "Tulokset", "2020", "vehicle_kms_vdfs_areas.txt"),
   col_types = "cddddd"
 )
 

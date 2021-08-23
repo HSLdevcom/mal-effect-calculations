@@ -11,7 +11,8 @@ translations <- here::here("utilities", "modes.tsv") %>%
   readr::read_tsv(col_types = "cc")
 
 results <- here::here("data",
-                      "helmet_4.0.4_2018_results",
+                      "Tulokset",
+                      "2020",
                       "origins_demand.txt") %>%
   readr::read_tsv(
     col_names = c("zone", "car", "transit", "bike", "walk"),
