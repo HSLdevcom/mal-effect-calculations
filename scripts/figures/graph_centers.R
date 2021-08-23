@@ -3,7 +3,7 @@ library(here)
 library(tidyverse)
 library(omxr)
 
-path <- here::here("data", "helmet_4.0.4_2018_results", "Matrices", "time_aht.omx")
+path <- here::here("data", "Tulokset", "2020", "Matrices", "time_aht.omx")
 
 aht <- omxr::read_all_omx(path)
 zone_numbers <- omxr::read_lookup(path, name = "zone_number")
