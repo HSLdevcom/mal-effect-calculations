@@ -12,31 +12,19 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
 
-demand_path <- file.path(config::get("helmet_data"),
-                         config::get("results"),
-                         "Matrices",
-                         "demand_aht.omx")
-
-demand_lookup <- demand_path %>%
-  omxr::read_lookup(name = "zone_number")
-
-demand <- demand_path %>%
-  omxr::read_all_omx() %>%
-  dplyr::select(origin, destination, bike_leisure, bike_work) %>%
-  dplyr::mutate(origin = demand_lookup$Lookup[origin],
-                destination = demand_lookup$Lookup[destination])
-
-distance_lookup <- demand_path %>%
-  omxr::read_lookup(name = "zone_number")
+demand <- file.path(config::get("helmet_data"),
+                    config::get("results"),
+                    "Matrices",
+                    "demand_aht.omx") %>%
+  read_helmet_omx() %>%
+  dplyr::select(origin, destination, bike_leisure, bike_work)
 
 distance <- file.path(config::get("helmet_data"),
                       config::get("results"),
                       "Matrices",
                       "dist_aht.omx") %>%
-  omxr::read_all_omx() %>%
-  dplyr::select(origin, destination, bike) %>%
-  dplyr::mutate(origin = distance_lookup$Lookup[origin],
-                destination = distance_lookup$Lookup[destination])
+  read_helmet_omx() %>%
+  dplyr::select(origin, destination, bike)
 
 matrices <- demand %>%
   dplyr::full_join(distance, by = c("origin", "destination")) %>%
