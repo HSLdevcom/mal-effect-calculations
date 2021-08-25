@@ -3,17 +3,6 @@ library(here)
 library(tidyverse)
 library(omxr)
 
-read_helmet_omx <- function(path) {
-  zone_numbers <- omxr::read_lookup(path, name = "zone_number")
-  zone_numbers <- as.vector(zone_numbers$Lookup, mode = "integer")
-  omx_matrix <- omxr::read_all_omx(path) %>%
-    dplyr::mutate(
-      origin = zone_numbers[origin],
-      destination = zone_numbers[destination]
-    )
-  return(omx_matrix)
-}
-
 path <- here::here("data", "Tulokset", "2020", "Matrices", "time_aht.omx")
 time_aht <- read_helmet_omx(path) %>%
   dplyr::rename_with(~ sprintf("%s_time_aht", .x), !c("origin", "destination"))

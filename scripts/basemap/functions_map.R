@@ -120,3 +120,14 @@ ggsave_graph <- function(filename,
          dpi = dpi,
          ...)
 }
+
+read_helmet_omx <- function(path) {
+  zone_numbers <- omxr::read_lookup(path, name = "zone_number")
+  zone_numbers <- as.vector(zone_numbers$Lookup, mode = "integer")
+  omx_matrix <- omxr::read_all_omx(path) %>%
+    dplyr::mutate(
+      origin = zone_numbers[origin],
+      destination = zone_numbers[destination]
+    )
+  return(omx_matrix)
+}
