@@ -15,42 +15,60 @@ translations <- here::here("utilities", "areas.tsv") %>%
   readr::read_tsv(col_types = "cc")
 
 car_density <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "car_density_areas.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "car_density_areas.txt"),
   col_types = "cd"
 )
 car_use <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "car_use_areas.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "car_use_areas.txt"),
   col_types = "cd"
 )
 origin_demand <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "origin_demand_areas.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "origin_demand_areas.txt"),
   col_types = "cdddd"
 )
 own_zone_demand <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "own_zone_demand.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "own_zone_demand.txt"),
   col_types = "cdddddddddddddddddddddddddddddddddddd"
 )
 vehicle_kms_modes <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "vehicle_kms_areas.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "vehicle_kms_areas.txt"),
   col_types = "cddddddddd"
 )
 vehicle_kms_vdfs <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "vehicle_kms_vdfs_areas.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "vehicle_kms_vdfs_areas.txt"),
   col_types = "cddddd"
 )
-workforce_accessibility <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "workforce_accessibility_per_area.txt"),
-  col_types = "cd"
-)
+# workforce_accessibility <- read_tsv_helmet(
+#   file.path(config::get("helmet_data"),
+#             config::get("results"),
+#             "workforce_accessibility_per_area.txt"),
+#   col_types = "cd"
+# )
 
 noise <- read_tsv(
-  here::here("data", "Tulokset", "2020", "noise_areas.txt"),
-  skip = 1,
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "noise_areas.txt"),
+  skip = 1, # skip old column names
   col_types = "cdd",
   col_names = c("area", "area_km2", "population") # override column names
 )
 aggregated_demand <- read_tsv(
-  here::here("data", "Tulokset", "2020", "aggregated_demand.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "aggregated_demand.txt"),
   col_types = "ccccd",
   col_names = c("area_origin", "area_destination", "purpose", "mode", "demand"),
   na = "nan"
