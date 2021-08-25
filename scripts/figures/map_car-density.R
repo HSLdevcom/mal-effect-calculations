@@ -7,7 +7,7 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-results <- readr::read_rds(here::here("results", "zones_2018.rds"))
+results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
 
 
 # Plot --------------------------------------------------------------------
@@ -39,8 +39,8 @@ ggplot() +
   geom_basemap() +
   annotate_map(
     title = "Henkilöautotiheys",
-    subtitle = "helmet_4.0.4_2018_results"
+    subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name"))
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", "map_car-density.png"))
+ggsave_map(here::here("figures", sprintf("map_car-density_%s.png", config::get("scenario"))))
