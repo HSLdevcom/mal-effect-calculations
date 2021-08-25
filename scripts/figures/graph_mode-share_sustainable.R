@@ -10,45 +10,21 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 translations <- here::here("utilities", "modes.tsv") %>%
   readr::read_tsv(col_types = "cc")
 
-results <- here::here("data",
-                      "Tulokset",
-                      "2020",
-                      "origins_demand.txt") %>%
-  readr::read_tsv(
-    col_names = c("zone", "car", "transit", "bike", "walk"),
-    col_types = "idddd",
-    skip = 1
-  ) %>%
-  dplyr::select(zone, car, transit, bike, walk) %>%
-  tidyr::pivot_longer(cols = -zone, names_to = "mode", values_to = "demand") %>%
+results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
+  dplyr::select(scenario, area, starts_with("origin_share_")) %>%
+  tidyr::pivot_longer(
+    cols = starts_with("origin_share_"),
+    names_to = "mode",
+    names_prefix = "origin_share_"
+    ) %>%
+  dplyr::filter(mode != "car") %>%
   dplyr::mutate(mode = factor(mode, levels = translations$level, labels = translations$label))
-
-zones <- readr::read_rds(here::here("results", "zones.rds")) %>%
-  sf::st_drop_geometry() %>%
-  dplyr::rename(zone = SIJ2019) %>%
-  dplyr::full_join(results, by = "zone") %>%
-  dplyr::mutate(municipality = factor(KUNTANIMI)) %>%
-  dplyr::group_by(municipality, mode) %>%
-  dplyr::summarise(demand = sum(demand)) %>%
-  dplyr::mutate(value = demand / sum(demand)) %>%
-  dplyr::ungroup() %>%
-  dplyr::filter(mode != "Henkilöauto")
-
-zones1 <- zones
-zones1$scenario <- "2023"
-zones2 <- zones
-zones2$scenario <- "2040 Pohja"
-zones3 <- zones
-zones3$scenario <- "2040 Luonnos"
-
-zones <- dplyr::bind_rows(zones1, zones2, zones3) %>%
-  dplyr::mutate(scenario = forcats::as_factor(scenario))
 
 
 # Plot --------------------------------------------------------------------
 
-ggplot(zones, aes(x = scenario, y = value)) +
-  facet_grid(cols = vars(municipality), switch = "both", labeller = labeller(.cols = scales::label_wrap(10))) +
+ggplot(results, aes(x = scenario, y = value)) +
+  facet_grid(cols = vars(area), switch = "both", labeller = labeller(.cols = scales::label_wrap(10))) +
   geom_col(aes(fill = mode)) +
   scale_y_continuous(
     labels = scales::label_percent(suffix = "")

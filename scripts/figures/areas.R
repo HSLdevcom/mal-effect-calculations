@@ -101,11 +101,14 @@ zones2 <- zones %>%
 # Rename columns to avoid name collisions
 vehicle_kms_modes <- vehicle_kms_modes %>%
   dplyr::rename_with(~ paste0("vehicle_kms_", .x), -area)
+origin_demand <- origin_demand %>%
+  dplyr::rename_with(~ paste0("origin_demand_", .x), -area)
 
 areas <- data.frame(area = unique(zones$area)) %>%
   dplyr::left_join(zones1, by = "area") %>%
   dplyr::left_join(zones2, by = "area") %>%
   dplyr::left_join(vehicle_kms_modes, by = "area") %>%
+  dplyr::left_join(origin_demand, by = "area") %>%
   dplyr::left_join(car_density, by = "area")
 
 
@@ -114,7 +117,14 @@ areas <- data.frame(area = unique(zones$area)) %>%
 areas <- areas %>%
   dplyr::mutate(vehicle_kms_total = rowSums(select(., starts_with("vehicle_kms")))) %>%
   dplyr::mutate(car_density = 1000 * car_density) %>%
-  dplyr::mutate(goodness_share = goodness_wrk / total_wrk)
+  dplyr::mutate(goodness_share = goodness_wrk / total_wrk) %>%
+  dplyr::mutate(
+    origin_demand_total = origin_demand_transit + origin_demand_car + origin_demand_walk + origin_demand_bike,
+    origin_share_transit = origin_demand_transit / origin_demand_total,
+    origin_share_car = origin_demand_car / origin_demand_total,
+    origin_share_walk = origin_demand_walk / origin_demand_total,
+    origin_share_bike = origin_demand_bike / origin_demand_total,
+  )
 
 
 # Add total row -----------------------------------------------------------
@@ -123,7 +133,11 @@ areas <- areas %>%
   dplyr::add_row(
     area = "helsinki_region",
     car_density = weighted.mean(.$car_density, .$total_pop),
-    goodness_share = sum(.$goodness_wrk) / sum(.$total_wrk)
+    goodness_share = sum(.$goodness_wrk) / sum(.$total_wrk),
+    origin_share_walk = sum(.$origin_demand_walk) / sum(.$origin_demand_total),
+    origin_share_transit = sum(.$origin_demand_transit) / sum(.$origin_demand_total),
+    origin_share_car = sum(.$origin_demand_car) / sum(.$origin_demand_total),
+    origin_share_bike = sum(.$origin_demand_bike) / sum(.$origin_demand_total),
   )
 
 
