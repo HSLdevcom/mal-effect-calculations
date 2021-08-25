@@ -5,41 +5,12 @@ library(tidyverse)
 
 # Data --------------------------------------------------------------------
 
-translations <- here::here("utilities", "areas.tsv") %>%
-  readr::read_tsv(col_types = "cc")
-
-results <- here::here("data",
-                      "Tulokset",
-                      "2020",
-                      "workforce_accessibility_per_area.txt") %>%
-  readr::read_tsv(
-    col_names = c("area", "value"),
-    col_types = "cd",
-    skip = 1
-  )
-
-results <- results %>%
-  dplyr::filter(area != "peripheral") %>%
-  dplyr::add_row(area = "helsinki_region",
-                 value = 0,
-                 .before = 1) %>%
-  dplyr::mutate(area = factor(area, levels = translations$level, labels = translations$label))
-
-results1 <- results
-results1$scenario <- "2023"
-results2 <- results
-results2$scenario <- "2040 Pohja"
-results3 <- results
-results3$scenario <- "2040 Luonnos"
-
-results <- dplyr::bind_rows(results1, results2, results3) %>%
-  dplyr::mutate(scenario = forcats::as_factor(scenario)) %>%
-  dplyr::mutate(value = value / 100)
+results <- readr::read_rds(here::here("results", "areas_all.rds"))
 
 
 # Plot --------------------------------------------------------------------
 
-ggplot(results, aes(x = scenario, y = value)) +
+ggplot(results, aes(x = scenario, y = workforce_accessibility)) +
   facet_grid(cols = vars(area), switch = "both", labeller = labeller(.cols = scales::label_wrap(10))) +
   geom_col(aes(fill = area)) +
   scale_y_continuous(
