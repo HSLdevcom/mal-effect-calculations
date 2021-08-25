@@ -78,11 +78,22 @@ aggregated_demand <- read_tsv(
 # Read and aggregate zone data --------------------------------------------
 
 zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario")))) %>%
-  sf::st_drop_geometry() %>%
+  sf::st_drop_geometry()
+
+zones1 <- zones %>%
   dplyr::group_by(area) %>%
   dplyr::summarise(
-    total_pop = sum(total_pop)
+    total_pop = sum(total_pop),
+    total_wrk = sum(total_wrk)
   )
+
+zones2 <- zones %>%
+  dplyr::group_by(area, savu_goodness, .drop = FALSE) %>%
+  dplyr::summarise(
+    goodness_wrk = sum(total_wrk)
+  ) %>%
+  dplyr::ungroup() %>%
+  dplyr::filter(savu_goodness == "SAVU hyvä")
 
 
 # Join data ---------------------------------------------------------------
@@ -92,7 +103,8 @@ vehicle_kms_modes <- vehicle_kms_modes %>%
   dplyr::rename_with(~ paste0("vehicle_kms_", .x), -area)
 
 areas <- data.frame(area = unique(zones$area)) %>%
-  dplyr::left_join(zones, by = "area") %>%
+  dplyr::left_join(zones1, by = "area") %>%
+  dplyr::left_join(zones2, by = "area") %>%
   dplyr::left_join(vehicle_kms_modes, by = "area") %>%
   dplyr::left_join(car_density, by = "area")
 
@@ -101,7 +113,8 @@ areas <- data.frame(area = unique(zones$area)) %>%
 
 areas <- areas %>%
   dplyr::mutate(vehicle_kms_total = rowSums(select(., starts_with("vehicle_kms")))) %>%
-  dplyr::mutate(car_density = 1000 * car_density)
+  dplyr::mutate(car_density = 1000 * car_density) %>%
+  dplyr::mutate(goodness_share = goodness_wrk / total_wrk)
 
 
 # Add total row -----------------------------------------------------------
@@ -109,7 +122,8 @@ areas <- areas %>%
 areas <- areas %>%
   dplyr::add_row(
     area = "helsinki_region",
-    car_density = weighted.mean(.$car_density, .$total_pop)
+    car_density = weighted.mean(.$car_density, .$total_pop),
+    goodness_share = sum(.$goodness_wrk) / sum(.$total_wrk)
   )
 
 
