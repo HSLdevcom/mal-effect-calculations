@@ -75,34 +75,51 @@ aggregated_demand <- read_tsv(
 )
 
 
+# Read and aggregate zone data --------------------------------------------
+
+zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario")))) %>%
+  sf::st_drop_geometry() %>%
+  dplyr::group_by(area) %>%
+  dplyr::summarise(
+    total_pop = sum(total_pop)
+  )
+
+
 # Join data ---------------------------------------------------------------
 
 # Rename columns to avoid name collisions
 vehicle_kms_modes <- vehicle_kms_modes %>%
   dplyr::rename_with(~ paste0("vehicle_kms_", .x), -area)
 
-areas <- data.frame(area = c("helsinki_cbd",
-                             "helsinki_other",
-                             "espoo_vant_kau",
-                             "surround_train",
-                             "surround_other",
-                             "peripheral")) %>%
+areas <- data.frame(area = unique(zones$area)) %>%
+  dplyr::left_join(zones, by = "area") %>%
   dplyr::left_join(vehicle_kms_modes, by = "area") %>%
   dplyr::left_join(car_density, by = "area")
-
-
-# Translate data ----------------------------------------------------------
-
-areas <- areas %>%
-  dplyr::mutate(area = factor(area, levels = translations$level, labels = translations$label))
 
 
 # Impact assessment columns  ----------------------------------------------
 
 areas <- areas %>%
-  dplyr::mutate(vehicle_kms_total = rowSums(select(., starts_with("vehicle_kms"))))
+  dplyr::mutate(vehicle_kms_total = rowSums(select(., starts_with("vehicle_kms")))) %>%
+  dplyr::mutate(car_density = 1000 * car_density)
+
+
+# Add total row -----------------------------------------------------------
+
+areas <- areas %>%
+  dplyr::add_row(
+    area = "helsinki_region",
+    car_density = weighted.mean(.$car_density, .$total_pop)
+  )
+
+
+# Translate data ----------------------------------------------------------
+
+areas <- areas %>%
+  dplyr::mutate(area = factor(area, levels = translations$level, labels = translations$label)) %>%
+  dplyr::arrange(area)
 
 
 # Output ------------------------------------------------------------------
 
-readr::write_rds(areas, file = here::here("results", "areas_2018.rds"))
+readr::write_rds(areas, file = here::here("results", sprintf("areas_%s.rds", config::get("scenario"))))
