@@ -2,67 +2,15 @@
 library(here)
 library(tidyverse)
 
-read_tsv_helmet <- function(..., comment = "#") {
-  readr::read_tsv(..., comment = comment) %>%
-    dplyr::rename(area = X1) %>%
-    dplyr::rename_with(~ gsub("-", "_", .x, fixed = TRUE))
-}
 
-translations <- here::here("utilities", "vdfs.tsv") %>%
-  readr::read_tsv(col_types = "ic")
+# Data --------------------------------------------------------------------
 
-vdfs <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "vehicle_kms_vdfs_areas.txt"),
-  col_types = "cddddd"
-)
-
-# Discard peripheral data, transpose data frame, and calculate total vehicle
-# kilometers.
-vdfs <- vdfs %>%
-  dplyr::filter(!area %in% "peripheral") %>%
-  tidyr::pivot_longer(-area, names_to = "vdf", values_to = "vehicle_kms") %>%
-  tidyr::pivot_wider(id_cols = vdf, names_from = area, values_from = vehicle_kms) %>%
-  dplyr::mutate(total = rowSums(select(., -vdf)))
-
-# Handle vdf names.
-vdfs <- vdfs %>%
-  dplyr::mutate(
-    vdf = factor(vdf, levels = translations$level, labels = translations$label),
-    vdf = forcats::fct_collapse(
-      vdf,
-      `Pääkadut` = c(
-        "Pääkadut",
-        "Useampikaistaiset pääkadut tasoliittymin valoilla"
-      ),
-      `Pääväylät eritasoliittymin, maantiet` = c(
-        "Maantiet / Useampikaistaiset kaupunkiväylät eritasoliittymin",
-        "Moottoritiet"
-      )
-    ),
-    vdf = forcats::fct_rev(vdf)
-  )
-
-# Calculate results.
-vdfs <- vdfs %>%
-  dplyr::group_by(vdf) %>%
-  dplyr::summarise(total = sum(total), .groups = "drop") %>%
-  dplyr::mutate(share = total / sum(total))
-
-# Placeholder for future scenarios.
-vdfs1 <- vdfs
-vdfs1$scenario <- "2023"
-vdfs2 <- vdfs
-vdfs2$scenario <- "2040 Pohja"
-vdfs3 <- vdfs
-vdfs3$scenario <- "2040 Luonnos"
-
-vdfs <- dplyr::bind_rows(vdfs1, vdfs2, vdfs3) %>%
-  dplyr::mutate(scenario = forcats::as_factor(scenario))
+results <- readr::read_rds(here::here("results", "vdfs_all.rds"))
 
 
 # Plot --------------------------------------------------------------------
 
-ggplot(vdfs, aes(x = scenario, y = share)) +
+ggplot(results, aes(x = scenario, y = share)) +
   facet_grid(
     cols = vars(vdf),
     switch = "both",
