@@ -25,20 +25,26 @@ results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
 
 ggplot(results, aes(x = scenario, y = value)) +
   facet_grid(cols = vars(area), switch = "both", labeller = labeller(.cols = scales::label_wrap(10))) +
-  geom_col(aes(fill = mode)) +
+  geom_col(fill = "white") +
+  geom_col(aes(fill = mode, alpha = forcats::fct_rev(scenario))) +
   scale_y_continuous(
     labels = scales::label_percent(suffix = "")
   ) +
   scale_x_discrete(
-    expand = expansion(mult = 0.4),
-    labels = scales::label_wrap(5)
+    labels = NULL
   ) +
   scale_fill_manual(
+    name = NULL,
     values = c("Henkilöauto" = "#f092cd",
                "Joukkoliikenne" = "#00b9e4",
                "Pyöräily" = "#fcb919",
                "Kävely" = "#64be1e",
                "Muu" = "#999999")
+  ) +
+  scale_alpha_discrete(
+    name = NULL,
+    range = c(0.333, 1),
+    guide = guide_legend(reverse = TRUE)
   ) +
   labs(
     title = "Kestävien kulkutapojen osuus alueelta alkavista kiertomatkoista",
