@@ -42,10 +42,6 @@ ggplot(data = ttimes) +
     y = "Lähtöpaikka"
   ) +
   coord_equal() +
-  theme_minimal() +
-  theme(
-    text = element_text(family = "sans", colour = "#333333", size = 10),
-    panel.grid = element_blank()
-  )
+  theme_mal_graph()
 
 ggsave_graph(here::here("figures", "graph_centers.png"))

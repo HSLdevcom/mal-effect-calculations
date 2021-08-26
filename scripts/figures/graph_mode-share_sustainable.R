@@ -45,17 +45,6 @@ ggplot(results, aes(x = scenario, y = value)) +
     x = NULL,
     y = "%"
   ) +
-  theme_minimal() +
-  theme(
-    text = element_text(family = "sans", colour = "#333333", size = 10),
-    plot.title = element_text(colour = "#64BE1E"),
-    legend.position = "bottom",
-    legend.text = element_text(size = rel(1.0)),
-    plot.caption = element_text(size = rel(1.0)),
-    strip.placement = "outside",
-    panel.grid.major.x = element_blank(),
-    #strip.switch.pad.grid = unit(0, "cm"),
-    panel.spacing = unit(0, "lines")
-  )
+  theme_mal_graph()
 
 ggsave_graph(here::here("figures", "graph_mode-share_sustainable.png"))
