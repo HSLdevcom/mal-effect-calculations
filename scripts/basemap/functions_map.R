@@ -102,6 +102,7 @@ theme_mal_graph <- function() {
       text = element_text(family = "sans", colour = "#333333", size = 10),
       plot.title = element_text(colour = "#64BE1E"),
       legend.position = "bottom",
+      legend.box = "vertical",
       legend.text = element_text(size = rel(1.0)),
       plot.caption = element_text(size = rel(1.0)),
       strip.placement = "outside",
