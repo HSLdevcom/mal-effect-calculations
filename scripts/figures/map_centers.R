@@ -36,7 +36,7 @@ ggplot() +
   geom_basemap() +
   annotate_map(
     title = "Helsingin seudun keskukset",
-    subtitle = "helmet_4.0.4_2018_results"
+    subtitle = NULL
   ) +
   theme_mal_map()
 

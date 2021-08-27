@@ -15,46 +15,85 @@ translations <- here::here("utilities", "areas.tsv") %>%
   readr::read_tsv(col_types = "cc")
 
 car_density <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "car_density_areas.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "car_density_areas.txt"),
   col_types = "cd"
 )
 car_use <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "car_use_areas.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "car_use_areas.txt"),
   col_types = "cd"
 )
 origin_demand <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "origin_demand_areas.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "origin_demand_areas.txt"),
   col_types = "cdddd"
 )
 own_zone_demand <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "own_zone_demand.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "own_zone_demand.txt"),
   col_types = "cdddddddddddddddddddddddddddddddddddd"
 )
 vehicle_kms_modes <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "vehicle_kms_areas.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "vehicle_kms_areas.txt"),
   col_types = "cddddddddd"
 )
 vehicle_kms_vdfs <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "vehicle_kms_vdfs_areas.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "vehicle_kms_vdfs_areas.txt"),
   col_types = "cddddd"
 )
-workforce_accessibility <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "workforce_accessibility_per_area.txt"),
-  col_types = "cd"
-)
+# workforce_accessibility <- read_tsv_helmet(
+#   file.path(config::get("helmet_data"),
+#             config::get("results"),
+#             "workforce_accessibility_per_area.txt"),
+#   col_types = "cd"
+# )
 
 noise <- read_tsv(
-  here::here("data", "Tulokset", "2020", "noise_areas.txt"),
-  skip = 1,
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "noise_areas.txt"),
+  skip = 1, # skip old column names
   col_types = "cdd",
   col_names = c("area", "area_km2", "population") # override column names
 )
 aggregated_demand <- read_tsv(
-  here::here("data", "Tulokset", "2020", "aggregated_demand.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "aggregated_demand.txt"),
   col_types = "ccccd",
   col_names = c("area_origin", "area_destination", "purpose", "mode", "demand"),
   na = "nan"
 )
+
+
+# Read and aggregate zone data --------------------------------------------
+
+zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario")))) %>%
+  sf::st_drop_geometry()
+
+zones1 <- zones %>%
+  dplyr::group_by(area) %>%
+  dplyr::summarise(
+    total_pop = sum(total_pop),
+    total_wrk = sum(total_wrk)
+  )
+
+zones2 <- zones %>%
+  dplyr::group_by(area, savu_goodness, .drop = FALSE) %>%
+  dplyr::summarise(
+    goodness_wrk = sum(total_wrk)
+  ) %>%
+  dplyr::ungroup() %>%
+  dplyr::filter(savu_goodness == "SAVU hyvä")
 
 
 # Join data ---------------------------------------------------------------
@@ -62,29 +101,53 @@ aggregated_demand <- read_tsv(
 # Rename columns to avoid name collisions
 vehicle_kms_modes <- vehicle_kms_modes %>%
   dplyr::rename_with(~ paste0("vehicle_kms_", .x), -area)
+origin_demand <- origin_demand %>%
+  dplyr::rename_with(~ paste0("origin_demand_", .x), -area)
 
-areas <- data.frame(area = c("helsinki_cbd",
-                             "helsinki_other",
-                             "espoo_vant_kau",
-                             "surround_train",
-                             "surround_other",
-                             "peripheral")) %>%
+areas <- data.frame(area = unique(zones$area)) %>%
+  dplyr::left_join(zones1, by = "area") %>%
+  dplyr::left_join(zones2, by = "area") %>%
   dplyr::left_join(vehicle_kms_modes, by = "area") %>%
+  dplyr::left_join(origin_demand, by = "area") %>%
   dplyr::left_join(car_density, by = "area")
-
-
-# Translate data ----------------------------------------------------------
-
-areas <- areas %>%
-  dplyr::mutate(area = factor(area, levels = translations$level, labels = translations$label))
 
 
 # Impact assessment columns  ----------------------------------------------
 
 areas <- areas %>%
-  dplyr::mutate(vehicle_kms_total = rowSums(select(., starts_with("vehicle_kms"))))
+  dplyr::mutate(vehicle_kms_total = rowSums(select(., starts_with("vehicle_kms")))) %>%
+  dplyr::mutate(car_density = 1000 * car_density) %>%
+  dplyr::mutate(goodness_share = goodness_wrk / total_wrk) %>%
+  dplyr::mutate(
+    origin_demand_total = origin_demand_transit + origin_demand_car + origin_demand_walk + origin_demand_bike,
+    origin_share_transit = origin_demand_transit / origin_demand_total,
+    origin_share_car = origin_demand_car / origin_demand_total,
+    origin_share_walk = origin_demand_walk / origin_demand_total,
+    origin_share_bike = origin_demand_bike / origin_demand_total,
+  )
+
+
+# Add total row -----------------------------------------------------------
+
+areas <- areas %>%
+  dplyr::add_row(
+    area = "helsinki_region",
+    car_density = weighted.mean(.$car_density, .$total_pop),
+    goodness_share = sum(.$goodness_wrk) / sum(.$total_wrk),
+    origin_share_walk = sum(.$origin_demand_walk) / sum(.$origin_demand_total),
+    origin_share_transit = sum(.$origin_demand_transit) / sum(.$origin_demand_total),
+    origin_share_car = sum(.$origin_demand_car) / sum(.$origin_demand_total),
+    origin_share_bike = sum(.$origin_demand_bike) / sum(.$origin_demand_total),
+  )
+
+
+# Translate data ----------------------------------------------------------
+
+areas <- areas %>%
+  dplyr::mutate(area = factor(area, levels = translations$level, labels = translations$label)) %>%
+  dplyr::arrange(area)
 
 
 # Output ------------------------------------------------------------------
 
-readr::write_rds(areas, file = here::here("results", "areas_2018.rds"))
+readr::write_rds(areas, file = here::here("results", sprintf("areas_%s.rds", config::get("scenario"))))

@@ -15,68 +15,106 @@ read_tsv_helmet <- function(..., comment = "#") {
 zones <- readr::read_rds(here::here("results", "zones.rds"))
 
 pop <- read_tsv_helmet(
-  list.files(here::here("data", "Syottodata", "2020"), pattern = ".pop$", full.names = TRUE),
+  list.files(file.path(config::get("forecast_zonedata_path"),
+                       config::get("forecast_zonedata")),
+             pattern = ".pop$",
+             full.names = TRUE),
   col_types = "iiddddd"
 )
 lnd <- read_tsv_helmet(
-  list.files(here::here("data", "Syottodata", "2020"), pattern = ".lnd$", full.names = TRUE),
+  list.files(file.path(config::get("forecast_zonedata_path"),
+                       config::get("forecast_zonedata")),
+             pattern = ".lnd$",
+             full.names = TRUE),
   col_types = "idd"
 )
 edu <- read_tsv_helmet(
-  list.files(here::here("data", "Syottodata", "2020"), pattern = ".edu$", full.names = TRUE),
-  col_types = "iiii---"
+  list.files(file.path(config::get("forecast_zonedata_path"),
+                       config::get("forecast_zonedata")),
+             pattern = ".edu$",
+             full.names = TRUE),
+  col_types = "iiii"
 )
 wrk <- read_tsv_helmet(
-  list.files(here::here("data", "Syottodata", "2020"), pattern = ".wrk$", full.names = TRUE),
+  list.files(file.path(config::get("forecast_zonedata_path"),
+                       config::get("forecast_zonedata")),
+             pattern = ".wrk$",
+             full.names = TRUE),
   col_types = "iidddd"
 )
 prk <- read_tsv_helmet(
-  list.files(here::here("data", "Syottodata", "2020"), pattern = ".prk$", full.names = TRUE),
+  list.files(file.path(config::get("forecast_zonedata_path"),
+                       config::get("forecast_zonedata")),
+             pattern = ".prk$",
+             full.names = TRUE),
   col_types = "iii"
 )
 
 accessibility <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "accessibility.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "accessibility.txt"),
   col_types = "iddddddddddddddddddddddddddddddddddddddddddddddddd"
 )
 attraction <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "attraction.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "attraction.txt"),
   col_types = "idddddddddddd"
 )
 car_density <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "car_density.txt"),
+
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "car_density.txt"),
   col_types = "id"
 )
 car_use <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "car_use.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "car_use.txt"),
   col_types = "id"
 )
 generation <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "generation.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "generation.txt"),
   col_types = "idddddddddddd"
 )
 impedance_ratio <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "impedance_ratio.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "impedance_ratio.txt"),
   col_types = "idd"
 )
 origins_demand <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "origins_demand.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "origins_demand.txt"),
   col_types = "idddd"
 )
 origins_shares <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "origins_shares.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "origins_shares.txt"),
   col_types = "idddd"
 )
 savu <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "savu.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "savu.txt"),
   col_types = "id"
 )
 sustainable_accessibility <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "sustainable_accessibility.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "sustainable_accessibility.txt"),
   col_types = "iddddddddddd"
 )
 workforce_accessibility <- read_tsv_helmet(
-  here::here("data", "Tulokset", "2020", "workforce_accessibility.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "workforce_accessibility.txt"),
   col_types = "id"
 )
 
@@ -160,4 +198,4 @@ zones <- zones %>%
 
 # Output ------------------------------------------------------------------
 
-readr::write_rds(zones, file = here::here("results", "zones_2018.rds"))
+readr::write_rds(zones, file = here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))

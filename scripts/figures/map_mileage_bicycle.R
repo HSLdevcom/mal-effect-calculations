@@ -8,37 +8,23 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-zones <- here::here("results", "zones.rds") %>%
-  readr::read_rds() %>%
-  dplyr::rename(zone = SIJ2019)
+# TODO: Consider moving to zones.R
 
-demand_path <- here::here("data",
-                          "Tulokset",
-                          "2020",
-                          "Matrices",
-                          "demand_aht.omx")
+zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
 
-demand_lookup <- demand_path %>%
-  omxr::read_lookup(name = "zone_number")
+demand <- file.path(config::get("helmet_data"),
+                    config::get("results"),
+                    "Matrices",
+                    "demand_aht.omx") %>%
+  read_helmet_omx() %>%
+  dplyr::select(origin, destination, bike_leisure, bike_work)
 
-demand <- demand_path %>%
-  omxr::read_all_omx() %>%
-  dplyr::select(origin, destination, bike_leisure, bike_work) %>%
-  dplyr::mutate(origin = demand_lookup$Lookup[origin],
-                destination = demand_lookup$Lookup[destination])
-
-distance_lookup <- demand_path %>%
-  omxr::read_lookup(name = "zone_number")
-
-distance <- here::here("data",
-                       "Tulokset",
-                       "2020",
+distance <- file.path(config::get("helmet_data"),
+                      config::get("results"),
                       "Matrices",
                       "dist_aht.omx") %>%
-  omxr::read_all_omx() %>%
-  dplyr::select(origin, destination, bike) %>%
-  dplyr::mutate(origin = distance_lookup$Lookup[origin],
-                destination = distance_lookup$Lookup[destination])
+  read_helmet_omx() %>%
+  dplyr::select(origin, destination, bike)
 
 matrices <- demand %>%
   dplyr::full_join(distance, by = c("origin", "destination")) %>%
@@ -51,10 +37,10 @@ results <- matrices %>%
   dplyr::summarise(mileage = sum(mileage)) %>%
   dplyr::rename(zone = origin)
 
-population <- here::here("data",
-                         "Syottodata",
-                         "2020",
-                         "2017.pop") %>%
+population <- list.files(file.path(config::get("forecast_zonedata_path"),
+                                   config::get("forecast_zonedata")),
+                         pattern = ".pop$",
+                         full.names = TRUE) %>%
   readr::read_tsv(
     col_types = "iiddddd",
     comment = "#"
@@ -99,8 +85,8 @@ ggplot() +
   geom_basemap() +
   annotate_map(
     title = "Pyöräilymatkojen kilometrisuorite asukasta kohti",
-    subtitle = "helmet_4.0.4_2018_results"
+    subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name"))
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", "map_mileage_bicycle.png"))
+ggsave_map(here::here("figures", sprintf("map_mileage_bicycle_%s.png", config::get("scenario"))))
