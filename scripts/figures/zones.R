@@ -1,6 +1,7 @@
 # -*- coding: utf-8-unix -*-
 library(here)
 library(tidyverse)
+library(sf)
 
 read_tsv_helmet <- function(..., comment = "#") {
   readr::read_tsv(..., comment = comment) %>%
@@ -14,72 +15,106 @@ read_tsv_helmet <- function(..., comment = "#") {
 zones <- readr::read_rds(here::here("results", "zones.rds"))
 
 pop <- read_tsv_helmet(
-  here::here("data", "Lahtodata", "2016_zonedata", "2017.pop"),
+  list.files(file.path(config::get("forecast_zonedata_path"),
+                       config::get("forecast_zonedata")),
+             pattern = ".pop$",
+             full.names = TRUE),
   col_types = "iiddddd"
 )
 lnd <- read_tsv_helmet(
-  here::here("data", "Lahtodata", "2016_zonedata", "2017.lnd"),
+  list.files(file.path(config::get("forecast_zonedata_path"),
+                       config::get("forecast_zonedata")),
+             pattern = ".lnd$",
+             full.names = TRUE),
   col_types = "idd"
 )
 edu <- read_tsv_helmet(
-  here::here("data", "Lahtodata", "2016_zonedata", "2017.edu"),
-  col_types = "iiii---"
-)
-car <- read_tsv_helmet(
-  here::here("data", "Lahtodata", "2016_zonedata", "2017.car"),
-  col_types = "idd"
+  list.files(file.path(config::get("forecast_zonedata_path"),
+                       config::get("forecast_zonedata")),
+             pattern = ".edu$",
+             full.names = TRUE),
+  col_types = "iiii"
 )
 wrk <- read_tsv_helmet(
-  here::here("data", "Lahtodata", "2016_zonedata", "2016.wrk"),
+  list.files(file.path(config::get("forecast_zonedata_path"),
+                       config::get("forecast_zonedata")),
+             pattern = ".wrk$",
+             full.names = TRUE),
   col_types = "iidddd"
 )
 prk <- read_tsv_helmet(
-  here::here("data", "Lahtodata", "2016_zonedata", "2016.prk"),
+  list.files(file.path(config::get("forecast_zonedata_path"),
+                       config::get("forecast_zonedata")),
+             pattern = ".prk$",
+             full.names = TRUE),
   col_types = "iii"
 )
 
 accessibility <- read_tsv_helmet(
-  here::here("data", "helmet_4.0.4_2018_results", "accessibility.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "accessibility.txt"),
   col_types = "iddddddddddddddddddddddddddddddddddddddddddddddddd"
 )
 attraction <- read_tsv_helmet(
-  here::here("data", "helmet_4.0.4_2018_results", "attraction.txt"),
-  col_types = "iddddddddddddd"
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "attraction.txt"),
+  col_types = "idddddddddddd"
 )
 car_density <- read_tsv_helmet(
-  here::here("data", "helmet_4.0.4_2018_results", "car_density.txt"),
+
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "car_density.txt"),
   col_types = "id"
 )
 car_use <- read_tsv_helmet(
-  here::here("data", "helmet_4.0.4_2018_results", "car_use.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "car_use.txt"),
   col_types = "id"
 )
 generation <- read_tsv_helmet(
-  here::here("data", "helmet_4.0.4_2018_results", "generation.txt"),
-  col_types = "iddddddddddddd"
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "generation.txt"),
+  col_types = "idddddddddddd"
 )
 impedance_ratio <- read_tsv_helmet(
-  here::here("data", "helmet_4.0.4_2018_results", "impedance_ratio.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "impedance_ratio.txt"),
   col_types = "idd"
 )
 origins_demand <- read_tsv_helmet(
-  here::here("data", "helmet_4.0.4_2018_results", "origins_demand.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "origins_demand.txt"),
   col_types = "idddd"
 )
 origins_shares <- read_tsv_helmet(
-  here::here("data", "helmet_4.0.4_2018_results", "origins_shares.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "origins_shares.txt"),
   col_types = "idddd"
 )
 savu <- read_tsv_helmet(
-  here::here("data", "helmet_4.0.4_2018_results", "savu.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "savu.txt"),
   col_types = "id"
 )
 sustainable_accessibility <- read_tsv_helmet(
-  here::here("data", "helmet_4.0.4_2018_results", "sustainable_accessibility.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "sustainable_accessibility.txt"),
   col_types = "iddddddddddd"
 )
 workforce_accessibility <- read_tsv_helmet(
-  here::here("data", "helmet_4.0.4_2018_results", "workforce_accessibility.txt"),
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "workforce_accessibility.txt"),
   col_types = "id"
 )
 
@@ -104,7 +139,6 @@ zones <- zones %>%
   dplyr::left_join(pop, by = "zone") %>%
   dplyr::left_join(lnd, by = "zone") %>%
   dplyr::left_join(edu, by = "zone") %>%
-  dplyr::left_join(car, by = "zone") %>%
   dplyr::left_join(wrk, by = "zone") %>%
   dplyr::left_join(prk, by = "zone") %>%
   dplyr::left_join(savu, by = "zone") %>%
@@ -114,6 +148,18 @@ zones <- zones %>%
 
 
 # Impact assessment columns  ----------------------------------------------
+
+zones <- zones %>%
+  dplyr::mutate(
+    area = dplyr::case_when(
+      zone %in% 0:999 ~ "helsinki_cbd",
+      zone %in% 1000:1999 ~ "helsinki_other",
+      zone %in% 2000:5999 ~ "espoo_vant_kau",
+      zone %in% c(6000:6999, 10000:11999, 13000:14999, 15500:15999) ~ "surround_train",
+      zone %in% c(7000:9999, 12000:12999, 15000:15499) ~ "surround_other",
+      TRUE ~ NA_character_
+    ),
+  )
 
 levels <- sort(unique(zones$savu_zone))
 labels <- as.character(as.roman(levels))
@@ -152,4 +198,4 @@ zones <- zones %>%
 
 # Output ------------------------------------------------------------------
 
-readr::write_rds(zones, file = here::here("results", "zones_2018.rds"))
+readr::write_rds(zones, file = here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))

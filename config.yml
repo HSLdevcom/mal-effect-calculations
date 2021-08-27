@@ -4,6 +4,7 @@ default:
   present_name: "2018"
   housing_cost: "AsKustannukset_01062021.xlsx"
   income_data: "tulotiedot_2016_korjattu.xlsx"
+  forecast_zonedata_path: "C:/.../Syottodata"
 
 V2030_mal19_v1:
   projected_scenario: "V2030_mal19"
@@ -16,4 +17,23 @@ V2030_ve0_rm:
   baseline_scenario: "V2030_ve0"
   projected_name: "ve0 + Ruuhkamaksut"
   baseline_name: "2030 ve0"
+2020:
+  scenario: "2020"
+  year: 2020
+  scenario_name: "Nykytila"
+  forecast_zonedata: "2020"
+  results: "2020"
 
+2040_ve0:
+  scenario: "2040_ve0"
+  year: 2040
+  scenario_name: "Vertailupohja"
+  forecast_zonedata: "2040_ve0"
+  results: "2040_ve0"
+
+2040_ve0_muulitar:
+  scenario: "2040_ve0_muulitar"
+  year: 2040
+  scenario_name: "Etätyö+"
+  forecast_zonedata: "2040_ve0"
+  results: "2040_ve0_muulitar"
