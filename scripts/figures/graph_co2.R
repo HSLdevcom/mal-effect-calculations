@@ -18,11 +18,25 @@ results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
     vehicle = factor(vehicle, levels = c("truck_all", "bus_other", "bus_hsl", "van", "car"), labels = c("Kuorma-autot", "Muu linja-autoliikenne", "HSL:n linja-autoliikenne", "Pakettiautot", "Henkilöautot"))
   )
 
+results_total <- results %>%
+  dplyr::group_by(scenario) %>%
+  dplyr::summarise(value = sum(value))
+
 
 # Plot --------------------------------------------------------------------
 
 ggplot(results, aes(x = scenario, y = value)) +
   geom_col(aes(fill = vehicle), position = position_stack()) +
+  geom_text(
+    aes(label = scales::label_number(scale = 0.000001, accuracy = 1)(value), group = vehicle),
+    position = position_stack(vjust = 0.5),
+    size = points2mm(8)
+  ) +
+  geom_text(data = results_total,
+            aes(label = scales::label_number(scale = 0.000001, accuracy = 1)(value)),
+            vjust = -0.5,
+            size = points2mm(8),
+            fontface = "bold") +
   scale_y_continuous(
     labels = scales::label_number(scale = 0.000001)
   ) +

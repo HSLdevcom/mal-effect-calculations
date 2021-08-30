@@ -13,6 +13,12 @@ results <- readr::read_rds(here::here("results", "areas_all.rds"))
 
 ggplot(results, aes(x = area, y = goodness_share)) +
   geom_col(aes(fill = scenario), position = position_dodge2()) +
+  geom_text(
+    aes(label = scales::label_percent(accuracy = 1, suffix = "")(goodness_share)),
+    position = position_dodge2(width = 0.9),
+    vjust = -0.5,
+    size = points2mm(8)
+  ) +
   scale_y_continuous(
     labels = scales::label_percent(suffix = " %")
   ) +
