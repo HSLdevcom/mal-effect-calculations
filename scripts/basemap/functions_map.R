@@ -84,7 +84,7 @@ theme_mal_map <- function() {
     theme_void(),
     theme(
       text = element_text(family = "sans", colour = "#333333", size = 10),
-      plot.title = element_text(colour = "#64BE1E"),
+      plot.title = element_text(colour = "#3E8606"),
       legend.position = c(0.00, 0.90),
       legend.justification = c("left", "top"),
       legend.box.just = "left",
@@ -100,7 +100,7 @@ theme_mal_graph <- function() {
     theme_minimal(),
     theme(
       text = element_text(family = "sans", colour = "#333333", size = 10),
-      plot.title = element_text(colour = "#64BE1E"),
+      plot.title = element_text(colour = "#3E8606"),
       legend.position = "bottom",
       legend.box = "vertical",
       legend.text = element_text(size = rel(1.0)),
