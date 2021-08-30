@@ -42,6 +42,7 @@ ggplot(data = ttimes) +
     y = "Lähtöpaikka"
   ) +
   coord_equal() +
-  theme_mal_graph()
+  theme_mal_graph() +
+  theme(legend.position = "right")
 
 ggsave_graph(here::here("figures", "graph_centers.png"))
