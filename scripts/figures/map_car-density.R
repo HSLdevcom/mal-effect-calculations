@@ -22,6 +22,8 @@ values <- scales::rescale(
   to = c(0,1),
   from = range(breaks)
 )
+limits <- range(breaks) + c(-0.0001, 0.0001)
+breaks <- breaks[c(-1, -length(breaks))]
 
 ggplot() +
   geom_sf(mapping = aes(fill = car_density),
@@ -30,9 +32,8 @@ ggplot() +
     name = "autoa per 1000 asukasta",
     labels = scales::label_number(accuracy = 1),
     breaks = breaks,
-    limits = range(breaks),
+    limits = limits,
     colors = colors,
-    guide = "colourbar",
     values = values,
     oob = scales::squish
   ) +

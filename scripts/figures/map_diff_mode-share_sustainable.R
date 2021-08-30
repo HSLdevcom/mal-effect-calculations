@@ -34,6 +34,7 @@ values <- scales::rescale(
   to = c(0,1),
   from = range(breaks)
 )
+limits <- range(breaks) + c(-0.0001, 0.0001)
 breaks <- breaks[c(-1, -length(breaks))]
 
 label_percent_signed <- function(x) {
@@ -50,7 +51,7 @@ ggplot() +
     name = "%-yks.",
     breaks = breaks,
     labels = label_percent_signed,
-    limits = c(-0.0901, 0.0901),
+    limits = limits,
     colors = colors,
     values = values,
     oob = scales::squish
