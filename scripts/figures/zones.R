@@ -54,7 +54,7 @@ accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "accessibility.txt"),
-  col_types = "iddddddddddddddddddddddddddddddddddddddddddddddddd"
+  col_types = "idddddddddddddddddddddddddddddddddddddddddddddddddd"
 )
 attraction <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
@@ -109,7 +109,7 @@ sustainable_accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "sustainable_accessibility.txt"),
-  col_types = "iddddddddddd"
+  col_types = "idddddddddddd"
 )
 workforce_accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
