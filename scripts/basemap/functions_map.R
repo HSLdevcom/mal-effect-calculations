@@ -51,7 +51,7 @@ annotate_map <- function(title, subtitle) {
       vjust = 1,
       label = title,
       size = points2mm(10),
-      colour = "#64BE1E"
+      colour = "#3E8606"
     ),
     # Subtitle
     annotate(
