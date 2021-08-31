@@ -46,4 +46,4 @@ ggplot(results, aes(x = scenario, y = total_wrk)) +
   theme_mal_graph() +
   theme(legend.position = "right")
 
-ggsave_graph(here::here("figures", "graph_wkr.png"))
+ggsave_graph(here::here("figures", "graph_wrk.png"))
