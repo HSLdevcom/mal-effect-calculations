@@ -7,7 +7,7 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-results0 <- readr::read_rds(here::here("results", "zones_2020.rds")) %>%
+results0 <- readr::read_rds(here::here("results", "zones_2018.rds")) %>%
   dplyr::select(zone, mode_share_sustainable) %>%
   dplyr::rename(mode_share_sustainable0 = mode_share_sustainable)
 
@@ -59,7 +59,7 @@ ggplot() +
   geom_basemap() +
   annotate_map(
     title = "Muutos kestävillä kulkutavoilla tehtyjen kiertomatkojen osuuksissa alueelta alkavista kiertomatkoista",
-    subtitle = "2020 Nykytila \U2192 2040 Vertailupohja"
+    subtitle = "2018 Nykytila \U2192 2040 Vertailupohja"
   ) +
   theme_mal_map()
 
