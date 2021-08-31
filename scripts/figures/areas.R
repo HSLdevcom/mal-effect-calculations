@@ -14,7 +14,7 @@ read_tsv_helmet <- function(..., comment = "#") {
 translations <- here::here("utilities", "areas.tsv") %>%
   readr::read_tsv(col_types = "cc")
 
-co2 <- here::here("data", "co2.tsv") %>%
+co2 <- here::here("utilities", "co2.tsv") %>%
   readr::read_tsv(col_types = "cid")
 
 car_density <- read_tsv_helmet(
