@@ -47,12 +47,12 @@ vehicle_kms_modes <- read_tsv_helmet(
             "vehicle_kms_areas.txt"),
   col_types = "cddddddddd"
 )
-# workforce_accessibility <- read_tsv_helmet(
-#   file.path(config::get("helmet_data"),
-#             config::get("results"),
-#             "workforce_accessibility_per_area.txt"),
-#   col_types = "cd"
-# )
+workforce_accessibility <- read_tsv_helmet(
+  file.path(config::get("helmet_data"),
+            config::get("results"),
+            "workforce_accessibility_per_area.txt"),
+  col_types = "cd"
+)
 
 noise <- read_tsv(
   file.path(config::get("helmet_data"),
@@ -111,6 +111,8 @@ zones2 <- zones %>%
 # Rename columns to avoid name collisions
 vehicle_kms_modes <- vehicle_kms_modes %>%
   dplyr::rename_with(~ paste0("vehicle_kms_", .x), -area)
+workforce_accessibility <- workforce_accessibility %>%
+  dplyr::rename(workforce_accessibility = wh)
 origin_demand <- origin_demand %>%
   dplyr::rename_with(~ paste0("origin_demand_", .x), -area)
 
@@ -118,6 +120,7 @@ areas <- data.frame(area = unique(zones$area)) %>%
   dplyr::left_join(zones1, by = "area") %>%
   dplyr::left_join(zones2, by = "area") %>%
   dplyr::left_join(vehicle_kms_modes, by = "area") %>%
+  dplyr::left_join(workforce_accessibility, by = "area") %>%
   dplyr::left_join(origin_demand, by = "area") %>%
   dplyr::left_join(car_density, by = "area")
 

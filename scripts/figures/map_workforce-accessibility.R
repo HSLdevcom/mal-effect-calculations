@@ -12,26 +12,30 @@ results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config:
 
 # Plot --------------------------------------------------------------------
 
-breaks <- quantile(zones$workforce_accessibility, probs = seq(0, 1, 0.05), names = FALSE)
+breaks <- seq(from = 0, to = 1000000, by = 100000)
 colors <- c("#fef0d9", "#fdcc8a", "#fc8d59", "#e34a33", "#000000")
-nbreaks <- length(breaks)
-values <- scales::rescale(
-  x = seq(from = mean(breaks[c(1, 2)]),
-          to = mean(breaks[c(nbreaks - 1, nbreaks)]),
-          length.out = 5),
-  to = c(0,1),
-  from = range(zones$workforce_accessibility)
-)
+# nbreaks <- length(breaks)
+# values <- scales::rescale(
+#   x = seq(from = mean(breaks[c(1, 2)]),
+#           to = mean(breaks[c(nbreaks - 1, nbreaks)]),
+#           length.out = 5),
+#   to = c(0,1),
+#   from = range(results$workforce_accessibility)
+# )
+limits <- range(breaks)
+breaks <- breaks[c(-1, -length(breaks))]
 
 ggplot() +
   geom_sf(mapping = aes(fill = workforce_accessibility),
-          data = zones, color = NA) +
+          data = results, color = NA) +
   scale_fill_stepsn(
     name = "Henkilöä",
+    labels = scales::label_number(accuracy = 1),
     breaks = breaks,
+    limits = limits,
     colors = colors,
-    guide = "colourbar",
-    values = values
+    # values = values,
+    oob = scales::squish
   ) +
   geom_basemap() +
   annotate_map(
