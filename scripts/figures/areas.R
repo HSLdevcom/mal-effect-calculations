@@ -165,7 +165,7 @@ vehicle_kms_bus_hsl <- transit_kms$dist[transit_kms$vehicle == "bus_hsl"]
 vehicle_kms_bus_other <- transit_kms$dist[transit_kms$vehicle == "bus_other"]
 
 co2 <- co2 %>%
-  dplyr::filter(year == config::get("year")) %>%
+  dplyr::filter(year == config::get("co2_year")) %>%
   dplyr::select(vehicle, co2) %>%
   tibble::deframe()
 
