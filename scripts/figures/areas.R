@@ -100,9 +100,9 @@ zones1 <- zones %>%
 zones2 <- zones %>%
   dplyr::group_by(area, savu_goodness, .drop = FALSE) %>%
   dplyr::summarise(
-    goodness_wrk = sum(total_wrk)
+    goodness_wrk = sum(total_wrk),
+    .groups = "drop"
   ) %>%
-  dplyr::ungroup() %>%
   dplyr::filter(savu_goodness == "SAVU hyvä")
 
 

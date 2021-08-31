@@ -22,7 +22,7 @@ results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
 
 results_total <- results %>%
   dplyr::group_by(scenario, area) %>%
-  dplyr::summarise(value = sum(value))
+  dplyr::summarise(value = sum(value), .groups = "drop")
 
 
 # Plot --------------------------------------------------------------------
