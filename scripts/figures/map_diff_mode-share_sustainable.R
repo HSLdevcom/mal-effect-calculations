@@ -25,7 +25,7 @@ results <- results0 %>%
 # Plot --------------------------------------------------------------------
 
 breaks <- seq(from = -0.09, to = 0.09, by = 0.02)
-colors <- c("#f092cd", "#ffffff", "#3E8606")
+colors <- c("#7b1154", "#ffffff", "#3E8606")
 nbreaks <- length(breaks)
 values <- scales::rescale(
   x = seq(from = mean(breaks[c(1, 2)]),
