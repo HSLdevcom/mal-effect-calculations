@@ -24,7 +24,7 @@ results <- results0 %>%
 
 # Plot --------------------------------------------------------------------
 
-breaks <- seq(from = -200, to = 200, by = 50)
+breaks <- seq(from = -225, to = 225, by = 50)
 colors <- c("#3E8606", "#ffffff", "#f092cd")
 nbreaks <- length(breaks)
 values <- scales::rescale(
@@ -41,7 +41,7 @@ ggplot() +
   geom_sf(mapping = aes(fill = diff_car_density),
           data = results, color = NA) +
   scale_fill_stepsn(
-    name = "%-yks.",
+    name = "autoa per 1000 asukasta",
     breaks = breaks,
     labels = scales::label_number(accuracy = 1),
     limits = limits,
