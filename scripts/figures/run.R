@@ -57,4 +57,7 @@ source(here::here("scripts", "figures", "graph_vehicle_kms.R"), encoding = "utf-
 source(here::here("scripts", "figures", "graph_wrk.R"), encoding = "utf-8")
 source(here::here("scripts", "figures", "graph_workforce-accessibility.R"), encoding = "utf-8")
 
+source(here::here("scripts", "figures", "map_diff_car-density.R"), encoding = "utf-8")
 source(here::here("scripts", "figures", "map_diff_mode-share_sustainable.R"), encoding = "utf-8")
+source(here::here("scripts", "figures", "map_diff_workforce-accessibility.R"), encoding = "utf-8")
+source(here::here("scripts", "figures", "map_diff_rel_workforce-accessibility.R"), encoding = "utf-8")
