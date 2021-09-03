@@ -180,6 +180,7 @@ areas <- areas %>%
     co2_bus_hsl = co2["bus_hsl"] * vehicle_kms_bus_hsl,
     co2_bus_other = co2["bus_other"] * vehicle_kms_bus_other,
     co2_truck_all = co2["truck_all"] * sum(.$vehicle_kms_trailer_truck) + sum(.$vehicle_kms_trailer_truck),
+    workforce_accessibility = weighted.mean(.$workforce_accessibility, .$total_wrk),
     car_density = weighted.mean(.$car_density, .$total_pop),
     goodness_share = sum(.$goodness_wrk) / sum(.$total_wrk),
     origin_share_walk = sum(.$origin_demand_walk) / sum(.$origin_demand_total),
