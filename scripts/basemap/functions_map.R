@@ -90,7 +90,8 @@ theme_mal_map <- function() {
       legend.box.just = "left",
       legend.margin = margin(3, 3, 3, 3),
       legend.text = element_text(size = rel(1.0)),
-      plot.caption = element_text(size = rel(1.0))
+      plot.caption = element_text(size = rel(1.0)),
+      legend.key.height= unit(1, "cm")
     )
   )
 }
