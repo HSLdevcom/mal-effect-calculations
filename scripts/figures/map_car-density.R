@@ -12,7 +12,7 @@ results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config:
 
 # Plot --------------------------------------------------------------------
 
-breaks <- c(100, 200, 300, 400, 500, 600, 700.1)
+breaks <- seq(from = 100, to = 900, by = 100)
 colors <- c("#ffffff", "#7b1154")
 nbreaks <- length(breaks)
 values <- scales::rescale(

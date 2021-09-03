@@ -24,7 +24,7 @@ results <- results0 %>%
 
 # Plot --------------------------------------------------------------------
 
-breaks <- seq(from = -0.09, to = 0.09, by = 0.02)
+breaks <- seq(from = -0.275, to = 0.275, by = 0.05)
 colors <- c("#7b1154", "#ffffff", "#3E8606")
 nbreaks <- length(breaks)
 values <- scales::rescale(
@@ -38,7 +38,7 @@ limits <- range(breaks) + c(-0.0001, 0.0001)
 breaks <- breaks[c(-1, -length(breaks))]
 
 label_percent_signed <- function(x) {
-  y <- scales::label_percent(accuracy = 1, suffix = "")(x)
+  y <- scales::label_percent(accuracy = 0.1, suffix = "", decimal.mark = ",")(x)
   without_sign <- !grepl("-", y)
   y[without_sign] <- paste0("+", y[without_sign])
   return(y)
