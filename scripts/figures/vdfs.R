@@ -11,7 +11,7 @@ translations <- here::here("utilities", "vdfs.tsv") %>%
 vdfs <- read_tsv_helmet(
   here::here(config::get("helmet_data"), config::get("results"), "vehicle_kms_vdfs_areas.txt"),
   col_types = "cddddd",
-  first_col_name = "vdf"
+  first_col_name = "area"
 )
 
 # Discard peripheral data, transpose data frame, and calculate total vehicle
