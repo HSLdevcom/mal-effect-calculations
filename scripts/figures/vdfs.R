@@ -2,19 +2,6 @@
 library(here)
 library(tidyverse)
 
-read_tsv_helmet <- function(..., comment = "#") {
-  withCallingHandlers({
-    readr::read_tsv(..., comment = comment) %>%
-      dplyr::rename(area = X1) %>%
-      dplyr::rename_with(~ gsub("-", "_", .x, fixed = TRUE))
-  }, warning = function(w) {
-    # Helmet results never include first column name
-    if (conditionMessage(w) == "Missing column names filled in: 'X1' [1]") {
-      invokeRestart("muffleWarning")
-    }
-  })
-}
-
 
 # Read data ---------------------------------------------------------------
 
@@ -23,7 +10,8 @@ translations <- here::here("utilities", "vdfs.tsv") %>%
 
 vdfs <- read_tsv_helmet(
   here::here(config::get("helmet_data"), config::get("results"), "vehicle_kms_vdfs_areas.txt"),
-  col_types = "cddddd"
+  col_types = "cddddd",
+  first_col_name = "vdf"
 )
 
 # Discard peripheral data, transpose data frame, and calculate total vehicle

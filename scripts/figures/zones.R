@@ -3,19 +3,6 @@ library(here)
 library(tidyverse)
 library(sf)
 
-read_tsv_helmet <- function(..., comment = "#") {
-  withCallingHandlers({
-    readr::read_tsv(..., comment = comment) %>%
-      dplyr::rename(zone = X1) %>%
-      dplyr::rename_with(~ gsub("-", "_", .x, fixed = TRUE))
-  }, warning = function(w) {
-    # Helmet results never include first column name
-    if (conditionMessage(w) == "Missing column names filled in: 'X1' [1]") {
-      invokeRestart("muffleWarning")
-    }
-  })
-}
-
 
 # Read data ---------------------------------------------------------------
 
@@ -26,103 +13,119 @@ pop <- read_tsv_helmet(
                        config::get("forecast_zonedata")),
              pattern = ".pop$",
              full.names = TRUE),
-  col_types = "iiddddd"
+  col_types = "iiddddd",
+  first_col_name = "zone"
 )
 lnd <- read_tsv_helmet(
   list.files(file.path(config::get("forecast_zonedata_path"),
                        config::get("forecast_zonedata")),
              pattern = ".lnd$",
              full.names = TRUE),
-  col_types = "idd"
+  col_types = "idd",
+  first_col_name = "zone"
 )
 edu <- read_tsv_helmet(
   list.files(file.path(config::get("forecast_zonedata_path"),
                        config::get("forecast_zonedata")),
              pattern = ".edu$",
              full.names = TRUE),
-  col_types = "iiii"
+  col_types = "iiii",
+  first_col_name = "zone"
 )
 wrk <- read_tsv_helmet(
   list.files(file.path(config::get("forecast_zonedata_path"),
                        config::get("forecast_zonedata")),
              pattern = ".wrk$",
              full.names = TRUE),
-  col_types = "iidddd"
+  col_types = "iidddd",
+  first_col_name = "zone"
 )
 prk <- read_tsv_helmet(
   list.files(file.path(config::get("forecast_zonedata_path"),
                        config::get("forecast_zonedata")),
              pattern = ".prk$",
              full.names = TRUE),
-  col_types = "iii"
+  col_types = "iii",
+  first_col_name = "zone"
 )
 
 accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "accessibility.txt"),
-  col_types = "idddddddddddddddddddddddddddddddddddddddddddddddddd"
+  col_types = "idddddddddddddddddddddddddddddddddddddddddddddddddd",
+  first_col_name = "zone"
 )
 attraction <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "attraction.txt"),
-  col_types = "idddddddddddd"
+  col_types = "idddddddddddd",
+  first_col_name = "zone"
 )
 car_density <- read_tsv_helmet(
 
   file.path(config::get("helmet_data"),
             config::get("results"),
             "car_density.txt"),
-  col_types = "id"
+  col_types = "id",
+  first_col_name = "zone"
 )
 car_use <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "car_use.txt"),
-  col_types = "id"
+  col_types = "id",
+  first_col_name = "zone"
 )
 generation <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "generation.txt"),
-  col_types = "idddddddddddd"
+  col_types = "idddddddddddd",
+  first_col_name = "zone"
 )
 impedance_ratio <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "impedance_ratio.txt"),
-  col_types = "idd"
+  col_types = "idd",
+  first_col_name = "zone"
 )
 origins_demand <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "origins_demand.txt"),
-  col_types = "idddd"
+  col_types = "idddd",
+  first_col_name = "zone"
 )
 origins_shares <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "origins_shares.txt"),
-  col_types = "idddd"
+  col_types = "idddd",
+  first_col_name = "zone"
 )
 savu <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "savu.txt"),
-  col_types = "id"
+  col_types = "id",
+  first_col_name = "zone"
 )
 sustainable_accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "sustainable_accessibility.txt"),
-  col_types = "idddddddddddd"
+  col_types = "idddddddddddd",
+  first_col_name = "zone"
 )
 workforce_accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "workforce_accessibility.txt"),
-  col_types = "id"
+  col_types = "id",
+  first_col_name = "zone"
 )
 
 

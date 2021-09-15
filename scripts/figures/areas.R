@@ -2,19 +2,6 @@
 library(here)
 library(tidyverse)
 
-read_tsv_helmet <- function(..., comment = "#") {
-  withCallingHandlers({
-    readr::read_tsv(..., comment = comment) %>%
-      dplyr::rename(area = X1) %>%
-      dplyr::rename_with(~ gsub("-", "_", .x, fixed = TRUE))
-  }, warning = function(w) {
-    # Helmet results never include first column name
-    if (conditionMessage(w) == "Missing column names filled in: 'X1' [1]") {
-      invokeRestart("muffleWarning")
-    }
-  })
-}
-
 
 # Read data ---------------------------------------------------------------
 
@@ -28,37 +15,43 @@ car_density <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "car_density_areas.txt"),
-  col_types = "cd"
+  col_types = "cd",
+  first_col_name = "area"
 )
 car_use <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "car_use_areas.txt"),
-  col_types = "cd"
+  col_types = "cd",
+  first_col_name = "area"
 )
 origin_demand <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "origin_demand_areas.txt"),
-  col_types = "cdddd"
+  col_types = "cdddd",
+  first_col_name = "area"
 )
 own_zone_demand <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "own_zone_demand.txt"),
-  col_types = "cdddddddddddddddddddddddddddddddddddd"
+  col_types = "cdddddddddddddddddddddddddddddddddddd",
+  first_col_name = "area"
 )
 vehicle_kms_modes <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "vehicle_kms_areas.txt"),
-  col_types = "cddddddddd"
+  col_types = "cddddddddd",
+  first_col_name = "area"
 )
 workforce_accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "workforce_accessibility_per_area.txt"),
-  col_types = "cd"
+  col_types = "cd",
+  first_col_name = "area"
 )
 
 noise <- read_tsv(
