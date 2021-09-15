@@ -1,7 +1,9 @@
 # -*- coding: utf-8-unix -*-
 library(here)
+library(tidyverse)
 
 source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
+source(here::here("scripts", "utils.R"), encoding = "utf-8")
 
 source(here::here("scripts", "figures", "map_centers.R"), encoding = "utf-8")
 
