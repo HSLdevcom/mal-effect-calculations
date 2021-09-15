@@ -42,7 +42,8 @@ ggplot(results, aes(x = scenario, y = value)) +
             size = points2mm(8),
             fontface = "bold") +
   scale_y_continuous(
-    labels = scales::label_percent(suffix = "")
+    labels = scales::label_percent(suffix = ""),
+    limits = c(0, 1)
   ) +
   scale_x_discrete(
     labels = NULL
