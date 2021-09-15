@@ -13,9 +13,10 @@ results <- readr::read_rds(here::here("results", "vdfs_all.rds"))
 ggplot(results, aes(x = vdf, y = share)) +
   geom_col(aes(fill = scenario), position = position_dodge2()) +
   geom_text(
-    aes(label = scales::label_percent(accuracy = 0.1, suffix = "", decimal.mark = ",")(share)),
+    aes(label = scales::label_percent(accuracy = 1, suffix = "", decimal.mark = ",")(share)),
     position = position_dodge2(width = 0.9),
-    vjust = -0.5
+    vjust = -0.5,
+    size = points2mm(8)
   ) +
   scale_y_continuous(
     labels = scales::label_percent(accuracy = 1, suffix = "")

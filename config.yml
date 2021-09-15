@@ -11,6 +11,13 @@ V2030_mal19_v1:
   baseline_scenario: "V2030_ve0"
   projected_name: "MAL2019"
   baseline_name: "2030 ve0"
+2018:
+  scenario: "2018"
+  year: 2018
+  scenario_name: "Nykytila"
+  forecast_zonedata: "2018"
+  results: "2018"
+  co2_year: 2020
 
 V2030_ve0_rm:
   projected_scenario: "V2030_ve0_rm"
@@ -23,6 +30,7 @@ V2030_ve0_rm:
   scenario_name: "Nykytila"
   forecast_zonedata: "2020"
   results: "2020"
+  co2_year: 2020
 
 2040_ve0:
   scenario: "2040_ve0"
@@ -30,6 +38,7 @@ V2030_ve0_rm:
   scenario_name: "Vertailupohja"
   forecast_zonedata: "2040_ve0"
   results: "2040_ve0"
+  co2_year: 2040
 
 2040_ve0_muulitar:
   scenario: "2040_ve0_muulitar"
@@ -37,3 +46,4 @@ V2030_ve0_rm:
   scenario_name: "Etätyö+"
   forecast_zonedata: "2040_ve0"
   results: "2040_ve0_muulitar"
+  co2_year: 2040

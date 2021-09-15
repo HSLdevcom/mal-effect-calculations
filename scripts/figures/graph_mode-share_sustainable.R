@@ -20,6 +20,10 @@ results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
   dplyr::filter(mode != "car") %>%
   dplyr::mutate(mode = factor(mode, levels = translations$level, labels = translations$label))
 
+results_total <- results %>%
+  dplyr::group_by(scenario, area) %>%
+  dplyr::summarise(value = sum(value), .groups = "drop")
+
 
 # Plot --------------------------------------------------------------------
 
@@ -27,6 +31,16 @@ ggplot(results, aes(x = scenario, y = value)) +
   facet_grid(cols = vars(area), switch = "both", labeller = labeller(.cols = scales::label_wrap(10))) +
   geom_col(fill = "white") +
   geom_col(aes(fill = mode, alpha = forcats::fct_rev(scenario))) +
+  geom_text(
+    aes(label = scales::label_percent(accuracy = 1, suffix = "")(value), group = mode),
+    position = position_stack(vjust = 0.5),
+    size = points2mm(8)
+  ) +
+  geom_text(data = results_total,
+            aes(label = scales::label_percent(accuracy = 1, suffix = "")(value)),
+            vjust = -0.5,
+            size = points2mm(8),
+            fontface = "bold") +
   scale_y_continuous(
     labels = scales::label_percent(suffix = "")
   ) +
