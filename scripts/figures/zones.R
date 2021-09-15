@@ -4,9 +4,16 @@ library(tidyverse)
 library(sf)
 
 read_tsv_helmet <- function(..., comment = "#") {
-  readr::read_tsv(..., comment = comment) %>%
-    dplyr::rename(zone = X1) %>%
-    dplyr::rename_with(~ gsub("-", "_", .x, fixed = TRUE))
+  withCallingHandlers({
+    readr::read_tsv(..., comment = comment) %>%
+      dplyr::rename(zone = X1) %>%
+      dplyr::rename_with(~ gsub("-", "_", .x, fixed = TRUE))
+  }, warning = function(w) {
+    # Helmet results never include first column name
+    if (conditionMessage(w) == "Missing column names filled in: 'X1' [1]") {
+      invokeRestart("muffleWarning")
+    }
+  })
 }
 
 
