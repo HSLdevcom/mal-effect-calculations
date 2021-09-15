@@ -13,6 +13,7 @@ for (scenario in c("2018", "2040_ve0", "2040_ve0_muulitar")) {
   source(here::here("scripts", "figures", "areas.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "vdfs.R"), encoding = "utf-8")
 
+  source(here::here("scripts", "figures", "map_sustainable-accessibility.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "graph_centers.R"), encoding = "utf-8")
 
   source(here::here("scripts", "figures", "map_car-density.R"), encoding = "utf-8")

@@ -93,6 +93,7 @@ zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::g
 zones1 <- zones %>%
   dplyr::group_by(area) %>%
   dplyr::summarise(
+    sustainable_accessibility = weighted.mean(sustainable_accessibility, total_pop),
     total_pop = sum(total_pop),
     total_wrk = sum(total_wrk)
   )
@@ -180,6 +181,7 @@ areas <- areas %>%
     co2_bus_hsl = co2["bus_hsl"] * vehicle_kms_bus_hsl,
     co2_bus_other = co2["bus_other"] * vehicle_kms_bus_other,
     co2_truck_all = co2["truck_all"] * sum(.$vehicle_kms_trailer_truck) + sum(.$vehicle_kms_trailer_truck),
+    sustainable_accessibility = weighted.mean(.$sustainable_accessibility, .$total_pop),
     workforce_accessibility = weighted.mean(.$workforce_accessibility, .$total_wrk),
     car_density = weighted.mean(.$car_density, .$total_pop),
     goodness_share = sum(.$goodness_wrk) / sum(.$total_wrk),
