@@ -26,3 +26,8 @@ read_helmet_omx <- function(path) {
     )
   return(omx_matrix)
 }
+
+verbose_source <- function(file, ...) {
+  message(sprintf("Running analysis in %s...", basename(file)))
+  invisible(source(file, ...))
+}

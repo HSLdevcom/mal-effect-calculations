@@ -3,11 +3,6 @@ library(here)
 
 source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
-verbose_source <- function(file, ...) {
-  message(sprintf("Running analysis in %s...", basename(file)))
-  invisible(source(file, ...))
-}
-
 source(here::here("scripts", "figures", "map_centers.R"), encoding = "utf-8")
 
 for (scenario in c("2018", "2040_ve0", "2040_ve0_muulitar")) {
