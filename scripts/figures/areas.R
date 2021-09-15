@@ -60,7 +60,7 @@ noise <- read_tsv(
             "noise_areas.txt"),
   skip = 1, # skip old column names
   col_types = "cdd",
-  col_names = c("area", "area_km2", "population") # override column names
+  col_names = c("area", "noise_area_km2", "noise_population") # override column names
 )
 aggregated_demand <- read_tsv(
   file.path(config::get("helmet_data"),
@@ -123,7 +123,8 @@ areas <- data.frame(area = unique(zones$area)) %>%
   dplyr::left_join(vehicle_kms_modes, by = "area") %>%
   dplyr::left_join(workforce_accessibility, by = "area") %>%
   dplyr::left_join(origin_demand, by = "area") %>%
-  dplyr::left_join(car_density, by = "area")
+  dplyr::left_join(car_density, by = "area") %>%
+  dplyr::left_join(noise, by = "area")
 
 
 # Impact assessment columns  ----------------------------------------------
@@ -189,6 +190,10 @@ areas <- areas %>%
     origin_share_transit = sum(.$origin_demand_transit) / sum(.$origin_demand_total),
     origin_share_car = sum(.$origin_demand_car) / sum(.$origin_demand_total),
     origin_share_bike = sum(.$origin_demand_bike) / sum(.$origin_demand_total),
+    noise_area_km2 = sum(.$noise_area_km2),
+    noise_population = sum(.$noise_population),
+    total_pop = sum(.$total_pop),
+    total_wrk = sum(.$total_wrk)
   )
 
 
