@@ -1,10 +1,10 @@
 vehicle	year	co2
-car	2040	59
-van	2040	49
-bus_all	2040	291
-bus_hsl	2040	190
-bus_other	2040	476
-truck_all	2040	487
+car	2040	47
+van	2040	46
+bus_all	2040	278
+bus_hsl	2040	182
+bus_other	2040	455
+truck_all	2040	444
 other	2040	80
 car	2020	127
 van	2020	135
