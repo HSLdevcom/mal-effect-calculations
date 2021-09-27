@@ -10,7 +10,7 @@ translations <- here::here("utilities", "vdfs.tsv") %>%
 
 vdfs <- read_tsv_helmet(
   here::here(config::get("helmet_data"), config::get("results"), "vehicle_kms_vdfs_areas.txt"),
-  col_types = "cddddd",
+  col_types = "cdddddd",
   first_col_name = "area"
 )
 
