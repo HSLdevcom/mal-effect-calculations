@@ -17,15 +17,15 @@ results <- results %>%
 
 # Plot --------------------------------------------------------------------
 
-ggplot(results, aes(x = scenario, y = vehicle_kms_total)) +
+ggplot(results, aes(x = scenario, y = vehicle_kms_car)) +
   geom_col(aes(fill = area), position = position_stack()) +
   geom_text(
-    aes(label = scales::label_number(scale = 0.000001, accuracy = 0.1, decimal.mark = ",")(vehicle_kms_total), group = area),
+    aes(label = scales::label_number(scale = 0.000001, accuracy = 0.1, decimal.mark = ",")(vehicle_kms_car), group = area),
     position = position_stack(vjust = 0.5),
     size = points2mm(8)
   ) +
   geom_text(data = results_total,
-            aes(label = scales::label_number(scale = 0.000001, accuracy = 0.1, decimal.mark = ",")(vehicle_kms_total)),
+            aes(label = scales::label_number(scale = 0.000001, accuracy = 0.1, decimal.mark = ",")(vehicle_kms_car)),
             vjust = -0.5,
             size = points2mm(8),
             fontface = "bold") +
@@ -40,11 +40,11 @@ ggplot(results, aes(x = scenario, y = vehicle_kms_total)) +
     values = c("#3E8606", "#BFD7AC", "#f092cd", "#007AC9", "#AAD3ED")
   ) +
   labs(
-    title = "Moottoriajoneuvoliikenteen liikennesuorite Helsingin seudulla",
+    title = "Henkilöautoliikenteen liikennesuorite Helsingin seudulla",
     x =  NULL,
     y = "milj. ajon.km / arki-vrk"
   ) +
   theme_mal_graph() +
   theme(legend.position = "right")
 
-ggsave_graph(here::here("figures", "graph_vehicle_kms.png"))
+ggsave_graph(here::here("figures", "graph_vehicle_kms_car.png"))

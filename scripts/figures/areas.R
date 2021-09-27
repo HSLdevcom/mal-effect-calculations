@@ -130,7 +130,10 @@ areas <- data.frame(area = unique(zones$area)) %>%
 # Impact assessment columns  ----------------------------------------------
 
 areas <- areas %>%
-  dplyr::mutate(vehicle_kms_total = rowSums(select(., vehicle_kms_car_work, vehicle_kms_car_leisure, vehicle_kms_trailer_truck, vehicle_kms_truck, vehicle_kms_van, vehicle_kms_bus))) %>%
+  dplyr::mutate(vehicle_kms_total = vehicle_kms_car_work + vehicle_kms_car_leisure +
+                  vehicle_kms_trailer_truck + vehicle_kms_truck +
+                  vehicle_kms_van + vehicle_kms_bus,
+                vehicle_kms_car = vehicle_kms_car_work + vehicle_kms_car_leisure) %>%
   dplyr::mutate(
     co2_car = NA_real_,
     co2_van = NA_real_,
@@ -177,6 +180,8 @@ co2 <- co2 %>%
 areas <- areas %>%
   dplyr::add_row(
     area = "helsinki_region",
+    vehicle_kms_total = sum(.$vehicle_kms_total),
+    vehicle_kms_car = sum(.$vehicle_kms_car),
     co2_car = co2["car"] * (sum(.$vehicle_kms_car_work) + sum(.$vehicle_kms_car_leisure)),
     co2_van = co2["van"] * sum(.$vehicle_kms_van),
     co2_bus_hsl = co2["bus_hsl"] * vehicle_kms_bus_hsl,
