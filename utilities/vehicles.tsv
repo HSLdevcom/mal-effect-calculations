@@ -1,0 +1,8 @@
+level	label
+car	Henkilöautot
+van	Pakettiautot
+bus_hsl	HSL:n linja-autoliikenne
+bus_other	Muu linja-autoliikenne
+truck_all	Kuorma-autot
+all	Kaikki ajoneuvotyypit
+total	total

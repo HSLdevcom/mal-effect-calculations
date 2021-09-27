@@ -8,9 +8,6 @@ library(tidyverse)
 translations <- here::here("utilities", "areas.tsv") %>%
   readr::read_tsv(col_types = "cc")
 
-co2 <- here::here("utilities", "co2.tsv") %>%
-  readr::read_tsv(col_types = "cid")
-
 car_density <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
@@ -72,19 +69,6 @@ aggregated_demand <- read_tsv(
 )
 
 
-# Read Helsinki region data -----------------------------------------------
-
-transit_kms <- read_tsv(
-  file.path(config::get("helmet_data"),
-            config::get("results"),
-            "transit_kms.txt"),
-  skip = 1, # skip old column names
-  col_types = "cdd",
-  col_names = c("transit_vehicle", "dist", "time"),
-  na = "nan"
-)
-
-
 # Read and aggregate zone data --------------------------------------------
 
 zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario")))) %>%
@@ -133,14 +117,8 @@ areas <- areas %>%
   dplyr::mutate(vehicle_kms_total = vehicle_kms_car_work + vehicle_kms_car_leisure +
                   vehicle_kms_trailer_truck + vehicle_kms_truck +
                   vehicle_kms_van + vehicle_kms_bus,
-                vehicle_kms_car = vehicle_kms_car_work + vehicle_kms_car_leisure) %>%
-  dplyr::mutate(
-    co2_car = NA_real_,
-    co2_van = NA_real_,
-    co2_bus_hsl = NA_real_,
-    co2_bus_other = NA_real_,
-    co2_truck_all = NA_real_,
-  ) %>%
+                vehicle_kms_car = vehicle_kms_car_work + vehicle_kms_car_leisure,
+                vehicle_kms_truck_all = vehicle_kms_trailer_truck + vehicle_kms_truck) %>%
   dplyr::mutate(car_density = 1000 * car_density) %>%
   dplyr::mutate(goodness_share = goodness_wrk / total_wrk) %>%
   dplyr::mutate(
@@ -151,29 +129,6 @@ areas <- areas %>%
     origin_share_bike = origin_demand_bike / origin_demand_total,
   )
 
-# This data is only for total Helsinki region
-buses <- tibble::tribble(
-  ~transit_vehicle, ~vehicle,
-  "ValluVakio",     "bus_other",
-  "ValluPika",      "bus_other",
-  "HSL-bussi",      "bus_hsl",
-  "HSL-runkob",     "bus_hsl"
-)
-
-transit_kms <- transit_kms %>%
-  dplyr::filter(transit_vehicle %in% c("ValluVakio", "ValluPika", "HSL-bussi", "HSL-runkob")) %>%
-  dplyr::left_join(buses, by = "transit_vehicle") %>%
-  dplyr::group_by(vehicle) %>%
-  dplyr::summarise(dist = sum(dist))
-
-vehicle_kms_bus_hsl <- transit_kms$dist[transit_kms$vehicle == "bus_hsl"]
-vehicle_kms_bus_other <- transit_kms$dist[transit_kms$vehicle == "bus_other"]
-
-co2 <- co2 %>%
-  dplyr::filter(year == config::get("co2_year")) %>%
-  dplyr::select(vehicle, co2) %>%
-  tibble::deframe()
-
 
 # Add total row -----------------------------------------------------------
 
@@ -182,11 +137,8 @@ areas <- areas %>%
     area = "helsinki_region",
     vehicle_kms_total = sum(.$vehicle_kms_total),
     vehicle_kms_car = sum(.$vehicle_kms_car),
-    co2_car = co2["car"] * (sum(.$vehicle_kms_car_work) + sum(.$vehicle_kms_car_leisure)),
-    co2_van = co2["van"] * sum(.$vehicle_kms_van),
-    co2_bus_hsl = co2["bus_hsl"] * vehicle_kms_bus_hsl,
-    co2_bus_other = co2["bus_other"] * vehicle_kms_bus_other,
-    co2_truck_all = co2["truck_all"] * (sum(.$vehicle_kms_trailer_truck) + sum(.$vehicle_kms_truck)),
+    vehicle_kms_van = sum(.$vehicle_kms_van),
+    vehicle_kms_truck_all = sum(.$vehicle_kms_truck_all),
     sustainable_accessibility = weighted.mean(.$sustainable_accessibility, .$total_pop),
     workforce_accessibility = weighted.mean(.$workforce_accessibility, .$total_wrk),
     car_density = weighted.mean(.$car_density, .$total_pop),

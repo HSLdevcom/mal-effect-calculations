@@ -12,6 +12,7 @@ for (scenario in c("2018", "2040_ve0", "2040_ve0_muulitar")) {
   source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "areas.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "vdfs.R"), encoding = "utf-8")
+  source(here::here("scripts", "figures", "emissions.R"), encoding = "utf-8")
 
   source(here::here("scripts", "figures", "map_sustainable-accessibility.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "graph_centers.R"), encoding = "utf-8")
@@ -43,6 +44,15 @@ vdfs_all <- dplyr::bind_rows(
   dplyr::mutate(scenario = forcats::as_factor(scenario))
 
 readr::write_rds(vdfs_all, file = here::here("results", "vdfs_all.rds"))
+
+emissions_all <- dplyr::bind_rows(
+  "2018 Nykytila" = readr::read_rds(here::here("results", "emissions_2018.rds")),
+  "2040 Vertailupohja" = readr::read_rds(here::here("results", "emissions_2040_ve0.rds")),
+  #"2040 Etätyö+" = readr::read_rds(here::here("results", "vdfs_2040_ve0_muulitar.rds")),
+  .id = "scenario") %>%
+  dplyr::mutate(scenario = forcats::as_factor(scenario))
+
+readr::write_rds(emissions_all, file = here::here("results", "emissions_all.rds"))
 
 # When running maps and graphs, the order of the files does not matter.
 source(here::here("scripts", "figures", "graph_car_density.R"), encoding = "utf-8")
