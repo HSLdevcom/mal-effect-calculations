@@ -116,6 +116,7 @@ theme_mal_graph <- function() {
       #strip.switch.pad.grid = unit(0, "cm"),
       panel.spacing = unit(0, "lines"),
       axis.text = element_text(colour = "#333333"),
+      strip.text = element_text(colour = "#333333"),
       panel.grid = element_line(colour = "#dddddc")
     )
   )
