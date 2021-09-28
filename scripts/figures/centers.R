@@ -6,7 +6,7 @@ library(omxr)
 
 # Read data ---------------------------------------------------------------
 
-centers <- readr::read_tsv(here::here("data", "centers.tsv"), col_types = "ic")
+centers <- readr::read_tsv(here::here("data", "centers.tsv"), col_types = "icll")
 
 ttimes_aht <- read_helmet_omx(file.path(config::get("helmet_data"),
                                         config::get("results"),
