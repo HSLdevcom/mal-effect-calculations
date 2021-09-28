@@ -36,13 +36,15 @@ ggplot(results, aes(x = scenario, y = emission)) +
   geom_text(
     aes(label = scales::label_number(scale = 10^(-9), accuracy = 1)(emission), group = vehicle),
     position = position_stack(vjust = 0.5),
-    size = points2mm(8)
+    size = points2mm(8),
+    color = "#333333"
   ) +
   geom_text(data = results_total,
             aes(label = scales::label_number(scale = 10^(-9), accuracy = 1)(emission)),
             vjust = -0.5,
             size = points2mm(8),
-            fontface = "bold") +
+            fontface = "bold",
+            color = "#333333") +
   scale_y_continuous(
     labels = scales::label_number(scale = 10^(-9))
   ) +

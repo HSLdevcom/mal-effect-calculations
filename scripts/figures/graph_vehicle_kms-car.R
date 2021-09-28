@@ -22,13 +22,15 @@ ggplot(results, aes(x = scenario, y = vehicle_kms_car)) +
   geom_text(
     aes(label = scales::label_number(scale = 0.000001, accuracy = 0.1, decimal.mark = ",")(vehicle_kms_car), group = area),
     position = position_stack(vjust = 0.5),
-    size = points2mm(8)
+    size = points2mm(8),
+    color = "#333333"
   ) +
   geom_text(data = results_total,
             aes(label = scales::label_number(scale = 0.000001, accuracy = 0.1, decimal.mark = ",")(vehicle_kms_car)),
             vjust = -0.5,
             size = points2mm(8),
-            fontface = "bold") +
+            fontface = "bold",
+            color = "#333333") +
   scale_y_continuous(
     labels = scales::label_number(scale = 0.000001)
   ) +

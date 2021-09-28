@@ -16,7 +16,8 @@ ggplot(results, aes(x = area, y = workforce_accessibility)) +
     aes(label = scales::label_number(accuracy = 1, scale = 0.001, big.mark = "")(workforce_accessibility)),
     position = position_dodge2(width = 0.9),
     vjust = -0.5,
-    size = points2mm(8)
+    size = points2mm(8),
+    color = "#333333"
   ) +
   scale_y_continuous(
     labels = scales::label_number(scale = 0.001)

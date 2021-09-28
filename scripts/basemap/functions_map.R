@@ -101,7 +101,7 @@ theme_mal_graph <- function() {
     theme_minimal(),
     theme(
       text = element_text(family = "sans", colour = "#333333", size = 10),
-      plot.title = element_text(colour = "#3E8606"),
+      plot.title = element_text(colour = "#3E8606", size = 10),
       legend.position = "bottom",
       legend.box = "vertical",
       legend.text = element_text(size = rel(1.0)),
@@ -109,7 +109,9 @@ theme_mal_graph <- function() {
       strip.placement = "outside",
       panel.grid.major.x = element_blank(),
       #strip.switch.pad.grid = unit(0, "cm"),
-      panel.spacing = unit(0, "lines")
+      panel.spacing = unit(0, "lines"),
+      axis.text = element_text(colour = "#333333"),
+      panel.grid = element_line(colour = "#dddddc")
     )
   )
 }
@@ -129,7 +131,7 @@ ggsave_map <- function(filename,
 
 ggsave_graph <- function(filename,
                          width = 148,
-                         height = 105,
+                         height = 68,
                          units = "mm",
                          dpi = 600, ...) {
   ggsave(filename = filename,

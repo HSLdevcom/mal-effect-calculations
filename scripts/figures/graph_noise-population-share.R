@@ -18,7 +18,8 @@ ggplot(results, aes(x = area, y = noise_population_share)) +
     aes(label = scales::label_percent(accuracy = 1, suffix = "")(noise_population_share)),
     position = position_dodge2(width = 0.9),
     vjust = -0.5,
-    size = points2mm(8)
+    size = points2mm(8),
+    color = "#333333"
   ) +
   scale_y_continuous(
     labels = scales::label_percent(suffix = ""),

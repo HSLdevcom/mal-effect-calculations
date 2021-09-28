@@ -72,14 +72,16 @@ ggplot(results, aes(x = year, y = emission)) +
     color = "#dc0451",
     vjust = -1,
     size = points2mm(8),
-    fontface = "bold"
+    fontface = "bold",
+    color = "#333333"
   ) +
   geom_text(
     data = results_total,
     aes(label = scales::label_percent(suffix = " %", accuracy = 1)(label)),
     vjust = -0.5,
     size = points2mm(8),
-    fontface = "bold"
+    fontface = "bold",
+    color = "#333333"
   ) +
   scale_y_continuous(
     labels = scales::label_number(scale = 10^(-9))
