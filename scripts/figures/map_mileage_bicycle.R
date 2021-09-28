@@ -83,6 +83,7 @@ ggplot() +
   # ) +
   scale_fill_continuous(limits = c(0, 2.0)) +
   geom_basemap() +
+  coord_sf_mal() +
   annotate_map(
     title = "Pyöräilymatkojen kilometrisuorite asukasta kohti",
     subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name"))

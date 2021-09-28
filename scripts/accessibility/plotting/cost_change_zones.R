@@ -81,6 +81,7 @@ ggplot() +
     na.value = hsl_cols("lightgray")
   ) +
   geom_basemap() +
+  coord_sf_mal() +
   annotate_map(
     title = "Liikkumisen suorat kustannukset (eur)",
     subtitle = paste0(

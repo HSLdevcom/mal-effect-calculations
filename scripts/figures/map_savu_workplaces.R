@@ -25,6 +25,7 @@ ggplot() +
     limits = c(0, 4000),
     guide = guide_legend(override.aes = list(fill = "#646464"))) +
   geom_basemap() +
+  coord_sf_mal() +
   annotate_map(
     title = "Työpaikkojen lukumäärä hyvillä ja heikoilla SAVU-vyöhykkeillä",
     subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name"))

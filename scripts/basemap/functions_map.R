@@ -23,7 +23,12 @@ geom_basemap <- function() {
     geom_sf(data = metro, color = "#ff7f00", linetype = "solid", size = 0.66),
     geom_sf(data = metro, color = "#ffffff", linetype = "22", size = 0.53),
     geom_sf(data = region, color = "#000000", fill = NA, size = 0.46),
-    geom_sf(data = bonus_region, color = "#000000", fill = NA, linetype = "33", size = 0.46),
+    geom_sf(data = bonus_region, color = "#000000", fill = NA, linetype = "33", size = 0.46)
+  )
+}
+
+coord_sf_mal <- function() {
+  list(
     coord_sf(
       xlim = c(bbox$xmin - 500, bbox$xmax + 500),
       ylim = c(bbox$ymin + 20000, bbox$ymax + 500),

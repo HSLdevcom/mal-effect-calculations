@@ -114,6 +114,7 @@ ggplot() +
     size = 0.01
     ) +
   geom_basemap() +
+  coord_sf_mal() +
   geom_sf(
     data = zones_centroids,
     mapping = aes(size = Asukkaat),

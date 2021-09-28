@@ -20,6 +20,7 @@ ggplot() +
     values = c("#bd0026", "#f54026", "#fd9f44", "#fede80", "#ffffcc", "#bdbdbd", "#ffffff")
   ) +
   geom_basemap() +
+  coord_sf_mal() +
   annotate_map(
     title = "SAVU-vyöhykkeet",
     subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name"))

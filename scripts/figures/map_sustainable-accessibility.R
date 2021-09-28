@@ -29,6 +29,7 @@ ggplot() +
     oob = scales::squish
   ) +
   geom_basemap() +
+  coord_sf_mal() +
   annotate_map(
     title = "Saavutettavuus asukkaiden näkökulmasta",
     subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name"))

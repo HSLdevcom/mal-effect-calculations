@@ -22,6 +22,7 @@ zones <- zones %>%
 # Plot --------------------------------------------------------------------
 
 ggplot() +
+  geom_basemap() +
   geom_sf(data = zones, color = "#64BE1E", size = points2mm(15)) +
   geom_sf_text(data = zones, mapping = aes(label = center_number), size = points2mm(10)) +
   annotate(
@@ -34,11 +35,11 @@ ggplot() +
     size = points2mm(10),
     colour = "#333333"
   ) +
-  geom_basemap() +
   annotate_map(
     title = "Helsingin seudun keskukset",
     subtitle = NULL
   ) +
+  coord_sf_mal() +
   theme_mal_map()
 
 ggsave_map(here::here("figures", "map_centers.png"))

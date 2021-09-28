@@ -67,6 +67,7 @@ ggplot() +
     na.value = hsl_cols("lightgray")
   ) +
   geom_basemap() +
+  coord_sf_mal() +
   annotate_map(
     title = "Liikkumisen suorat kustannukset (eur)",
     subtitle = config::get("present_name")
@@ -96,6 +97,7 @@ ggplot() +
     na.value = hsl_cols("lightgray")
   ) +
   geom_basemap() +
+  coord_sf_mal() +
   annotate_map(
     title = "Asumisen menot (eur)",
     subtitle = config::get("present_name")
@@ -125,6 +127,7 @@ ggplot() +
     na.value = hsl_cols("lightgray")
   ) +
   geom_basemap() +
+  coord_sf_mal() +
   annotate_map(
     title = "Liikkumisen ja asumisen suorat menot (eur)",
     subtitle = config::get("present_name")
@@ -154,6 +157,7 @@ ggplot() +
     na.value = hsl_cols("lightgray")
   ) +
   geom_basemap() +
+  coord_sf_mal() +
   annotate_map(
     title = "Mediaanitulot (eur)",
     subtitle = config::get("present_name")
@@ -184,6 +188,7 @@ ggplot() +
     na.value = hsl_cols("lightgray")
   ) +
   geom_basemap() +
+  coord_sf_mal() +
   annotate_map(
     title = "Osuus tuloista liikkumiseen ja asumiseen",
     subtitle = config::get("present_name")
