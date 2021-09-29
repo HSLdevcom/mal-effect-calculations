@@ -1,26 +1,29 @@
 # -*- coding: utf-8-unix -*-
 library(here)
 library(tidyverse)
+library(sf)
 
 
 # Data --------------------------------------------------------------------
 
-results <- readr::read_rds(here::here("results", "areas_all.rds"))
+results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
+  dplyr::mutate(noise_population_share = noise_population / total_pop)
 
 
 # Plot --------------------------------------------------------------------
 
-ggplot(results, aes(x = area, y = workforce_accessibility)) +
+ggplot(results, aes(x = area, y = noise_population_share)) +
   geom_col(aes(fill = scenario), position = position_dodge2()) +
   geom_text(
-    aes(label = scales::label_number(accuracy = 1, scale = 0.001, big.mark = "")(workforce_accessibility)),
+    aes(label = scales::label_percent(accuracy = 1, suffix = "")(noise_population_share)),
     position = position_dodge2(width = 0.9),
     vjust = -0.5,
     size = points2mm(8),
     color = "#333333"
   ) +
   scale_y_continuous(
-    labels = scales::label_number(scale = 0.001)
+    labels = scales::label_percent(suffix = ""),
+    limits = c(0, 1)
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)
@@ -30,10 +33,10 @@ ggplot(results, aes(x = area, y = workforce_accessibility)) +
     values = c("#3E8606", "#7DAD58", "#BFD7AC")
   ) +
   labs(
-    title = "Työvoimasaavutettavuus",
-    x = NULL,
-    y = "tuhatta henkilöä"
+    title = "Meluvyöhykkeillä asuvien osuus alueen asukkaista",
+    x =  NULL,
+    y = "%"
   ) +
   theme_mal_graph()
 
-ggsave_graph(here::here("figures", "graph_workforce-accessibility.png"))
+ggsave_graph(here::here("figures", "graph_noise-population-share.png"))

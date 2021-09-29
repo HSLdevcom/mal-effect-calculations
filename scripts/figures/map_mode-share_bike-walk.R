@@ -38,6 +38,7 @@ ggplot() +
     oob = scales::squish
   ) +
   geom_basemap() +
+  coord_sf_mal() +
   annotate_map(
     title = "Kävellen ja pyöräillen tehtyjen kiertomatkojen osuus alueelta alkavista kiertomatkoista",
     subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name"))

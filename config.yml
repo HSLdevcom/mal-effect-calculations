@@ -17,7 +17,7 @@ V2030_mal19_v1:
   scenario_name: "Nykytila"
   forecast_zonedata: "2018"
   results: "2018"
-  co2_year: 2020
+  co2_year: 2018
 
 V2030_ve0_rm:
   projected_scenario: "V2030_ve0_rm"

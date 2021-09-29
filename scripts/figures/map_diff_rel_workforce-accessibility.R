@@ -51,6 +51,7 @@ ggplot() +
     oob = scales::squish
   ) +
   geom_basemap() +
+  coord_sf_mal() +
   annotate_map(
     title = "Suhteellinen muutos työvoimasaavutettavuudessa",
     subtitle = "2018 Nykytila \U2192 2040 Vertailupohja"

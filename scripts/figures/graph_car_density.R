@@ -17,7 +17,8 @@ ggplot(results, aes(x = area, y = car_density)) +
     aes(label = scales::label_number(accuracy = 1)(car_density)),
     position = position_dodge2(width = 0.9),
     vjust = -0.5,
-    size = points2mm(8)
+    size = points2mm(8),
+    color = "#333333"
   ) +
   scale_y_continuous(
     labels = scales::label_number()

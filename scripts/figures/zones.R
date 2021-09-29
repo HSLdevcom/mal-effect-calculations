@@ -136,6 +136,9 @@ pop <- pop %>%
   dplyr::rename(total_pop = total)
 wrk <- wrk %>%
   dplyr::rename(total_wrk = total)
+sustainable_accessibility <- sustainable_accessibility %>%
+  dplyr::rename(sustainable_accessibility = all) %>%
+  dplyr::select(zone, sustainable_accessibility)
 workforce_accessibility <- workforce_accessibility %>%
   dplyr::rename(workforce_accessibility = wh)
 origins_shares <- origins_shares %>%
@@ -152,6 +155,7 @@ zones <- zones %>%
   dplyr::left_join(wrk, by = "zone") %>%
   dplyr::left_join(prk, by = "zone") %>%
   dplyr::left_join(savu, by = "zone") %>%
+  dplyr::left_join(sustainable_accessibility, by = "zone") %>%
   dplyr::left_join(workforce_accessibility, by = "zone") %>%
   dplyr::left_join(car_density, by = "zone") %>%
   dplyr::left_join(origins_shares, by = "zone")

@@ -38,6 +38,7 @@ ggplot() +
     oob = scales::squish
   ) +
   geom_basemap() +
+  coord_sf_mal() +
   annotate_map(
     title = "Työvoimasaavutettavuus",
     subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name"))

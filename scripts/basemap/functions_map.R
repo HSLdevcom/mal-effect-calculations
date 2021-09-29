@@ -23,7 +23,12 @@ geom_basemap <- function() {
     geom_sf(data = metro, color = "#ff7f00", linetype = "solid", size = 0.66),
     geom_sf(data = metro, color = "#ffffff", linetype = "22", size = 0.53),
     geom_sf(data = region, color = "#000000", fill = NA, size = 0.46),
-    geom_sf(data = bonus_region, color = "#000000", fill = NA, linetype = "33", size = 0.46),
+    geom_sf(data = bonus_region, color = "#000000", fill = NA, linetype = "33", size = 0.46)
+  )
+}
+
+coord_sf_mal <- function() {
+  list(
     coord_sf(
       xlim = c(bbox$xmin - 500, bbox$xmax + 500),
       ylim = c(bbox$ymin + 20000, bbox$ymax + 500),
@@ -101,7 +106,7 @@ theme_mal_graph <- function() {
     theme_minimal(),
     theme(
       text = element_text(family = "sans", colour = "#333333", size = 10),
-      plot.title = element_text(colour = "#3E8606"),
+      plot.title = element_text(colour = "#3E8606", size = 10),
       legend.position = "bottom",
       legend.box = "vertical",
       legend.text = element_text(size = rel(1.0)),
@@ -109,7 +114,10 @@ theme_mal_graph <- function() {
       strip.placement = "outside",
       panel.grid.major.x = element_blank(),
       #strip.switch.pad.grid = unit(0, "cm"),
-      panel.spacing = unit(0, "lines")
+      panel.spacing = unit(0, "lines"),
+      axis.text = element_text(colour = "#333333"),
+      strip.text = element_text(colour = "#333333"),
+      panel.grid = element_line(colour = "#dddddc")
     )
   )
 }
@@ -129,7 +137,7 @@ ggsave_map <- function(filename,
 
 ggsave_graph <- function(filename,
                          width = 148,
-                         height = 105,
+                         height = 68,
                          units = "mm",
                          dpi = 600, ...) {
   ggsave(filename = filename,
