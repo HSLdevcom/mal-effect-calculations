@@ -5,6 +5,7 @@ default:
   housing_cost: "AsKustannukset_01062021.xlsx"
   income_data: "tulotiedot_2016_korjattu.xlsx"
   forecast_zonedata_path: "C:/.../Syottodata"
+  baseline_scenario: "2018"
 
 V2030_mal19_v1:
   projected_scenario: "V2030_mal19"
