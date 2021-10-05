@@ -14,20 +14,18 @@ results <- readr::read_rds(here::here("results", sprintf("centers_%s.rds", confi
 ggplot(data = results) +
   geom_raster(mapping = aes(x = destination,
                             y = forcats::fct_rev(origin),
-                            fill = ttime_ratio_aht)) +
+                            fill = ttime_car_work_aht)) +
   scale_x_discrete(position = "top",
                    guide = guide_axis(angle = 90)) +
   scale_fill_fermenter(
     name = NULL,
-    breaks = c(0, 0.5, 1, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0),
-    limits = c(0, 4.0),
-    type = "div",
-    palette = "PiYG",
+    breaks = seq(0, 70, 10),
+    limits = c(0, 70),
     na.value = "#FFFFFF",
-    labels = scales::percent_format(accuracy = 1, suffix = " %")
+    labels = scales::number_format()
   ) +
   labs(
-    title = "Joukkoliikenteen ja henkilöauton matka-aikojen suhde",
+    title = "Henkilöautoliikenteen matka-aika aamuhuipputuntina",
     subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name")),
     x = "Määräpaikka",
     y = "Lähtöpaikka"
@@ -37,4 +35,4 @@ ggplot(data = results) +
   theme(legend.position = "right",
         panel.grid.major.y = element_blank())
 
-ggsave_graph(here::here("figures", sprintf("graph_centers_%s.png", config::get("scenario"))))
+ggsave_graph(here::here("figures", sprintf("graph_car-work_aht_%s.png", config::get("scenario"))))

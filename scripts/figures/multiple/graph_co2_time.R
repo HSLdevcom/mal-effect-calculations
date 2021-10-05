@@ -72,8 +72,7 @@ ggplot(results, aes(x = year, y = emission)) +
     color = "#dc0451",
     vjust = -1,
     size = points2mm(8),
-    fontface = "bold",
-    color = "#333333"
+    fontface = "bold"
   ) +
   geom_text(
     data = results_total,

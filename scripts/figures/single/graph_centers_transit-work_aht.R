@@ -14,20 +14,18 @@ results <- readr::read_rds(here::here("results", sprintf("centers_%s.rds", confi
 ggplot(data = results) +
   geom_raster(mapping = aes(x = destination,
                             y = forcats::fct_rev(origin),
-                            fill = delay_share_car_work)) +
+                            fill = ttime_transit_work_aht)) +
   scale_x_discrete(position = "top",
                    guide = guide_axis(angle = 90)) +
   scale_fill_fermenter(
     name = NULL,
-    type = "div",
-    palette = "PuOr",
-    breaks = seq(-0.35, 0.35, 0.1),
-    limits = c(-0.35, 0.35),
+    breaks = seq(0, 280, 50),
+    limits = c(0, 280),
     na.value = "#FFFFFF",
-    labels = scales::percent_format(accuracy = 1, suffix = " %")
+    labels = scales::number_format()
   ) +
   labs(
-    title = "Ruuhkaviiveen osuus henkilöautoliikenteen matka-ajasta aamuhuipputuntina",
+    title = "Joukkoliikenteen matkavastus aamuhuipputuntina",
     subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name")),
     x = "Määräpaikka",
     y = "Lähtöpaikka"
@@ -37,4 +35,4 @@ ggplot(data = results) +
   theme(legend.position = "right",
         panel.grid.major.y = element_blank())
 
-ggsave_graph(here::here("figures", sprintf("graph_centers-delay_share-car_work_%s.png", config::get("scenario"))))
+ggsave_graph(here::here("figures", sprintf("graph_ttime_transit-work_aht_%s.png", config::get("scenario"))))
