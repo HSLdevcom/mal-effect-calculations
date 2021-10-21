@@ -120,11 +120,11 @@ sustainable_accessibility <- read_tsv_helmet(
   col_types = "idddddddddddd",
   first_col_name = "zone"
 )
-workforce_accessibility <- read_tsv_helmet(
+workplace_accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
-            "workforce_accessibility.txt"),
-  col_types = "id",
+            "workplace_accessibility.txt"),
+  col_types = "idd",
   first_col_name = "zone"
 )
 
@@ -139,8 +139,9 @@ wrk <- wrk %>%
 sustainable_accessibility <- sustainable_accessibility %>%
   dplyr::rename(sustainable_accessibility = all) %>%
   dplyr::select(zone, sustainable_accessibility)
-workforce_accessibility <- workforce_accessibility %>%
-  dplyr::rename(workforce_accessibility = wh)
+workplace_accessibility <- workplace_accessibility %>%
+  dplyr::rename(workplace_accessibility = hw,
+                workforce_accessibility = wh)
 origins_shares <- origins_shares %>%
   dplyr::rename(mode_share_car = car,
                 mode_share_transit = transit,
@@ -156,7 +157,7 @@ zones <- zones %>%
   dplyr::left_join(prk, by = "zone") %>%
   dplyr::left_join(savu, by = "zone") %>%
   dplyr::left_join(sustainable_accessibility, by = "zone") %>%
-  dplyr::left_join(workforce_accessibility, by = "zone") %>%
+  dplyr::left_join(workplace_accessibility, by = "zone") %>%
   dplyr::left_join(car_density, by = "zone") %>%
   dplyr::left_join(origins_shares, by = "zone")
 
