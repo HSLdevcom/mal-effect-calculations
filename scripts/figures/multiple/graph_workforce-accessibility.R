@@ -20,7 +20,8 @@ ggplot(results, aes(x = area, y = workforce_accessibility)) +
     color = "#333333"
   ) +
   scale_y_continuous(
-    labels = scales::label_number(scale = 0.001)
+    labels = scales::label_number(scale = 0.001),
+    expand = expansion(mult = 0.1)
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)

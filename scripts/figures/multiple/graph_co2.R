@@ -46,7 +46,8 @@ ggplot(results, aes(x = scenario, y = emission)) +
             fontface = "bold",
             color = "#333333") +
   scale_y_continuous(
-    labels = scales::label_number(scale = 10^(-9))
+    labels = scales::label_number(scale = 10^(-9)),
+    expand = expansion(mult = 0.1)
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)

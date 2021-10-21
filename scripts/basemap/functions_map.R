@@ -138,7 +138,7 @@ ggsave_map <- function(filename,
 
 ggsave_graph <- function(filename,
                          width = 148,
-                         height = 68,
+                         height = 84,
                          units = "mm",
                          dpi = 600, ...) {
   ggsave(filename = filename,

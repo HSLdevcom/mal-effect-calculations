@@ -21,7 +21,8 @@ ggplot(results, aes(x = area, y = car_density)) +
     color = "#333333"
   ) +
   scale_y_continuous(
-    labels = scales::label_number()
+    labels = scales::label_number(),
+    expand = expansion(mult = 0.1)
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)

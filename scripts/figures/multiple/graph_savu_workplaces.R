@@ -21,7 +21,8 @@ ggplot(results, aes(x = area, y = goodness_share)) +
     color = "#333333"
   ) +
   scale_y_continuous(
-    labels = scales::label_percent(suffix = " %")
+    labels = scales::label_percent(suffix = " %"),
+    expand = expansion(mult = 0.1)
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)
@@ -31,7 +32,7 @@ ggplot(results, aes(x = area, y = goodness_share)) +
     values = c("#3E8606", "#7DAD58", "#BFD7AC")
   ) +
   labs(
-    title = "Työpaikkojen sijoittuminen kestävän liikkumisen kannalta hyville saavutettavuusvyöhykkeille",
+    title = "Työpaikkojen sijoittuminen kestävän liikkumisen kannalta hyville\nsaavutettavuusvyöhykkeille",
     x = NULL,
     y = NULL
   ) +

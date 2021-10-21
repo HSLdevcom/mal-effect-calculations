@@ -32,7 +32,8 @@ ggplot(results, aes(x = scenario, y = vehicle_kms_total)) +
             fontface = "bold",
             color = "#333333") +
   scale_y_continuous(
-    labels = scales::label_number(scale = 0.000001)
+    labels = scales::label_number(scale = 0.000001),
+    expand = expansion(mult = 0.1)
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)
