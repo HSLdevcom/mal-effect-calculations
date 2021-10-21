@@ -214,6 +214,9 @@ zones <- zones %>%
                               mode_share_walk)
   )
 
+zones <- zones %>%
+  dplyr::mutate(malpakka = exp(17.67998 * log(abs(sustainable_accessibility)) + 0.59672 + (-90.97805)))
+
 
 # Output ------------------------------------------------------------------
 
