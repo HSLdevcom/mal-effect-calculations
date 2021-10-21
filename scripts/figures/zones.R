@@ -200,6 +200,10 @@ zones <- zones %>%
 zones <- zones %>%
   dplyr::mutate(car_density = 1000 * car_density)
 
+# Change sign
+zones <- zones %>%
+  dplyr::mutate(sustainable_accessibility = -sustainable_accessibility)
+
 zones <- zones %>%
   dplyr::mutate(
     mode_share_sustainable = (mode_share_transit +

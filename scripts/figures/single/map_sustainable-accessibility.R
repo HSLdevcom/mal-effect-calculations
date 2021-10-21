@@ -13,7 +13,7 @@ results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config:
 
 # Plot --------------------------------------------------------------------
 
-breaks <- seq(from = -185, to = -135, by = 5)
+breaks <- seq(from = 135, to = 185, by = 5)
 limits <- range(breaks)
 breaks <- breaks[c(-1, -length(breaks))]
 
@@ -26,6 +26,7 @@ ggplot() +
     labels = scales::label_number(accuracy = 1),
     breaks = breaks,
     limits = limits,
+    direction = -1,
     oob = scales::squish
   ) +
   geom_basemap() +
