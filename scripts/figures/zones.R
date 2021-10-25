@@ -8,6 +8,9 @@ library(sf)
 
 zones <- readr::read_rds(here::here("results", "zones.rds"))
 
+land_area <- readxl::read_xlsx(here::here("data", "maapinta_ala_ja_asutut_ruudut.xlsx"),
+                               sheet = "pinta_alat")
+
 pop <- read_tsv_helmet(
   list.files(file.path(config::get("forecast_zonedata_path"),
                        config::get("forecast_zonedata")),
@@ -214,8 +217,18 @@ zones <- zones %>%
                               mode_share_walk)
   )
 
+# Calculate MALPAKKA model results
 zones <- zones %>%
   dplyr::mutate(malpakka = exp(17.67998 * log(abs(sustainable_accessibility)) + 0.59672 + (-90.97805)))
+
+# Calculate workplace densities as number of workplaces per land area (km2)
+land_area <- land_area %>%
+  dplyr::select(SIJ2019, Maa_ala) %>%
+  dplyr::rename(zone = SIJ2019,
+                land_area = Maa_ala)
+zones <- zones %>%
+  dplyr::left_join(land_area, by = "zone") %>%
+  dplyr::mutate(total_wrk_density = total_wrk / land_area)
 
 
 # Output ------------------------------------------------------------------

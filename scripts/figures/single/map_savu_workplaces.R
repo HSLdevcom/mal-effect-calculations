@@ -13,21 +13,22 @@ results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config:
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_sf(mapping = aes(fill = savu_goodness, alpha = total_wrk),
+  geom_sf(mapping = aes(fill = savu_goodness, alpha = total_wrk_density),
           data = results, color = NA) +
   scale_fill_manual(
     name = "Saavutettavuus",
     values = c("#4d9221", "#c51b7d")
   ) +
   scale_alpha_continuous(
-    name = "Työpaikat",
+    name = "työpaikkoja per km2",
     range = c(0, 1),
+    breaks = c(0, 1000, 2000, 3000, 4000),
     limits = c(0, 4000),
     guide = guide_legend(override.aes = list(fill = "#646464"))) +
   geom_basemap() +
   coord_sf_mal() +
   annotate_map(
-    title = "Työpaikkojen lukumäärä hyvillä ja heikoilla SAVU-vyöhykkeillä",
+    title = "Työpaikkatiheys hyvillä ja heikoilla SAVU-vyöhykkeillä maa-alaa kohden",
     subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name"))
   ) +
   theme_mal_map()
