@@ -6,7 +6,12 @@ library(omxr)
 
 # Data --------------------------------------------------------------------
 
-results <- readr::read_rds(here::here("results", sprintf("centers_%s.rds", config::get("scenario"))))
+centers <- readr::read_tsv(here::here("data", "centers.tsv"), col_types = "icll") %>%
+  dplyr::filter(center)
+
+results <- readr::read_rds(here::here("results", sprintf("centers_%s.rds", config::get("scenario")))) %>%
+  dplyr::filter(origin %in% centers$label & destination %in% centers$label)
+
 
 
 # Plot --------------------------------------------------------------------
