@@ -131,6 +131,13 @@ workplace_accessibility <- read_tsv_helmet(
   first_col_name = "zone"
 )
 
+centers <- readr::read_rds(here::here("results", "centers_uusimaa-2050.rds"))
+
+ttimes_pt <- read_helmet_omx(file.path(config::get("helmet_data"),
+                                       config::get("results"),
+                                       "Matrices",
+                                       "time_pt.omx"))
+
 
 # Join data ---------------------------------------------------------------
 
@@ -229,6 +236,33 @@ land_area <- land_area %>%
 zones <- zones %>%
   dplyr::left_join(land_area, by = "zone") %>%
   dplyr::mutate(total_wrk_density = total_wrk / land_area)
+
+# Sum of travel times to two temporally closest centers
+ttimes <- ttimes_pt %>%
+  dplyr::filter(origin %in% zones$zone & destination %in% centers$SIJ2019) %>%
+  dplyr::rename(car = car_work,
+                transit = transit_work,
+                bike = bike,
+                walk = walk) %>%
+  dplyr::select(origin, destination, car, transit, bike, walk) %>%
+  tidyr::pivot_longer(
+    cols = car:walk,
+    values_to = "ttime",
+    names_to = "mode"
+  ) %>%
+  dplyr::group_by(origin, mode) %>%
+  dplyr::arrange(ttime) %>%
+  dplyr::summarise(ttime_twocenters = sum(ttime[1:2]), .groups = "drop") %>%
+  tidyr::pivot_wider(
+    id_cols = origin,
+    names_from = mode,
+    values_from = ttime_twocenters,
+    names_prefix = "ttime_twocenters_"
+  ) %>%
+  dplyr::rename(zone = origin)
+
+zones <- zones %>%
+  dplyr::left_join(ttimes, by = "zone")
 
 
 # Output ------------------------------------------------------------------
