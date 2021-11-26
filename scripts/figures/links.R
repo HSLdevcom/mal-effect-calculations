@@ -13,7 +13,9 @@ links <- here::here(config::get("helmet_data"), config::get("results"), "links.t
   dplyr::rename_with(~ gsub("@", "", .x, fixed = TRUE)) %>%
   dplyr::rename(geometry = Link) %>%
   sf::st_as_sf(wkt = "geometry", remove = TRUE, crs = 3879) %>%
+  dplyr::filter(!(volume_delay_func %in% 99)) %>%
   dplyr::mutate(volume_aht = car_leisure_aht + car_work_aht + bus_aht + trailer_truck_aht + truck_aht + van_aht,
+                car_aht = car_work_aht + car_leisure_aht,
                 relative_speed = car_time_pt / car_time_aht)
 
 buffers <- links %>%
