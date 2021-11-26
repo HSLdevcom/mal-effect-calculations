@@ -16,7 +16,7 @@ results <- readr::read_rds(here::here("results", sprintf("buffers_%s.rds", confi
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_basemap() +
+  geom_basemap(show_roads = FALSE) +
   geom_sf(mapping = aes(fill = volume_aht),
           data = results, color = NA) +
   scale_fill_viridis_b(
