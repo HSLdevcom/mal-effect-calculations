@@ -40,7 +40,7 @@ vehicle_kms_modes <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "vehicle_kms_areas.txt"),
-  col_types = "cddddddddd",
+  col_types = "cdddddddddd",
   first_col_name = "area"
 )
 workplace_accessibility <- read_tsv_helmet(
