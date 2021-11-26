@@ -26,8 +26,17 @@ buffers <- links %>%
   dplyr::filter(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE)) %>%
   dplyr::filter(volume_aht > 0.01)
 
+buffers_car <- links %>%
+  sf::st_buffer(dist = -links$car_aht / 5,
+                endCapStyle = "FLAT",
+                singleSide = TRUE) %>%
+  # Filter for improved plotting
+  dplyr::filter(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE)) %>%
+  dplyr::filter(car_aht > 0.01)
+
 
 # Output ------------------------------------------------------------------
 
 readr::write_rds(links, file = here::here("results", sprintf("links_%s.rds", config::get("scenario"))))
 readr::write_rds(buffers, file = here::here("results", sprintf("buffers_%s.rds", config::get("scenario"))))
+readr::write_rds(buffers_car, file = here::here("results", sprintf("buffers-car_%s.rds", config::get("scenario"))))
