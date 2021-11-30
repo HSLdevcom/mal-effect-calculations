@@ -12,6 +12,7 @@ source(here::here("scripts", "utils.R"), encoding = "utf-8")
 # Plot common figures -----------------------------------------------------
 
 source(here::here("scripts", "figures", "map_centers.R"), encoding = "utf-8")
+source(here::here("scripts", "figures", "map_centers_uusimaa-2050.R"), encoding = "utf-8")
 source(here::here("scripts", "figures", "map_hubs.R"), encoding = "utf-8")
 
 
