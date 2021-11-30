@@ -22,14 +22,15 @@ ggplot(data = results) +
   scale_x_discrete(position = "top",
                    guide = guide_axis(angle = 90)) +
   scale_fill_fermenter(
-    name = NULL,
-    breaks = seq(0, 70, 10),
+    name = "minuuttia",
+    palette = "OrRd",
+    direction = 1,
+    breaks = seq(10, 60, 10),
     limits = c(0, 70),
-    na.value = "#FFFFFF",
     labels = scales::number_format()
   ) +
   labs(
-    title = "Henkilöautoliikenteen matka-aika aamuhuipputuntina",
+    title = "Henkilöautoliikenteen matka-aika\naamuhuipputuntina",
     subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name")),
     x = "Määräpaikka",
     y = "Lähtöpaikka"
