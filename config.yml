@@ -41,6 +41,20 @@ V2030_ve0_rm:
   results: "2040_ve0"
   co2_year: 2040
 
+2040_ve0_car--:
+  scenario: "2040_ve0_car--"
+  year: 2040
+  forecast_zonedata: "2040_ve0"
+  results: "2040_ve0_car--"
+  co2_year: 2040
+
+2040_ve0_car++:
+  scenario: "2040_ve0_car++"
+  year: 2040
+  forecast_zonedata: "2040_ve0"
+  results: "2040_ve0_car++"
+  co2_year: 2040
+
 2040_ve0_muulitar:
   scenario: "2040_ve0_muulitar"
   year: 2040
