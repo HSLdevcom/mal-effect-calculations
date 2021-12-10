@@ -61,6 +61,20 @@ emissions_all <- dplyr::bind_rows(
 readr::write_rds(emissions_all, file = here::here("results", "emissions_all.rds"))
 
 
+# Sensitivity analysis ----------------------------------------------------
+
+sensitivity_scenarios <- c("2040_ve0_car--", "2040_ve0_car++")
+
+for (scenario in sensitivity_scenarios) {
+  Sys.setenv(R_CONFIG_ACTIVE = scenario)
+  message(sprintf("Prepare data in scenario %s...", scenario))
+  source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
+  source(here::here("scripts", "figures", "areas.R"), encoding = "utf-8")
+}
+
+source(here::here("scripts", "figures", "sensitivity.R"), encoding = "utf-8")
+
+
 # Plot figures -----------------------------------------------------------
 
 singles <- list.files(here::here("scripts", "figures", "single"),
