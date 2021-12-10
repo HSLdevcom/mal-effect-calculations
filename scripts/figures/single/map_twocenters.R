@@ -10,26 +10,38 @@ source(here::here("scripts", "utils.R"), encoding = "utf-8")
 
 Sys.setenv(R_CONFIG_ACTIVE = "2018")
 
+scale_and_squish <- function(x, xrange, a, b) {
+  x_normal <- scale_to_range(x, xrange[1], xrange[2], a, b)
+  x_normal_ab <- pmax(a, pmin(x_normal, b))
+  return(x_normal_ab)
+}
+
+break_twocenters <- function(x) {
+  unique(quantile(x, probs = seq.int(0, 1, by = 1 / 5)))
+}
+
+cut_twocenters <- function(x, breaks) {
+  cut(x, breaks = breaks, include.lowest = TRUE)
+}
+
+ttime_to_bins <- function(x, xrange, a, b, breaks) {
+  x_normal_ab <- scale_and_squish(x, xrange, a, b)
+  return(cut_twocenters(x_normal_ab, breaks = breaks))
+}
+
 results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
 
 # Dropping Suomenlinna because it distorts the results too much.
 outlier_zones <- c(1531)
 
 # Ranges are calculated in 2018 and used as such in 2040.
-ranges <- results %>%
+results_to_range <- results %>%
   sf::st_drop_geometry() %>%
-  dplyr::summarise(
-    car_min = min(ttime_twocenters_car[!(zone %in% outlier_zones)]),
-    car_max = max(ttime_twocenters_car[!(zone %in% outlier_zones)]),
-    transit_min = min(ttime_twocenters_transit[!(zone %in% outlier_zones)]),
-    transit_max = max(ttime_twocenters_transit[!(zone %in% outlier_zones)]),
-    bike_min = min(ttime_twocenters_bike[!(zone %in% outlier_zones)]),
-    bike_max = max(ttime_twocenters_bike[!(zone %in% outlier_zones)]),
-    walk_min = min(ttime_twocenters_walk[!(zone %in% outlier_zones)]),
-    walk_max = max(ttime_twocenters_walk[!(zone %in% outlier_zones)]),
-  ) %>%
-  tidyr::pivot_longer(everything()) %>%
-  tibble::deframe()
+  dplyr::filter(!(zone %in% outlier_zones))
+range_car <- range(results_to_range$ttime_twocenters_car)
+range_transit <- range(results_to_range$ttime_twocenters_transit)
+range_bike <- range(results_to_range$ttime_twocenters_bike)
+range_walk <- range(results_to_range$ttime_twocenters_walk)
 
 # Scaling to 1-100
 a <- 1
@@ -38,38 +50,25 @@ b <- 100
 results <- results %>%
   dplyr::select(zone, dplyr::starts_with("ttime_twocenters_")) %>%
   dplyr::mutate(
-    ttime_twocenters_car_normal =  scale_to_range(ttime_twocenters_car, xmin = ranges["car_min"], xmax = ranges["car_max"], a = a, b = b),
-    ttime_twocenters_transit_normal =  scale_to_range(ttime_twocenters_transit, xmin = ranges["transit_min"], xmax = ranges["transit_max"], a = a, b = b),
-    ttime_twocenters_bike_normal =  scale_to_range(ttime_twocenters_bike, xmin = ranges["bike_min"], xmax = ranges["bike_max"], a = a, b = b),
-    ttime_twocenters_walk_normal =  scale_to_range(ttime_twocenters_walk, xmin = ranges["walk_min"], xmax = ranges["walk_max"], a = a, b = b)
-  ) %>%
-  dplyr::mutate(
-    ttime_twocenters_car_normal = pmax(1, pmin(ttime_twocenters_car_normal, 100)),
-    ttime_twocenters_transit_normal = pmax(1, pmin(ttime_twocenters_transit_normal, 100)),
-    ttime_twocenters_bike_normal = pmax(1, pmin(ttime_twocenters_bike_normal, 100)),
-    ttime_twocenters_walk_normal = pmax(1, pmin(ttime_twocenters_walk_normal, 100)),
+    ttime_twocenters_car_normal = scale_and_squish(ttime_twocenters_car, xrange = range_car, a = a, b = b),
+    ttime_twocenters_transit_normal = scale_and_squish(ttime_twocenters_transit, xrange = range_transit, a = a, b = b),
+    ttime_twocenters_bike_normal = scale_and_squish(ttime_twocenters_bike, xrange = range_bike, a = a, b = b),
+    ttime_twocenters_walk_normal = scale_and_squish(ttime_twocenters_walk, xrange = range_walk, a = a, b = b),
   )
 
 # Breaks are calculated in 2018 and used as such in 2040.
-breaks_car <- unique(quantile(results$ttime_twocenters_car_normal, probs = seq.int(0, 1, by = 1 / 5)))
-breaks_transit <- unique(quantile(results$ttime_twocenters_transit_normal, probs = seq.int(0, 1, by = 1 / 5)))
-breaks_bike <- unique(quantile(results$ttime_twocenters_bike_normal, probs = seq.int(0, 1, by = 1 / 5)))
-breaks_walk <- unique(quantile(results$ttime_twocenters_walk_normal, probs = seq.int(0, 1, by = 1 / 5)))
+breaks_car <- break_twocenters(results$ttime_twocenters_car_normal)
+breaks_transit <- break_twocenters(results$ttime_twocenters_transit_normal)
+breaks_bike <- break_twocenters(results$ttime_twocenters_bike_normal)
+breaks_walk <- break_twocenters(results$ttime_twocenters_walk_normal)
 
 results <- results %>%
   dplyr::mutate(
-    car_bins = cut(ttime_twocenters_car_normal,
-                   breaks = breaks_car,
-                   include.lowest = TRUE),
-    transit_bins = cut(ttime_twocenters_transit_normal,
-                       breaks = breaks_transit,
-                       include.lowest = TRUE),
-    bike_bins = cut(ttime_twocenters_bike_normal,
-                    breaks = breaks_bike,
-                    include.lowest = TRUE),
-    walk_bins = cut(ttime_twocenters_walk_normal,
-                    breaks = breaks_walk,
-                    include.lowest = TRUE))
+    car_bins = cut_twocenters(ttime_twocenters_car_normal, breaks = breaks_car),
+    transit_bins = cut_twocenters(ttime_twocenters_transit_normal, breaks = breaks_transit),
+    bike_bins = cut_twocenters(ttime_twocenters_bike_normal, breaks = breaks_bike),
+    walk_bins = cut_twocenters(ttime_twocenters_walk_normal, breaks = breaks_walk)
+  )
 
 
 # Plot --------------------------------------------------------------------
@@ -106,37 +105,14 @@ ggsave_map(here::here("figures", sprintf("map_twocenters_walk_%s.png", config::g
 
 Sys.setenv(R_CONFIG_ACTIVE = "2040_ve0")
 
-results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
-
-results <- results %>%
+results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario")))) %>%
   dplyr::select(zone, dplyr::starts_with("ttime_twocenters_")) %>%
   dplyr::mutate(
-    ttime_twocenters_car_normal =  scale_to_range(ttime_twocenters_car, xmin = ranges["car_min"], xmax = ranges["car_max"], a = a, b = b),
-    ttime_twocenters_transit_normal =  scale_to_range(ttime_twocenters_transit, xmin = ranges["transit_min"], xmax = ranges["transit_max"], a = a, b = b),
-    ttime_twocenters_bike_normal =  scale_to_range(ttime_twocenters_bike, xmin = ranges["bike_min"], xmax = ranges["bike_max"], a = a, b = b),
-    ttime_twocenters_walk_normal =  scale_to_range(ttime_twocenters_walk, xmin = ranges["walk_min"], xmax = ranges["walk_max"], a = a, b = b)
-  ) %>%
-  dplyr::mutate(
-    ttime_twocenters_car_normal = pmax(1, pmin(ttime_twocenters_car_normal, 100)),
-    ttime_twocenters_transit_normal = pmax(1, pmin(ttime_twocenters_transit_normal, 100)),
-    ttime_twocenters_bike_normal = pmax(1, pmin(ttime_twocenters_bike_normal, 100)),
-    ttime_twocenters_walk_normal = pmax(1, pmin(ttime_twocenters_walk_normal, 100)),
+    car_bins = ttime_to_bins(ttime_twocenters_car, xrange = range_car, a = a, b = b, breaks = breaks_car),
+    transit_bins = ttime_to_bins(ttime_twocenters_transit, xrange = range_transit, a = a, b = b, breaks = breaks_transit),
+    bike_bins = ttime_to_bins(ttime_twocenters_bike, xrange = range_bike, a = a, b = b, breaks = breaks_bike),
+    walk_bins = ttime_to_bins(ttime_twocenters_walk, xrange = range_walk, a = a, b = b, breaks = breaks_walk),
   )
-
-results <- results %>%
-  dplyr::mutate(
-    car_bins = cut(ttime_twocenters_car_normal,
-                   breaks = breaks_car,
-                   include.lowest = TRUE),
-    transit_bins = cut(ttime_twocenters_transit_normal,
-                       breaks = breaks_transit,
-                       include.lowest = TRUE),
-    bike_bins = cut(ttime_twocenters_bike_normal,
-                    breaks = breaks_bike,
-                    include.lowest = TRUE),
-    walk_bins = cut(ttime_twocenters_walk_normal,
-                    breaks = breaks_walk,
-                    include.lowest = TRUE))
 
 
 # Plot --------------------------------------------------------------------
