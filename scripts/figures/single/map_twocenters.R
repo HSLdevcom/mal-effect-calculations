@@ -63,6 +63,7 @@ twocenters <- function(.data, mode, title) {
     xrange <- range(.data_to_range[[column]])
     readr::write_rds(xrange, file = here::here("results", sprintf("twocenters_range_%s.rds", mode)))
   } else {
+    message("twocenters: read ranges...")
     xrange <- readr::read_rds(here::here("results", sprintf("twocenters_range_%s.rds", mode)))
   }
   # Normalise variable.
@@ -76,6 +77,7 @@ twocenters <- function(.data, mode, title) {
     breaks <- break_twocenters(ttime_twocenters_normal)
     readr::write_rds(breaks, file = here::here("results", sprintf("twocenters_breaks_%s.rds", mode)))
   } else {
+    message("twocenters: read breaks...")
     breaks <- readr::read_rds(here::here("results", sprintf("twocenters_breaks_%s.rds", mode)))
   }
   # Cut variable into bins and plot.
