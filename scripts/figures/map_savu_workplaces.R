@@ -12,28 +12,24 @@ results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config:
 
 # Plot --------------------------------------------------------------------
 
-breaks <- seq(from = 0, to = 1600000, by = 200000)
-limits <- range(breaks)
-breaks <- breaks[c(-1, -length(breaks))]
-
 ggplot() +
-  geom_sf(mapping = aes(fill = workplace_accessibility),
+  geom_sf(mapping = aes(fill = savu_goodness, alpha = total_wrk),
           data = results, color = NA) +
-  scale_fill_viridis_b(
-    option="viridis",
-    name = NULL,
-    labels = scales::label_number(accuracy = 1),
-    breaks = breaks,
-    limits = limits,
-    direction = -1,
-    oob = scales::squish
+  scale_fill_manual(
+    name = "Saavutettavuus",
+    values = c("#4d9221", "#c51b7d")
   ) +
+  scale_alpha_continuous(
+    name = "Työpaikat",
+    range = c(0, 1),
+    limits = c(0, 4000),
+    guide = guide_legend(override.aes = list(fill = "#646464"))) +
   geom_basemap() +
   coord_sf_mal() +
   annotate_map(
-    title = "Työpaikkasaavutettavuus",
+    title = "Työpaikkojen lukumäärä hyvillä ja heikoilla SAVU-vyöhykkeillä",
     subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name"))
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_workplace-accessibility_%s.png", config::get("scenario"))))
+ggsave_map(here::here("figures", sprintf("map_savu_workplaces_%s.png", config::get("scenario"))))

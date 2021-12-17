@@ -40,14 +40,14 @@ vehicle_kms_modes <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "vehicle_kms_areas.txt"),
-  col_types = "cdddddddddd",
+  col_types = "cddddddddd",
   first_col_name = "area"
 )
-workplace_accessibility <- read_tsv_helmet(
+workforce_accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
-            "workplace_accessibility_areas.txt"),
-  col_types = "cdd",
+            "workforce_accessibility_per_area.txt"),
+  col_types = "cd",
   first_col_name = "area"
 )
 
@@ -96,9 +96,8 @@ zones2 <- zones %>%
 # Rename columns to avoid name collisions
 vehicle_kms_modes <- vehicle_kms_modes %>%
   dplyr::rename_with(~ paste0("vehicle_kms_", .x), -area)
-workplace_accessibility <- workplace_accessibility %>%
-  dplyr::rename(workplace_accessibility = hw,
-                workforce_accessibility = wh)
+workforce_accessibility <- workforce_accessibility %>%
+  dplyr::rename(workforce_accessibility = wh)
 origin_demand <- origin_demand %>%
   dplyr::rename_with(~ paste0("origin_demand_", .x), -area)
 
@@ -106,7 +105,7 @@ areas <- data.frame(area = unique(zones$area)) %>%
   dplyr::left_join(zones1, by = "area") %>%
   dplyr::left_join(zones2, by = "area") %>%
   dplyr::left_join(vehicle_kms_modes, by = "area") %>%
-  dplyr::left_join(workplace_accessibility, by = "area") %>%
+  dplyr::left_join(workforce_accessibility, by = "area") %>%
   dplyr::left_join(origin_demand, by = "area") %>%
   dplyr::left_join(car_density, by = "area") %>%
   dplyr::left_join(noise, by = "area")
@@ -141,7 +140,6 @@ areas <- areas %>%
     vehicle_kms_van = sum(.$vehicle_kms_van),
     vehicle_kms_truck_all = sum(.$vehicle_kms_truck_all),
     sustainable_accessibility = weighted.mean(.$sustainable_accessibility, .$total_pop),
-    workplace_accessibility = weighted.mean(.$workplace_accessibility, .$total_wrk),
     workforce_accessibility = weighted.mean(.$workforce_accessibility, .$total_wrk),
     car_density = weighted.mean(.$car_density, .$total_pop),
     goodness_share = sum(.$goodness_wrk) / sum(.$total_wrk),

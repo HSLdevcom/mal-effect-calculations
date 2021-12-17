@@ -17,23 +17,22 @@ results <- results %>%
 
 # Plot --------------------------------------------------------------------
 
-ggplot(results, aes(x = scenario, y = vehicle_kms_car)) +
+ggplot(results, aes(x = scenario, y = vehicle_kms_total)) +
   geom_col(aes(fill = area), position = position_stack()) +
   geom_text(
-    aes(label = scales::label_number(scale = 0.000001, accuracy = 0.1, decimal.mark = ",")(vehicle_kms_car), group = area),
+    aes(label = scales::label_number(scale = 0.000001, accuracy = 0.1, decimal.mark = ",")(vehicle_kms_total), group = area),
     position = position_stack(vjust = 0.5),
     size = points2mm(8),
     color = "#333333"
   ) +
   geom_text(data = results_total,
-            aes(label = scales::label_number(scale = 0.000001, accuracy = 0.1, decimal.mark = ",")(vehicle_kms_car)),
+            aes(label = scales::label_number(scale = 0.000001, accuracy = 0.1, decimal.mark = ",")(vehicle_kms_total)),
             vjust = -0.5,
             size = points2mm(8),
             fontface = "bold",
             color = "#333333") +
   scale_y_continuous(
-    labels = scales::label_number(scale = 0.000001),
-    expand = expansion(mult = 0.1)
+    labels = scales::label_number(scale = 0.000001)
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)
@@ -43,11 +42,11 @@ ggplot(results, aes(x = scenario, y = vehicle_kms_car)) +
     values = c("#3E8606", "#BFD7AC", "#f092cd", "#007AC9", "#AAD3ED")
   ) +
   labs(
-    title = "Henkilöautoliikenteen liikennesuorite Helsingin seudulla",
+    title = "Moottoriajoneuvoliikenteen liikennesuorite Helsingin seudulla",
     x =  NULL,
     y = "milj. ajon.km / arki-vrk"
   ) +
   theme_mal_graph() +
   theme(legend.position = "right")
 
-ggsave_graph(here::here("figures", "graph_vehicle_kms_car.png"))
+ggsave_graph(here::here("figures", "graph_vehicle_kms.png"))

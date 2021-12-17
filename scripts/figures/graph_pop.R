@@ -31,8 +31,7 @@ ggplot(results, aes(x = scenario, y = total_pop)) +
             fontface = "bold",
             color = "#333333") +
   scale_y_continuous(
-    labels = scales::label_number(),
-    expand = expansion(mult = 0.1)
+    labels = scales::label_number()
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)

@@ -11,12 +11,12 @@ emission_statistics <- here::here("utilities", "co2_statistics.tsv") %>%
 
 results <- readr::read_rds(here::here("results", "emissions_all.rds")) %>%
   dplyr::add_row(
-    scenario = "2005",
+    scenario = "2005 LIPASTO",
     vehicle = factor("Kaikki ajoneuvotyypit"),
     emission = emission_statistics["2005"]
   ) %>%
   dplyr::add_row(
-    scenario = "2005",
+    scenario = "2005 LIPASTO",
     vehicle = factor("total"),
     emission = emission_statistics["2005"]
   ) %>%
@@ -46,8 +46,7 @@ ggplot(results, aes(x = scenario, y = emission)) +
             fontface = "bold",
             color = "#333333") +
   scale_y_continuous(
-    labels = scales::label_number(scale = 10^(-9)),
-    expand = expansion(mult = 0.1)
+    labels = scales::label_number(scale = 10^(-9))
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)
