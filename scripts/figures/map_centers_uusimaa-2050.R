@@ -8,6 +8,7 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 # Data --------------------------------------------------------------------
 
 centers <- readr::read_rds(here::here("results", "centers_uusimaa-2050.rds")) %>%
+  # Plot centers only inside HS15 region
   dplyr::filter(hs15) %>%
   dplyr::mutate(center_number = row_number())
 

@@ -5,6 +5,7 @@ library(sf)
 
 zones <- readr::read_rds(here::here("results", "sijoittelualueet2019.rds"))
 
+# Read all Uusimaa centers plus add several others.
 centers <- here::here("data", "Uusimaa-kaava-2050_Pisteet.gpkg") %>%
   sf::read_sf() %>%
   sf::st_transform(3879) %>%
