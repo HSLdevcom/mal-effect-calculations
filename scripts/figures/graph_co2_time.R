@@ -11,12 +11,12 @@ emission_statistics <- here::here("utilities", "co2_statistics.tsv") %>%
 
 results <- readr::read_rds(here::here("results", "emissions_all.rds")) %>%
   dplyr::add_row(
-    scenario = "2005",
+    scenario = "2005 LIPASTO",
     vehicle = factor("Kaikki ajoneuvotyypit"),
     emission = emission_statistics["2005"]
   ) %>%
   dplyr::add_row(
-    scenario = "2005",
+    scenario = "2005 LIPASTO",
     vehicle = factor("total"),
     emission = emission_statistics["2005"]
   ) %>%
@@ -32,7 +32,7 @@ tavoite <- tibble::tribble(
 results <- results %>%
   dplyr::mutate(
     year = dplyr::case_when(
-      scenario == "2005" ~ 2005L,
+      scenario == "2005 LIPASTO" ~ 2005L,
       scenario == "2018 Nykytila" ~ 2018L,
       scenario == "2040 Vertailupohja" ~ 2040L,
       TRUE ~ NA_integer_
@@ -41,7 +41,7 @@ results <- results %>%
 
 results_total <- results %>%
   dplyr::filter(vehicle == "total") %>%
-  dplyr::filter(scenario != "2005") %>%
+  dplyr::filter(scenario != "2005 LIPASTO") %>%
   dplyr::mutate(label = -(emission_statistics["2005"] - emission) / emission_statistics["2005"])
 
 results <- results %>%
@@ -61,16 +61,6 @@ ggplot(results, aes(x = year, y = emission)) +
     color = "#dc0451",
     linetype = "dashed"
   ) +
-  geom_segment(
-    aes(x = 2030, y = 0, xend = 2030, yend = tavoite$emission[tavoite$year == 2030]),
-    color = "#333333",
-    linetype = "dotted"
-  ) +
-  geom_segment(
-    aes(x = 2000, y = 0, xend = 2050, yend = 0),
-    arrow = arrow(length = unit(0.3, "cm")),
-    color = "#333333"
-  ) +
   geom_point(
     data = tavoite,
     color = "#dc0451",
@@ -82,7 +72,8 @@ ggplot(results, aes(x = year, y = emission)) +
     color = "#dc0451",
     vjust = -1,
     size = points2mm(8),
-    fontface = "bold"
+    fontface = "bold",
+    color = "#333333"
   ) +
   geom_text(
     data = results_total,
@@ -93,12 +84,11 @@ ggplot(results, aes(x = year, y = emission)) +
     color = "#333333"
   ) +
   scale_y_continuous(
-    labels = scales::label_number(scale = 10^(-9)),
-    expand = expansion(mult = c(0.025, 0.1))
+    labels = scales::label_number(scale = 10^(-9))
   ) +
   scale_x_continuous(
-    breaks = seq(from = 2000, to = 2050, by = 1),
-    labels = function(x) { dplyr::if_else(x %in% c(2005, 2018, 2030, 2040, 2045), dplyr::if_else(x %in% 2040, "2040\nVertailu-\npohja", as.character(x)), "") },
+    breaks = c(2005, 2018, 2030, 2040, 2045),
+    minor_breaks = seq(from = 2000, to = 2050, by = 5),
     limits = c(2000, 2050),
     expand = expansion(0, 0)
   ) +
@@ -113,8 +103,7 @@ ggplot(results, aes(x = year, y = emission)) +
   ) +
   theme_mal_graph() +
   theme(legend.position = "right",
-        panel.grid.minor.y = element_blank(),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank())
+        panel.grid.major.x = element_line(),
+        panel.grid.minor.x = element_line())
 
 ggsave_graph(here::here("figures", "graph_co2_time.png"))

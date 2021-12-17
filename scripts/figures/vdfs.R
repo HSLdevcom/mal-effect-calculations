@@ -10,7 +10,7 @@ translations <- here::here("utilities", "vdfs.tsv") %>%
 
 vdfs <- read_tsv_helmet(
   here::here(config::get("helmet_data"), config::get("results"), "vehicle_kms_vdfs_areas.txt"),
-  col_types = "cddddddd",
+  col_types = "cdddddd",
   first_col_name = "area"
 )
 
@@ -28,8 +28,6 @@ vdfs <- vdfs %>%
     vdf = factor(vdf, levels = translations$level, labels = translations$label),
     vdf = forcats::fct_collapse(
       vdf,
-      `Muut` = c("Muut", "Apulinkit"),
-      `Kokooja- ja tonttikadut` = c("Kokooja- ja tonttikadut"),
       `Pääkadut` = c(
         "Pääkadut",
         "Useampikaistaiset pääkadut tasoliittymin valoilla"
