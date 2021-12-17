@@ -8,6 +8,9 @@ library(sf)
 
 zones <- readr::read_rds(here::here("results", "zones.rds"))
 
+land_area <- readxl::read_xlsx(here::here("data", "maapinta_ala_ja_asutut_ruudut.xlsx"),
+                               sheet = "pinta_alat")
+
 pop <- read_tsv_helmet(
   list.files(file.path(config::get("forecast_zonedata_path"),
                        config::get("forecast_zonedata")),
@@ -120,13 +123,20 @@ sustainable_accessibility <- read_tsv_helmet(
   col_types = "idddddddddddd",
   first_col_name = "zone"
 )
-workforce_accessibility <- read_tsv_helmet(
+workplace_accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
-            "workforce_accessibility.txt"),
-  col_types = "id",
+            "workplace_accessibility.txt"),
+  col_types = "idd",
   first_col_name = "zone"
 )
+
+centers <- readr::read_rds(here::here("results", "centers_uusimaa-2050.rds"))
+
+ttimes_pt <- read_helmet_omx(file.path(config::get("helmet_data"),
+                                       config::get("results"),
+                                       "Matrices",
+                                       "time_pt.omx"))
 
 
 # Join data ---------------------------------------------------------------
@@ -139,8 +149,9 @@ wrk <- wrk %>%
 sustainable_accessibility <- sustainable_accessibility %>%
   dplyr::rename(sustainable_accessibility = all) %>%
   dplyr::select(zone, sustainable_accessibility)
-workforce_accessibility <- workforce_accessibility %>%
-  dplyr::rename(workforce_accessibility = wh)
+workplace_accessibility <- workplace_accessibility %>%
+  dplyr::rename(workplace_accessibility = hw,
+                workforce_accessibility = wh)
 origins_shares <- origins_shares %>%
   dplyr::rename(mode_share_car = car,
                 mode_share_transit = transit,
@@ -156,7 +167,7 @@ zones <- zones %>%
   dplyr::left_join(prk, by = "zone") %>%
   dplyr::left_join(savu, by = "zone") %>%
   dplyr::left_join(sustainable_accessibility, by = "zone") %>%
-  dplyr::left_join(workforce_accessibility, by = "zone") %>%
+  dplyr::left_join(workplace_accessibility, by = "zone") %>%
   dplyr::left_join(car_density, by = "zone") %>%
   dplyr::left_join(origins_shares, by = "zone")
 
@@ -200,6 +211,10 @@ zones <- zones %>%
 zones <- zones %>%
   dplyr::mutate(car_density = 1000 * car_density)
 
+# Change sign
+zones <- zones %>%
+  dplyr::mutate(sustainable_accessibility = -sustainable_accessibility)
+
 zones <- zones %>%
   dplyr::mutate(
     mode_share_sustainable = (mode_share_transit +
@@ -208,6 +223,46 @@ zones <- zones %>%
     mode_share_bike_walk = (mode_share_bike +
                               mode_share_walk)
   )
+
+# Calculate MALPAKKA model results
+zones <- zones %>%
+  dplyr::mutate(malpakka = exp(17.67998 * log(abs(sustainable_accessibility)) + 0.59672 + (-90.97805)))
+
+# Calculate workplace densities as number of workplaces per land area (km2)
+land_area <- land_area %>%
+  dplyr::select(SIJ2019, Maa_ala) %>%
+  dplyr::rename(zone = SIJ2019,
+                land_area = Maa_ala)
+zones <- zones %>%
+  dplyr::left_join(land_area, by = "zone") %>%
+  dplyr::mutate(total_wrk_density = total_wrk / land_area)
+
+# Sum of travel times to two temporally closest centers
+ttimes <- ttimes_pt %>%
+  dplyr::filter(origin %in% zones$zone & destination %in% centers$SIJ2019) %>%
+  dplyr::rename(car = car_work,
+                transit = transit_work,
+                bike = bike,
+                walk = walk) %>%
+  dplyr::select(origin, destination, car, transit, bike, walk) %>%
+  tidyr::pivot_longer(
+    cols = car:walk,
+    values_to = "ttime",
+    names_to = "mode"
+  ) %>%
+  dplyr::group_by(origin, mode) %>%
+  dplyr::arrange(ttime) %>%
+  dplyr::summarise(ttime_twocenters = sum(ttime[1:2]), .groups = "drop") %>%
+  tidyr::pivot_wider(
+    id_cols = origin,
+    names_from = mode,
+    values_from = ttime_twocenters,
+    names_prefix = "ttime_twocenters_"
+  ) %>%
+  dplyr::rename(zone = origin)
+
+zones <- zones %>%
+  dplyr::left_join(ttimes, by = "zone")
 
 
 # Output ------------------------------------------------------------------

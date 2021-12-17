@@ -6,33 +6,33 @@ library(sf)
 
 # Data --------------------------------------------------------------------
 
-results <- readr::read_rds(here::here("results", "areas_all.rds"))
+results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
+  dplyr::filter(area != "Helsingin seutu")
 
 results_total <- results %>%
-  dplyr::filter(area == "Helsingin seutu")
-
-results <- results %>%
-  dplyr::filter(area != "Helsingin seutu")
+  dplyr::group_by(scenario) %>%
+  dplyr::summarise(noise_area_km2 = sum(noise_area_km2))
 
 
 # Plot --------------------------------------------------------------------
 
-ggplot(results, aes(x = scenario, y = vehicle_kms_car)) +
+ggplot(results, aes(x = scenario, y = noise_area_km2)) +
   geom_col(aes(fill = area), position = position_stack()) +
   geom_text(
-    aes(label = scales::label_number(scale = 0.000001, accuracy = 0.1, decimal.mark = ",")(vehicle_kms_car), group = area),
+    aes(label = scales::label_number(scale = 1, accuracy = 1)(noise_area_km2), group = area),
     position = position_stack(vjust = 0.5),
     size = points2mm(8),
     color = "#333333"
   ) +
   geom_text(data = results_total,
-            aes(label = scales::label_number(scale = 0.000001, accuracy = 0.1, decimal.mark = ",")(vehicle_kms_car)),
+            aes(label = scales::label_number(scale = 1, accuracy = 1)(noise_area_km2)),
             vjust = -0.5,
             size = points2mm(8),
             fontface = "bold",
             color = "#333333") +
   scale_y_continuous(
-    labels = scales::label_number(scale = 0.000001)
+    labels = scales::label_number(),
+    expand = expansion(mult = 0.1)
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)
@@ -42,11 +42,11 @@ ggplot(results, aes(x = scenario, y = vehicle_kms_car)) +
     values = c("#3E8606", "#BFD7AC", "#f092cd", "#007AC9", "#AAD3ED")
   ) +
   labs(
-    title = "Henkilöautoliikenteen liikennesuorite Helsingin seudulla",
+    title = "Meluvyöhykkeiden pinta-ala",
     x =  NULL,
-    y = "milj. ajon.km / arki-vrk"
+    y = "km2"
   ) +
   theme_mal_graph() +
   theme(legend.position = "right")
 
-ggsave_graph(here::here("figures", "graph_vehicle_kms_car.png"))
+ggsave_graph(here::here("figures", "graph_noise-area-km2.png"))

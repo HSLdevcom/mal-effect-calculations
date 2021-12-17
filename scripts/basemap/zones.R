@@ -36,9 +36,15 @@ hs15 <- c("Helsinki",
           "Vihti",
           "Siuntio")
 
+# Save whole model area
+zones %>%
+  dplyr::mutate(hs15 = KUNTANIMI %in% hs15) %>%
+  readr::write_rds(here::here("results", "sijoittelualueet2019.rds"))
+
 zones <- zones %>%
   dplyr::filter(KUNTANIMI %in% hs15) %>%
   dplyr::mutate(KUNTANIMI = factor(KUNTANIMI, levels = hs15))
 
+# Save only HS15 area
 zones %>%
   readr::write_rds(here::here("results", "zones.rds"))
