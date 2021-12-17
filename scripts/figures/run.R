@@ -31,6 +31,7 @@ for (scenario in scenarios) {
   source(here::here("scripts", "figures", "vdfs.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "emissions.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "centers.R"), encoding = "utf-8")
+  source(here::here("scripts", "figures", "links.R"), encoding = "utf-8")
 }
 
 Sys.setenv(R_CONFIG_ACTIVE = "default")
