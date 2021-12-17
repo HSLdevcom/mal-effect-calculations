@@ -6,6 +6,7 @@ library(sf)
 region <- readr::read_rds(here::here("results", "region.rds"))
 bonus_region <- readr::read_rds(here::here("results", "bonus_region.rds"))
 metro <- readr::read_rds(here::here("results", "metro.rds"))
+metro_2040_ve0 <- readr::read_rds(here::here("results", "metro_2040_ve0.rds"))
 train <- readr::read_rds(here::here("results", "train.rds"))
 roads <- readr::read_rds(here::here("results", "roads.rds"))
 municipalities <- readr::read_rds(here::here("results", "municipalities.rds"))
@@ -22,6 +23,8 @@ geom_basemap <- function() {
     geom_sf(data = train, color = "#ffffff", linetype = "22", size = 0.53),
     geom_sf(data = metro, color = "#ff7f00", linetype = "solid", size = 0.66),
     geom_sf(data = metro, color = "#ffffff", linetype = "22", size = 0.53),
+    geom_sf(data = metro_2040_ve0, color = "#ff7f00", linetype = "solid", size = 0.66),
+    geom_sf(data = metro_2040_ve0, color = "#ffffff", linetype = "22", size = 0.53),
     geom_sf(data = region, color = "#000000", fill = NA, size = 0.46),
     geom_sf(data = bonus_region, color = "#000000", fill = NA, linetype = "33", size = 0.46)
   )
@@ -138,7 +141,7 @@ ggsave_map <- function(filename,
 
 ggsave_graph <- function(filename,
                          width = 148,
-                         height = 68,
+                         height = 84,
                          units = "mm",
                          dpi = 600, ...) {
   ggsave(filename = filename,

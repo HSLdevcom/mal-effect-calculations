@@ -1,7 +1,6 @@
 # -*- coding: utf-8-unix -*-
 library(here)
 library(tidyverse)
-library(sf)
 
 
 # Data --------------------------------------------------------------------
@@ -11,17 +10,18 @@ results <- readr::read_rds(here::here("results", "areas_all.rds"))
 
 # Plot --------------------------------------------------------------------
 
-ggplot(results, aes(x = area, y = goodness_share)) +
+ggplot(results, aes(x = area, y = workforce_accessibility)) +
   geom_col(aes(fill = scenario), position = position_dodge2()) +
   geom_text(
-    aes(label = scales::label_percent(accuracy = 1, suffix = "")(goodness_share)),
+    aes(label = scales::label_number(accuracy = 1, scale = 0.001, big.mark = "")(workforce_accessibility)),
     position = position_dodge2(width = 0.9),
     vjust = -0.5,
     size = points2mm(8),
     color = "#333333"
   ) +
   scale_y_continuous(
-    labels = scales::label_percent(suffix = " %")
+    labels = scales::label_number(scale = 0.001),
+    expand = expansion(mult = 0.1)
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)
@@ -31,10 +31,10 @@ ggplot(results, aes(x = area, y = goodness_share)) +
     values = c("#3E8606", "#7DAD58", "#BFD7AC")
   ) +
   labs(
-    title = "Työpaikkojen sijoittuminen kestävän liikkumisen kannalta hyville saavutettavuusvyöhykkeille",
+    title = "Työvoimasaavutettavuus",
     x = NULL,
-    y = NULL
+    y = "tuhatta henkilöä"
   ) +
   theme_mal_graph()
 
-ggsave_graph(here::here("figures", "graph_savu_workplaces.png"))
+ggsave_graph(here::here("figures", "graph_workforce-accessibility.png"))
