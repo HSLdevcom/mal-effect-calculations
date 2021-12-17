@@ -105,11 +105,13 @@ ggplot(pdata, aes(value)) +
   facet_wrap(vars(mode), nrow = 1)
 ggsave_graph(here::here("figures", sprintf("twocenters_distribution_%s.png", config::get("scenario"))))
 
+mode_shares <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("baseline_scenario"))))
+
 results <- results %>%
-  dplyr::mutate(ttime_twocenters_all = mode_share_car * car +
-                  mode_share_transit * transit +
-                  mode_share_bike * bike +
-                  mode_share_walk * walk)
+  dplyr::mutate(ttime_twocenters_all = mode_shares$mode_share_car * car +
+                  mode_shares$mode_share_transit * transit +
+                  mode_shares$mode_share_bike * bike +
+                  mode_shares$mode_share_walk * walk)
 
 # Now, we are handling already normalized travel times but I do not think that
 # is an issue. They are normalized again to fit [1, 100].
