@@ -80,6 +80,12 @@ plot_twocenters <- function(data, fill, title) {
 }
 
 twocenters <- function(.data, mode, title) {
+  # Scaling to 1-100
+  a <- 1
+  b <- 100
+  # Dropping Suomenlinna because it distorts the results too much.
+  outlier_zones <- c(1531)
+
   column <- sprintf("ttime_twocenters_%s", mode)
   # If we are on baseline scenario, calculate range of the variable. Otherwise
   # read it from the result folder.

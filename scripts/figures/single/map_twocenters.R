@@ -6,16 +6,6 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 source(here::here("scripts", "utils.R"), encoding = "utf-8")
 
 
-# Data --------------------------------------------------------------------
-
-# Scaling to 1-100
-a <- 1
-b <- 100
-
-# Dropping Suomenlinna because it distorts the results too much.
-outlier_zones <- c(1531)
-
-
 # Plot --------------------------------------------------------------------
 
 results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
