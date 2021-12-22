@@ -90,6 +90,10 @@ zones2 <- zones %>%
   ) %>%
   dplyr::filter(savu_goodness == "SAVU hyvä")
 
+zones3 <- zones %>%
+  dplyr::group_by(area) %>%
+  dplyr::summarise(twocenters = weighted.mean(ttime_twocenters_normal_all, w = total_pop))
+
 
 # Join data ---------------------------------------------------------------
 
@@ -105,6 +109,7 @@ origin_demand <- origin_demand %>%
 areas <- data.frame(area = unique(zones$area)) %>%
   dplyr::left_join(zones1, by = "area") %>%
   dplyr::left_join(zones2, by = "area") %>%
+  dplyr::left_join(zones3, by = "area") %>%
   dplyr::left_join(vehicle_kms_modes, by = "area") %>%
   dplyr::left_join(workplace_accessibility, by = "area") %>%
   dplyr::left_join(origin_demand, by = "area") %>%
@@ -151,6 +156,7 @@ areas <- areas %>%
     origin_share_bike = sum(.$origin_demand_bike) / sum(.$origin_demand_total),
     noise_area_km2 = sum(.$noise_area_km2),
     noise_population = sum(.$noise_population),
+    twocenters = weighted.mean(.$twocenters, .$total_pop),
     total_pop = sum(.$total_pop),
     total_wrk = sum(.$total_wrk)
   )
