@@ -264,6 +264,47 @@ ttimes <- ttimes_pt %>%
 zones <- zones %>%
   dplyr::left_join(ttimes, by = "zone")
 
+# Accessibility to two centers
+car <- twocenters(zones, mode = "car")
+transit <- twocenters(zones, mode = "transit")
+bike <- twocenters(zones, mode = "bike")
+walk <- twocenters(zones, mode = "walk")
+
+if (config::get("scenario") == config::get("baseline_scenario")) {
+  message("twocenters: use current mode shares...")
+  mode_shares <- zones
+} else {
+  message("twocenters: read mode shares...")
+  mode_shares <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
+}
+
+zones <- zones %>%
+  dplyr::mutate(
+    ttime_twocenters_normal_car = car$ttime_twocenters_normal,
+    ttime_twocenters_normal_transit = transit$ttime_twocenters_normal,
+    ttime_twocenters_normal_bike = bike$ttime_twocenters_normal,
+    ttime_twocenters_normal_walk = walk$ttime_twocenters_normal,
+    bins_twocenters_car = car$bins_twocenters,
+    bins_twocenters_transit = transit$bins_twocenters,
+    bins_twocenters_bike = bike$bins_twocenters,
+    bins_twocenters_walk = walk$bins_twocenters) %>%
+  dplyr::mutate(
+    ttime_twocenters_all = mode_shares$mode_share_car * ttime_twocenters_normal_car +
+                  mode_shares$mode_share_transit * ttime_twocenters_normal_transit +
+                  mode_shares$mode_share_bike * ttime_twocenters_normal_bike +
+                  mode_shares$mode_share_walk * ttime_twocenters_normal_walk
+  )
+
+# Now, we are handling already normalized travel times but I do not think that
+# is an issue. They are normalized again to fit [1, 100].
+all <- twocenters(zones, mode = "all")
+
+zones <- zones %>%
+  dplyr::mutate(
+    ttime_twocenters_normal_all = all$ttime_twocenters_normal,
+    bins_twocenters_all = all$bins_twocenters
+  )
+
 
 # Output ------------------------------------------------------------------
 

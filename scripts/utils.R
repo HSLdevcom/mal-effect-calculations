@@ -61,7 +61,7 @@ ttime_to_bins <- function(x, xrange, a, b, breaks) {
   return(cut_twocenters(x_normal_ab, breaks = breaks))
 }
 
-twocenters <- function(.data, mode, title) {
+twocenters <- function(.data, mode) {
   # Scaling to 1-100
   a <- 1
   b <- 100
@@ -96,7 +96,8 @@ twocenters <- function(.data, mode, title) {
     breaks <- readr::read_rds(here::here("results", sprintf("twocenters_breaks_%s.rds", mode)))
   }
   # Cut variable into bins and plot.
-  .data$bins = cut_twocenters(ttime_twocenters_normal,
-                              breaks = breaks)
-  return(ttime_twocenters_normal)
+  bins = cut_twocenters(ttime_twocenters_normal,
+                        breaks = breaks)
+  return(list(ttime_twocenters_normal = ttime_twocenters_normal,
+              bins_twocenters = bins))
 }
