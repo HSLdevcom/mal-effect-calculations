@@ -32,7 +32,7 @@ verbose_source <- function(file, ...) {
   invisible(source(file, ...))
 }
 
-scale_to_range <- function(x, xmin, xmax, a, b) {
+scale_to_range <- function(x, xmin = min(x), xmax = max(x), a, b) {
   # Scales vector x linearly to range [a, b] so that xmin = a and xmax = b.
   # Usually, xmin and xmax are min(x) and max(x) but they can be other values
   # too.
