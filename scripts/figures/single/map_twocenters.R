@@ -6,6 +6,13 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 source(here::here("scripts", "utils.R"), encoding = "utf-8")
 
 
+# Data --------------------------------------------------------------------
+
+results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
+
+
+# Plot --------------------------------------------------------------------
+
 plot_twocenters <- function(data, fill, title) {
   ggplot() +
     geom_sf(mapping = aes(fill = {{ fill }}),
@@ -23,11 +30,6 @@ plot_twocenters <- function(data, fill, title) {
     ) +
     theme_mal_map()
 }
-
-
-# Plot --------------------------------------------------------------------
-
-results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
 
 plot_twocenters(results, bins_twocenters_car, title="Kahden keskuksen matka-aikasaavutettavuus henkilöautolla")
 ggsave_map(here::here("figures", sprintf("map_twocenters_car_%s.png", config::get("scenario"))))
