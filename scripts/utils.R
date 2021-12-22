@@ -61,24 +61,6 @@ ttime_to_bins <- function(x, xrange, a, b, breaks) {
   return(cut_twocenters(x_normal_ab, breaks = breaks))
 }
 
-plot_twocenters <- function(data, fill, title) {
-  ggplot() +
-    geom_sf(mapping = aes(fill = {{ fill }}),
-            data = data, color = NA) +
-    scale_fill_viridis_d(
-      option="plasma",
-      name = "indeksi",
-      direction = -1
-    ) +
-    geom_basemap() +
-    coord_sf_mal() +
-    annotate_map(
-      title = title,
-      subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name"))
-    ) +
-    theme_mal_map()
-}
-
 twocenters <- function(.data, mode, title) {
   # Scaling to 1-100
   a <- 1
@@ -116,7 +98,5 @@ twocenters <- function(.data, mode, title) {
   # Cut variable into bins and plot.
   .data$bins = cut_twocenters(ttime_twocenters_normal,
                               breaks = breaks)
-  plot_twocenters(.data, bins, title)
-  ggsave_map(here::here("figures", sprintf("map_twocenters_%s_%s.png", mode, config::get("scenario"))))
   return(ttime_twocenters_normal)
 }

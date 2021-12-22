@@ -6,6 +6,29 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 source(here::here("scripts", "utils.R"), encoding = "utf-8")
 
 
+plot_twocenters <- function(data, fill, title) {
+  ggplot() +
+    geom_sf(mapping = aes(fill = {{ fill }}),
+            data = data, color = NA) +
+    scale_fill_viridis_d(
+      option="plasma",
+      name = "indeksi",
+      direction = -1
+    ) +
+    geom_basemap() +
+    coord_sf_mal() +
+    annotate_map(
+      title = title,
+      subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name"))
+    ) +
+    theme_mal_map()
+}
+
+
+plot_twocenters(.data, bins, title)
+ggsave_map(here::here("figures", sprintf("map_twocenters_%s_%s.png", mode, config::get("scenario"))))
+
+
 # Plot --------------------------------------------------------------------
 
 results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
