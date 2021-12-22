@@ -303,7 +303,8 @@ zones <- zones %>%
   dplyr::mutate(
     ttime_twocenters_normal_all = all$ttime_twocenters_normal,
     bins_twocenters_all = all$bins_twocenters
-  )
+  ) %>%
+  dplyr::select(!ttime_twocenters_all)
 
 
 # Output ------------------------------------------------------------------
