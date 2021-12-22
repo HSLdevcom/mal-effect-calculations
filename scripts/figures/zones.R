@@ -275,7 +275,7 @@ if (config::get("scenario") == config::get("baseline_scenario")) {
   mode_shares <- zones
 } else {
   message("twocenters: read mode shares...")
-  mode_shares <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
+  mode_shares <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("baseline_scenario"))))
 }
 
 zones <- zones %>%
