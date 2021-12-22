@@ -32,10 +32,10 @@ ggplot(results, aes(x = area, y = twocenters)) +
     values = c("#3E8606", "#7DAD58", "#BFD7AC")
   ) +
   labs(
-    title = "Kahden keskuksen saavutettavuus kaikilla kulkutavoilla",
+    title = "Kahden keskuksen matka-aikasaavutettavuus kaikilla kulkutavoilla",
     x =  NULL,
     y = "indeksi"
   ) +
   theme_mal_graph()
 
-ggsave_graph(here::here("figures", "graph_ttime_twocenters_all.png"))
+ggsave_graph(here::here("figures", "graph_twocenters.png"))
