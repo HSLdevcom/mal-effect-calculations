@@ -29,13 +29,13 @@ plot_twocenters <- function(data, fill, title) {
 
 results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
 
-plot_twocenters(.data, bins_twocenters_car, title="Kahden keskuksen matka-aikasaavutettavuus henkilöautolla")
+plot_twocenters(results, bins_twocenters_car, title="Kahden keskuksen matka-aikasaavutettavuus henkilöautolla")
 ggsave_map(here::here("figures", sprintf("map_twocenters_car_%s.png", config::get("scenario"))))
-plot_twocenters(.data, bins_twocenters_transit, title="Kahden keskuksen matka-aikasaavutettavuus joukkoliikenteellä")
+plot_twocenters(results, bins_twocenters_transit, title="Kahden keskuksen matka-aikasaavutettavuus joukkoliikenteellä")
 ggsave_map(here::here("figures", sprintf("map_twocenters_transit_%s.png", config::get("scenario"))))
-plot_twocenters(.data, bins_twocenters_bike, title="Kahden keskuksen matka-aikasaavutettavuus polkupyörällä")
+plot_twocenters(results, bins_twocenters_bike, title="Kahden keskuksen matka-aikasaavutettavuus polkupyörällä")
 ggsave_map(here::here("figures", sprintf("map_twocenters_bike_%s.png", config::get("scenario"))))
-plot_twocenters(.data, bins_twocenters_walk, title="Kahden keskuksen matka-aikasaavutettavuus kävellen")
+plot_twocenters(results, bins_twocenters_walk, title="Kahden keskuksen matka-aikasaavutettavuus kävellen")
 ggsave_map(here::here("figures", sprintf("map_twocenters_walk_%s.png", config::get("scenario"))))
-plot_twocenters(.data, bins_twocenters_all, title="Kahden keskuksen matka-aikasaavutettavuus kaikilla kulkutavoilla")
+plot_twocenters(results, bins_twocenters_all, title="Kahden keskuksen matka-aikasaavutettavuus kaikilla kulkutavoilla")
 ggsave_map(here::here("figures", sprintf("map_twocenters_all_%s.png", config::get("scenario"))))
