@@ -108,7 +108,6 @@ zones_centroids <- zones %>%
 
 ggplot() +
   geom_basemap() +
-  coord_sf_mal() +
   geom_sf(
     data = zones_centroids,
     mapping = aes(size = Asukkaat),
@@ -118,15 +117,12 @@ ggplot() +
     stroke = 0
   ) +
   scale_size(range = c(0, 4)) +
+  coord_sf_mal() +
   annotate_map(
     title = "Vertailuarvon alle jäävä väestö",
     subtitle = config::get("projected_name")
   ) +
-  theme_mal_map() +
-  coord_sf(
-    xlim = c(bbox$xmin - 500, bbox$xmax + 500),
-    ylim = c(bbox$ymin + 20000, bbox$ymax + 500),
-    expand = FALSE)
+  theme_mal_map()
 
 ggsave_map(
   here("figures",
