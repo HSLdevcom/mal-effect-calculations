@@ -2,11 +2,13 @@
 library(here)
 library(tidyverse)
 library(sf)
+library(lwgeom)
 
 
 # Read data ---------------------------------------------------------------
 
 region <- readr::read_rds(here::here("results", "region.rds"))
+zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
 
 links <- here::here(config::get("helmet_data"), config::get("results"), "links.txt") %>%
   readr::read_tsv() %>%
@@ -19,6 +21,20 @@ links <- here::here(config::get("helmet_data"), config::get("results"), "links.t
                 relative_speed = car_time_pt / car_time_aht) %>%
   # Filter for improved plotting
   dplyr::filter(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE))
+
+areas <- links %>%
+  dplyr::select(data1) %>%
+  # Get starting points of each linestring
+  sf::st_set_geometry(lwgeom::st_startpoint(.)) %>%
+  # Find out which area each starting point belongs to. Using
+  # `sf::st_nearest_feature` because links at the region border are not all
+  # matched with `sf::st_intersects`.
+  sf::st_join(zones, join = sf::st_nearest_feature) %>%
+  dplyr::select(area) %>%
+  sf::st_drop_geometry()
+
+stopifnot(nrow(areas) == nrow(links))
+links$area <- areas$area
 
 buffers <- links %>%
   sf::st_buffer(dist = -links$volume_aht / 5,
