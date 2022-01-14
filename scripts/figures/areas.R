@@ -95,6 +95,18 @@ zones3 <- zones %>%
   dplyr::summarise(twocenters = weighted.mean(ttime_twocenters_normal_all, w = total_pop))
 
 
+# Read and aggregate link data --------------------------------------------
+
+links <- readr::read_rds(here::here("results", sprintf("links_%s.rds", config::get("scenario")))) %>%
+  sf::st_drop_geometry() %>%
+  dplyr::group_by(area) %>%
+  # TODO: Get correct columns
+  dplyr::summarise(weighted_delay_car_all = sum(x),
+                   weighted_delay_truck_all = sum(x),
+                   weighted_delay_transit = sum(x),
+                   .groups = "drop")
+
+
 # Join data ---------------------------------------------------------------
 
 # Rename columns to avoid name collisions
@@ -110,6 +122,7 @@ areas <- data.frame(area = unique(zones$area)) %>%
   dplyr::left_join(zones1, by = "area") %>%
   dplyr::left_join(zones2, by = "area") %>%
   dplyr::left_join(zones3, by = "area") %>%
+  dplyr::left_join(links, by = "area") %>%
   dplyr::left_join(vehicle_kms_modes, by = "area") %>%
   dplyr::left_join(workplace_accessibility, by = "area") %>%
   dplyr::left_join(origin_demand, by = "area") %>%
