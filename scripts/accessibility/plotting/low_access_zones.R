@@ -134,12 +134,9 @@ ggplot() +
     ylim = c(bbox$ymin + 20000, bbox$ymax + 500),
     expand = FALSE)
 
-ggsave(
+ggsave_map(
   here("figures",
        get("projected_scenario"),
        "zones_access_poor_no_car.png"
-  ),
-  width = dimensions_map[1],
-  height = dimensions_map[2],
-  units = "cm"
+  )
 )

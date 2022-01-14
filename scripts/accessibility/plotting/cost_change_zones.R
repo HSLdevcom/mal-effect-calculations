@@ -93,13 +93,10 @@ ggplot() +
     ) +
   theme_mal_map()
 
-ggsave(
+ggsave_map(
   here(
     "figures",
     config::get("projected_scenario"),
     "cost_change_transport.png"
-  ),
-  width = dimensions_map[1],
-  height = dimensions_map[2],
-  units = "cm"
+  )
 )
