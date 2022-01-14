@@ -16,14 +16,15 @@ links <- here::here(config::get("helmet_data"), config::get("results"), "links.t
   dplyr::filter(!(volume_delay_func %in% 99)) %>%
   dplyr::mutate(volume_aht = car_leisure_aht + car_work_aht + bus_aht + trailer_truck_aht + truck_aht + van_aht,
                 car_aht = car_work_aht + car_leisure_aht,
-                relative_speed = car_time_pt / car_time_aht)
+                relative_speed = car_time_pt / car_time_aht) %>%
+  # Filter for improved plotting
+  dplyr::filter(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE))
 
 buffers <- links %>%
   sf::st_buffer(dist = -links$volume_aht / 5,
                 endCapStyle = "FLAT",
                 singleSide = TRUE) %>%
   # Filter for improved plotting
-  dplyr::filter(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE)) %>%
   dplyr::filter(volume_aht > 0.01)
 
 buffers_car <- links %>%
@@ -31,7 +32,6 @@ buffers_car <- links %>%
                 endCapStyle = "FLAT",
                 singleSide = TRUE) %>%
   # Filter for improved plotting
-  dplyr::filter(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE)) %>%
   dplyr::filter(car_aht > 0.01)
 
 
