@@ -75,10 +75,10 @@ calc_low_access <- function(df, pks, limit_pks, limit_kehys) {
   df %>%
     mutate(
       low_access = if_else(
-      area %in% pks,
-      tour_access < limit_pks,
-      tour_access < limit_kehys
-    )) %>%
+        area %in% pks,
+        tour_access < limit_pks,
+        tour_access < limit_kehys
+      )) %>%
     group_by(number) %>%
     summarise(nr_agents = n(),
               low_access = sum(low_access, na.rm = TRUE)) %>%
