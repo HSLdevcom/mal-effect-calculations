@@ -107,12 +107,6 @@ zones_centroids <- zones %>%
   rename(Asukkaat = "low_access")
 
 ggplot() +
-  geom_sf(
-    data = zones,
-    fill = NA,
-    color = "lightgray",
-    size = 0.01
-    ) +
   geom_basemap() +
   coord_sf_mal() +
   geom_sf(
