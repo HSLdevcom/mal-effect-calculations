@@ -23,26 +23,32 @@ links <- here::here(config::get("helmet_data"), config::get("results"), "links.t
   dplyr::mutate(volume_aht = car_leisure_aht + car_work_aht + bus_aht + trailer_truck_aht + truck_aht + van_aht,
                 car_aht = car_work_aht + car_leisure_aht,
                 relative_speed = car_time_pt / car_time_aht) %>%
-  dplyr::mutate(
-    length = units::drop_units(sf::st_length(.)),
-    free_speed = pmax(data2, 0),
-    free_time = (length / 1000) / free_speed,
-    diff_car_time_aht = pmax((car_time_aht / 60) - free_time, 0),
-    diff_car_time_iht = pmax((car_time_iht / 60) - free_time, 0),
-    diff_car_time_pt = pmax((car_time_pt / 60) - free_time, 0),
-    truck_all_aht = 5 * (trailer_truck_aht + truck_aht) * diff_car_time_aht,
-    truck_all_iht = 5 * (trailer_truck_iht + truck_iht) * diff_car_time_iht,
-    truck_all_pt = 5 * (trailer_truck_pt + truck_pt) * diff_car_time_pt,
-    # TODO: Remove bus lines
-    transit_aht = (transit_work_aht + transit_leisure_aht) * diff_car_time_aht,
-    transit_iht = (transit_work_iht + transit_leisure_iht) * diff_car_time_iht,
-    transit_pt = (transit_work_pt + transit_leisure_pt) * diff_car_time_pt,
-    car_aht = (car_work_aht + car_leisure_aht + van_aht) * diff_car_time_aht,
-    car_iht = (car_work_iht + car_leisure_iht + van_iht) * diff_car_time_iht,
-    car_pt = (car_work_pt + car_leisure_pt + van_pt) * diff_car_time_pt
-  ) %>%
   # Filter for improved plotting
   dplyr::filter(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE))
+
+links <- links %>%
+  dplyr::mutate(
+    free_speed = pmax(data2, 0), # km/h
+    free_time = length / free_speed, # h
+    diff_car_time_aht = pmax((car_time_aht / 60) - free_time, 0), # h
+    diff_car_time_iht = pmax((car_time_iht / 60) - free_time, 0), # h
+    diff_car_time_pt = pmax((car_time_pt / 60) - free_time, 0), # h
+    # It was discussed and decided that bus passengers do not experience delays
+    # when they travel on a road with a separate line for buses. This is handled
+    # by forcing the time difference to zero on those links.
+    diff_bus_time_aht = dplyr::if_else(type %in% c(200:499, 600:699), 0, diff_car_time_aht),
+    diff_bus_time_iht = dplyr::if_else(type %in% c(200:399, 500:699), 0, diff_car_time_iht),
+    diff_bus_time_pt = dplyr::if_else(type %in% c(300:399, 600:699), 0, diff_car_time_pt),
+    delay_truck_all_aht = 5 * (trailer_truck_aht + truck_aht) * diff_car_time_aht,
+    delay_truck_all_iht = 5 * (trailer_truck_iht + truck_iht) * diff_car_time_iht,
+    delay_truck_all_pt = 5 * (trailer_truck_pt + truck_pt) * diff_car_time_pt,
+    delay_transit_aht = (transit_work_aht + transit_leisure_aht) * diff_bus_time_aht,
+    delay_transit_iht = (transit_work_iht + transit_leisure_iht) * diff_bus_time_iht,
+    delay_transit_pt = (transit_work_pt + transit_leisure_pt) * diff_bus_time_pt,
+    delay_car_aht = (car_work_aht + car_leisure_aht + van_aht) * diff_car_time_aht,
+    delay_car_iht = (car_work_iht + car_leisure_iht + van_iht) * diff_car_time_iht,
+    delay_car_pt = (car_work_pt + car_leisure_pt + van_pt) * diff_car_time_pt
+  )
 
 areas <- links %>%
   dplyr::select(data1) %>%
