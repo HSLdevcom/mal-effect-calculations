@@ -16,6 +16,10 @@ links <- here::here(config::get("helmet_data"), config::get("results"), "links.t
   dplyr::rename(geometry = Link) %>%
   sf::st_as_sf(wkt = "geometry", remove = TRUE, crs = 3879) %>%
   dplyr::filter(!(volume_delay_func %in% 99)) %>%
+  # Remove links where only walking and bicycling are allowed
+  dplyr::filter(!(type %in% 70)) %>%
+  # Remove rail links
+  dplyr::filter(!type %in% 2:6) %>%
   dplyr::mutate(volume_aht = car_leisure_aht + car_work_aht + bus_aht + trailer_truck_aht + truck_aht + van_aht,
                 car_aht = car_work_aht + car_leisure_aht,
                 relative_speed = car_time_pt / car_time_aht) %>%
