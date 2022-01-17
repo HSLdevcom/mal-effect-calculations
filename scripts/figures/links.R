@@ -8,6 +8,7 @@ library(lwgeom)
 # Read data ---------------------------------------------------------------
 
 region <- readr::read_rds(here::here("results", "region.rds"))
+volume_factors <- readr::read_tsv(here::here("utilities", "volume_factors.tsv"), col_types = "cddd")
 zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
 
 links <- here::here(config::get("helmet_data"), config::get("results"), "links.txt") %>%
@@ -15,6 +16,8 @@ links <- here::here(config::get("helmet_data"), config::get("results"), "links.t
   dplyr::rename_with(~ gsub("@", "", .x, fixed = TRUE)) %>%
   dplyr::rename(geometry = Link) %>%
   sf::st_as_sf(wkt = "geometry", remove = TRUE, crs = 3879) %>%
+  # Add unique column for identification
+  dplyr::mutate(fid = dplyr::row_number()) %>%
   dplyr::filter(!(volume_delay_func %in% 99)) %>%
   # Remove links where only walking and bicycling are allowed
   dplyr::filter(!(type %in% 70)) %>%
@@ -26,29 +29,56 @@ links <- here::here(config::get("helmet_data"), config::get("results"), "links.t
   # Filter for improved plotting
   dplyr::filter(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE))
 
-links <- links %>%
+volume_factors <- volume_factors %>%
+  tidyr::pivot_longer(-mode, names_to = "period", values_to = "volume_factor")
+
+
+links0 <- links %>%
+  sf::st_drop_geometry() %>%
+  dplyr::select(fid, data2, length, type,
+                dplyr::starts_with(c("car_time", "car_work", "car_leisure",
+                                     "van", "truck", "trailer_truck",
+                                     "transit_work", "transit_leisure"))) %>%
+  dplyr::select(!dplyr::ends_with("vrk")) %>%
+  tidyr::pivot_longer(-c(fid, data2, length, type, dplyr::starts_with("car_time")),
+                      names_to = c("mode", "period"),
+                      names_pattern = "([a-z_]+)_([a-z]+)",
+                      values_to = "volume") %>%
+  dplyr::mutate(car_time = dplyr::case_when(
+    period == "aht" ~ car_time_aht,
+    period == "pt"  ~ car_time_pt,
+    period == "iht" ~ car_time_iht,
+    TRUE ~ NA_real_
+  )) %>%
+  dplyr::select(-c(car_time_aht, car_time_pt, car_time_iht)) %>%
   dplyr::mutate(
     free_speed = pmax(data2, 0), # km/h
     free_time = length / free_speed, # h
-    diff_car_time_aht = pmax((car_time_aht / 60) - free_time, 0), # h
-    diff_car_time_iht = pmax((car_time_iht / 60) - free_time, 0), # h
-    diff_car_time_pt = pmax((car_time_pt / 60) - free_time, 0), # h
-    # It was discussed and decided that bus passengers do not experience delays
-    # when they travel on a road with a separate line for buses. This is handled
-    # by forcing the time difference to zero on those links.
-    diff_bus_time_aht = dplyr::if_else(type %in% c(200:499, 600:699), 0, diff_car_time_aht),
-    diff_bus_time_iht = dplyr::if_else(type %in% c(200:399, 500:699), 0, diff_car_time_iht),
-    diff_bus_time_pt = dplyr::if_else(type %in% c(300:399, 600:699), 0, diff_car_time_pt),
-    delay_truck_all_aht = 5 * (trailer_truck_aht + truck_aht) * diff_car_time_aht,
-    delay_truck_all_iht = 5 * (trailer_truck_iht + truck_iht) * diff_car_time_iht,
-    delay_truck_all_pt = 5 * (trailer_truck_pt + truck_pt) * diff_car_time_pt,
-    delay_transit_aht = (transit_work_aht + transit_leisure_aht) * diff_bus_time_aht,
-    delay_transit_iht = (transit_work_iht + transit_leisure_iht) * diff_bus_time_iht,
-    delay_transit_pt = (transit_work_pt + transit_leisure_pt) * diff_bus_time_pt,
-    delay_car_aht = (car_work_aht + car_leisure_aht + van_aht) * diff_car_time_aht,
-    delay_car_iht = (car_work_iht + car_leisure_iht + van_iht) * diff_car_time_iht,
-    delay_car_pt = (car_work_pt + car_leisure_pt + van_pt) * diff_car_time_pt
-  )
+    diff_car_time = pmax((car_time / 60) - free_time, 0)) %>%  # h
+  dplyr::left_join(volume_factors, by = c("mode", "period")) %>%
+  dplyr::mutate(delay = volume / volume_factor * diff_car_time) %>%
+  # It was discussed and decided that bus passengers do not experience delays
+  # when they travel on a road with a separate line for buses. This is handled
+  # by forcing the time difference to zero on those links.
+  dplyr::mutate(
+    delay = dplyr::case_when(
+      mode %in% c("transit_work", "transit_leisure") & period == "aht" & type %in% c(200:499, 600:699) ~ 0.0,
+      mode %in% c("transit_work", "transit_leisure") & period == "pt" & type %in% c(300:399, 600:699) ~ 0.0,
+      mode %in% c("transit_work", "transit_leisure") & period == "iht" & type %in% c(200:399, 500:699) ~ 0.0,
+      TRUE ~ delay
+    )
+  ) %>%
+  dplyr::group_by(fid, mode) %>%
+  dplyr::summarise(delay = sum(delay), .groups = "drop") %>%
+  tidyr::pivot_wider(fid, names_from = "mode", values_from = "delay") %>%
+  dplyr::mutate(weighted_delay_car_all = car_leisure + car_work + van,
+                weighted_delay_truck_all = 5 * (trailer_truck + truck),
+                weighted_delay_transit =  transit_leisure + transit_work,
+                weighted_delay_all = weighted_delay_car_all + weighted_delay_truck_all + weighted_delay_transit) %>%
+  dplyr::select(fid, dplyr::starts_with("weighted_delay"))
+
+links <- links %>%
+  dplyr::left_join(links0, by = "fid")
 
 areas <- links %>%
   dplyr::select(data1) %>%

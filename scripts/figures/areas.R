@@ -100,12 +100,11 @@ zones3 <- zones %>%
 links <- readr::read_rds(here::here("results", sprintf("links_%s.rds", config::get("scenario")))) %>%
   sf::st_drop_geometry() %>%
   dplyr::group_by(area) %>%
-  # TODO: Get correct columns
-  dplyr::summarise(weighted_delay_car_all = sum(delay_car_aht + delay_car_iht + delay_car_pt),
-                   weighted_delay_truck_all = sum(delay_truck_all_aht + delay_truck_all_iht + delay_truck_all_iht),
-                   weighted_delay_transit = sum(delay_transit_aht + delay_transit_iht + delay_transit_pt),
-                   .groups = "drop") %>%
-  dplyr::mutate(weighted_delay_all = weighted_delay_car_all + weighted_delay_truck_all + weighted_delay_transit)
+  dplyr::summarise(weighted_delay_car_all = sum(weighted_delay_car_all),
+                   weighted_delay_truck_all = sum(weighted_delay_truck_all),
+                   weighted_delay_transit = sum(weighted_delay_transit),
+                   weighted_delay_all = sum(weighted_delay_all),
+                   .groups = "drop")
 
 
 # Join data ---------------------------------------------------------------
