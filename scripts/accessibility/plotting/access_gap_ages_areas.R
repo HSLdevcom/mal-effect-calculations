@@ -69,7 +69,10 @@ gap <- agent_sums %>%
       scenario %in% "projected" ~ config::get("projected_name"),
       scenario %in% "baseline" ~ config::get("baseline_name"),
       scenario %in% "present" ~ config::get("present_name")
-    )
+    ),
+    scenario = factor(scenario, levels = c(config::get("present_name"),
+                                           config::get("baseline_name"),
+                                           config::get("projected_name")))
   )
 
 max_gap <- max(abs(gap$utility_dif), na.rm = TRUE) + 1

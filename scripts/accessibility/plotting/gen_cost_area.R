@@ -52,6 +52,9 @@ areas_housing_cost <- housing_cost %>%
 
 areas <- agents_sums %>%
   bind_rows(agents_sums_0, agents_sums_1) %>%
+  mutate(scenario = factor(scenario, levels = c(config::get("present_name"),
+                                                config::get("baseline_name"),
+                                                config::get("projected_name")))) %>%
   left_join(areas_housing_cost, by = "area")
 
 # Cost data to month ----

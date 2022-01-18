@@ -99,7 +99,10 @@ low_access_1 <- agents_1 %>%
 
 # Calc differences ----
 
-results <- bind_rows(low_access, low_access_0, low_access_1)
+results <- bind_rows(low_access, low_access_0, low_access_1) %>%
+  mutate(scenario = factor(scenario, levels = c(config::get("present_name"),
+                                                config::get("baseline_name"),
+                                                config::get("projected_name"))))
 
 results <- results %>%
   mutate(area2 = if_else(area %in% pks, "Pääkaupunkiseutu", "Kehyskunnat"),
