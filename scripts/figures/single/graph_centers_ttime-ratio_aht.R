@@ -1,7 +1,6 @@
 # -*- coding: utf-8-unix -*-
 library(here)
 library(tidyverse)
-library(omxr)
 
 
 # Data --------------------------------------------------------------------
