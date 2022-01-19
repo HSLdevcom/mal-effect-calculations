@@ -85,7 +85,7 @@ generation <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "generation.txt"),
-  col_types = "idddddddddddd",
+  col_types = "iddddddddddd",
   first_col_name = "zone"
 )
 impedance_ratio <- read_tsv_helmet(

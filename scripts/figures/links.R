@@ -12,7 +12,8 @@ volume_factors <- readr::read_tsv(here::here("utilities", "volume_factors.tsv"),
 zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
 
 links <- here::here(config::get("helmet_data"), config::get("results"), "links.txt") %>%
-  readr::read_tsv() %>%
+  readr::read_tsv(col_types = cols(Link = col_character(),
+                                   .default = col_double())) %>%
   dplyr::rename_with(~ gsub("@", "", .x, fixed = TRUE)) %>%
   dplyr::rename(geometry = Link) %>%
   sf::st_as_sf(wkt = "geometry", remove = TRUE, crs = 3879) %>%
