@@ -8,17 +8,13 @@ source(here::here("scripts", "utils.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-cba <- read_tsv_helmet("T:/JohannaP/cba_2040_ve1_2040_ve0.txt", first_col_name = "zone")
-
-results <- readr::read_rds(here::here("results", "zones_2018.rds")) %>%
-  dplyr::select(zone) %>%
-  dplyr::left_join(cba, by = "zone")
+results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
 
 
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_sf(mapping = aes(fill = transit_work_time + transit_leisure_time),
+  geom_sf(mapping = aes(fill = cba_transit_time),
           data = results, color = NA) +
   scale_fill_distiller(
     palette = "PRGn",
@@ -36,13 +32,13 @@ ggplot() +
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", "map_cba_transit-time.png"))
+ggsave_map(here::here("figures", sprintf("map_cba_transit-time_%s.png", config::get("scenario"))))
 
 
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_sf(mapping = aes(fill = car_work_time + car_leisure_time),
+  geom_sf(mapping = aes(fill = cba_car_time),
           data = results, color = NA) +
   scale_fill_distiller(
     palette = "PRGn",
@@ -60,4 +56,4 @@ ggplot() +
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", "map_cba_car-time.png"))
+ggsave_map(here::here("figures", sprintf("map_cba_car-time_%s.png", config::get("scenario"))))

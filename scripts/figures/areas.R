@@ -94,6 +94,13 @@ zones3 <- zones %>%
   dplyr::group_by(area) %>%
   dplyr::summarise(twocenters = weighted.mean(ttime_twocenters_normal_all, w = total_pop))
 
+zones4 <- zones %>%
+  dplyr::group_by(area) %>%
+  dplyr::summarise(
+    cba_car_time = sum(cba_car_time * total_pop),
+    cba_transit_time = sum(cba_transit_time * total_pop)
+  )
+
 
 # Read and aggregate link data --------------------------------------------
 
@@ -174,6 +181,8 @@ areas <- areas %>%
     noise_area_km2 = sum(.$noise_area_km2),
     noise_population = sum(.$noise_population),
     twocenters = weighted.mean(.$twocenters, .$total_pop),
+    cba_car_time = sum(.$cba_car_time),
+    cba_transit_time = sum(.$cba_transit_time),
     total_pop = sum(.$total_pop),
     total_wrk = sum(.$total_wrk)
   )
