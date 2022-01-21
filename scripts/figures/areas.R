@@ -78,6 +78,9 @@ zones1 <- zones %>%
   dplyr::group_by(area) %>%
   dplyr::summarise(
     sustainable_accessibility = weighted.mean(sustainable_accessibility, total_pop),
+    twocenters = weighted.mean(ttime_twocenters_normal_all, w = total_pop),
+    cba_car_time = sum(cba_car_time * total_pop),
+    cba_transit_time = sum(cba_transit_time * total_pop),
     total_pop = sum(total_pop),
     total_wrk = sum(total_wrk)
   )
@@ -89,17 +92,6 @@ zones2 <- zones %>%
     .groups = "drop"
   ) %>%
   dplyr::filter(savu_goodness == "SAVU hyvä")
-
-zones3 <- zones %>%
-  dplyr::group_by(area) %>%
-  dplyr::summarise(twocenters = weighted.mean(ttime_twocenters_normal_all, w = total_pop))
-
-zones4 <- zones %>%
-  dplyr::group_by(area) %>%
-  dplyr::summarise(
-    cba_car_time = sum(cba_car_time * total_pop),
-    cba_transit_time = sum(cba_transit_time * total_pop)
-  )
 
 
 # Read and aggregate link data --------------------------------------------
@@ -128,7 +120,6 @@ origin_demand <- origin_demand %>%
 areas <- data.frame(area = unique(zones$area)) %>%
   dplyr::left_join(zones1, by = "area") %>%
   dplyr::left_join(zones2, by = "area") %>%
-  dplyr::left_join(zones3, by = "area") %>%
   dplyr::left_join(links, by = "area") %>%
   dplyr::left_join(vehicle_kms_modes, by = "area") %>%
   dplyr::left_join(workplace_accessibility, by = "area") %>%
