@@ -63,16 +63,16 @@ agent_sums %>%
   scale_x_discrete(
     labels = scales::label_wrap(5)
   ) +
-  scale_fill_manual(
-    name = NULL,
-    values = hsl_pal()(5)
+  scale_fill_brewer(
+    palette = "Set2",
+    name = NULL
   ) +
   geom_abline(slope = 0) +
   labs(
     y = "euroa kiertomatkaa kohden",
     x = NULL,
-    title = "Asukkaan tekemien matkojen saavutettavuuden muutos\nkotiperäisillä muilla matkoilla",
-    subtitle = config::get("projected_name")
+    title = "Asukkaan tekemien matkojen saavutettavuuden muutos\nkotiperäisillä muilla matkoilla ikäryhmän mukaan",
+    subtitle = sprintf("%s \U2192 %s", config::get("baseline_name"), config::get("projected_name"))
   ) +
   theme_mal_graph()
 

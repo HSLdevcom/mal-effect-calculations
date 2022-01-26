@@ -62,7 +62,7 @@ agent_sums <- agent_sums %>%
 
 # Plot ----
 
-income_names <- c("alin 20 %", rep("", 3), "ylin 20 %")
+income_names <- c("1 (alin 20 %)", "2", "3", "4", "5 (ylin 20 %)")
 
 gap <- agent_sums %>%
   select(income_group, area, projected, baseline, present) %>%
@@ -83,31 +83,40 @@ gap <- agent_sums %>%
 max_gap <- max(abs(gap$utility_dif)) + 1
 
 gap %>%
-  ggplot(aes(x = income_group, y = utility_dif, fill = scenario)) +
-  geom_bar(
-    stat = "identity",
-    position = "dodge",
-    color = "white",
-    width = 0.8
+  ggplot(aes(x = income_group, y = utility_dif, group = scenario)) +
+  facet_grid(cols = vars(area), switch = "both", labeller = labeller(.cols = scales::label_wrap(10)), margin = 10) +
+  geom_col(fill = "white", position = position_dodge2()) +
+  geom_col(aes(fill = income_group, alpha = scenario), position = position_dodge2()) +
+  scale_y_continuous(
+    labels = scales::label_number(decimal.mark = ",")
   ) +
-  facet_wrap( ~ area, nrow = 1) +
-  scale_fill_manual(values = hsl_pal("blues")(3)) +
-  scale_x_discrete(labels = income_names) +
-  theme_wide +
-  ylim(-max_gap, max_gap) +
+  scale_x_discrete(
+    labels = NULL
+  ) +
+  scale_fill_brewer(
+    palette = "Dark2",
+    name = "Tuloluokka",
+    labels = income_names,
+    guide = guide_legend(order = 1)
+  ) +
+  scale_alpha_discrete(
+    name = "Skenaario",
+    range = c(0.333, 1),
+    guide = guide_legend(reverse = FALSE, order = 2)
+  ) +
   geom_abline(slope = 0) +
-  labs(fill = "Skenaario",
-       y = "eur / kiertomatka",
+  labs(y = "euroa kiertomatkaa kohden",
        x = NULL,
-       title = "Saavutettavuusero suhteessa alueen keskiarvoon",
-       subtitle = "Kotiperäiset työmatkat")
+       title = "Saavutettavuuden ero alueen keskiarvoon\nkotiperäisillä työmatkoilla tuloluokittain") +
+  theme_mal_graph() +
+  theme(strip.background = element_rect(fill = NA, colour = "grey40", size = 0.5),
+        panel.spacing.x = unit(1, unit = "mm"),
+        legend.margin = margin(0, 0, 0, 0),
+        legend.title = element_text(face = "bold"))
 
-ggsave(
+ggsave_graph(
   here("figures",
        config::get("projected_scenario"),
        "access_gap_income_areas.png"
-       ),
-  width = dimensions_wide[1],
-  height = dimensions_wide[2],
-  units = "cm"
+  )
 )

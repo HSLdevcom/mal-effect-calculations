@@ -78,30 +78,39 @@ gap <- agent_sums %>%
 max_gap <- max(abs(gap$utility_dif), na.rm = TRUE) + 1
 
 gap %>%
-  ggplot(aes(x = age_group, y = utility_dif, fill = scenario)) +
-  geom_bar(
-    stat = "identity",
-    position = "dodge",
-    color = "white",
-    width = 0.8
+  ggplot(aes(x = age_group, y = utility_dif, group = scenario)) +
+  facet_grid(cols = vars(area), switch = "both", labeller = labeller(.cols = scales::label_wrap(10)), margin = 10) +
+  geom_col(fill = "white", position = position_dodge2()) +
+  geom_col(aes(fill = age_group, alpha = scenario), position = position_dodge2()) +
+  scale_y_continuous(
+    labels = scales::label_number(decimal.mark = ",")
   ) +
-  facet_wrap( ~ area, nrow = 1) +
-  scale_fill_manual(values = hsl_pal("blues")(3)) +
-  theme_wide +
-  ylim(-max_gap, max_gap) +
+  scale_x_discrete(
+    labels = NULL
+  ) +
+  scale_fill_brewer(
+    palette = "Set2",
+    name = "Ikäryhmä",
+    guide = guide_legend(order = 1)
+  ) +
+  scale_alpha_discrete(
+    name = "Skenaario",
+    range = c(0.333, 1),
+    guide = guide_legend(reverse = FALSE, order = 2)
+  ) +
   geom_abline(slope = 0) +
-  labs(fill = "Skenaario",
-       y = "eur / kiertomatka",
+  labs(y = "euroa kiertomatkaa kohden",
        x = NULL,
-       title = "Saavutettavuusero suhteessa alueen keskiarvoon",
-       subtitle = "Kotiperäiset muut matkat")
+       title = "Saavutettavuuden ero alueen keskiarvoon\nkotiperäisillä muilla matkoilla ikäryhmittäin") +
+  theme_mal_graph() +
+  theme(strip.background = element_rect(fill = NA, colour = "grey40", size = 0.5),
+        panel.spacing.x = unit(1, unit = "mm"),
+        legend.margin = margin(0, 0, 0, 0),
+        legend.title = element_text(face = "bold"))
 
-ggsave(
+ggsave_graph(
   here("figures",
        config::get("projected_scenario"),
-       "age_group_access_gap_areas.png"
-       ),
-  width = dimensions_wide[1],
-  height = dimensions_wide[2],
-  units = "cm"
+       "access_gap_age_group_areas.png"
+       )
 )
