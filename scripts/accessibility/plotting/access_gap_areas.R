@@ -9,7 +9,7 @@ source(here("scripts", "accessibility", "helpers.R"),
 areas <-
   c("Helsingin kantakaupunki",
     "Muu Helsinki",
-    "Espoo, Vantaa, Kau")
+    "Muu pääkaupunkiseutu")
 
 # Read files ----
 

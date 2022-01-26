@@ -26,11 +26,11 @@ zones <- zones %>%
 pks <-
   c("Helsingin kantakaupunki",
     "Muu Helsinki",
-    "Espoo, Vantaa, Kau")
+    "Muu pääkaupunkiseutu")
 
 kehys <-
-  c("Kehyskunnat (raide)",
-    "Kehyskunnat (muut)"
+  c("Junaliikenteen kehyskunnat",
+    "Bussiliikenteen kehyskunnat"
   )
 
 # Join tours to agents data ----
