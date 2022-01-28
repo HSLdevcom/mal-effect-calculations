@@ -29,6 +29,14 @@ default:
   results: "2040_ve0"
   co2_year: 2040
 
+2040_ve1:
+  scenario: "2040_ve1"
+  year: 2040
+  scenario_name: "Varjo"
+  forecast_zonedata: "2040_ve1"
+  results: "2040_ve1"
+  co2_year: 2040
+
 2040_ve0_muulitar:
   scenario: "2040_ve0_muulitar"
   year: 2040
