@@ -127,14 +127,11 @@ results %>%
   theme_mal_graph() +
   theme(panel.spacing = unit(2, "lines"))
 
-ggsave(
+ggsave_graph(
   here("figures",
        config::get("projected_scenario"),
        "low_access_no_car_nr.png"
-  ),
-  width = dimensions_fig[1],
-  height = dimensions_fig[2],
-  units = "cm"
+  )
 )
 
 # Plot shares ----
@@ -158,12 +155,9 @@ results %>%
   theme_mal_graph() +
   theme(panel.spacing = unit(2, "lines"))
 
-ggsave(
+ggsave_graph(
   here("figures",
        config::get("projected_scenario"),
        "low_access_no_car_share.png"
-  ),
-  width = dimensions_fig[1],
-  height = dimensions_fig[2],
-  units = "cm"
+  )
 )
