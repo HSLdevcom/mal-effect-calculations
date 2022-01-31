@@ -74,15 +74,12 @@ ggplot() +
   ) +
   theme_mal_map()
 
-ggsave(
+ggsave_map(
   here(
     "figures",
     config::get("projected_scenario"),
     "cost_transport.png"
-  ),
-  width = dimensions_long[1],
-  height = dimensions_long[2],
-  units = "cm"
+  )
 )
 
 # housing costs
@@ -104,15 +101,12 @@ ggplot() +
   ) +
   theme_mal_map()
 
-ggsave(
+ggsave_map(
   here(
     "figures",
     config::get("projected_scenario"),
     "cost_housing.png"
-  ),
-  width = dimensions_long[1],
-  height = dimensions_long[2],
-  units = "cm"
+  )
 )
 
 # housing + transport costs
@@ -134,15 +128,12 @@ ggplot() +
   ) +
   theme_mal_map()
 
-ggsave(
+ggsave_map(
   here(
     "figures",
     config::get("projected_scenario"),
     "cost_housing_transport.png"
-  ),
-  width = dimensions_long[1],
-  height = dimensions_long[2],
-  units = "cm"
+  )
 )
 
 # income ----
@@ -164,15 +155,12 @@ ggplot() +
   ) +
   theme_mal_map()
 
-ggsave(
+ggsave_map(
   here(
     "figures",
     config::get("projected_scenario"),
     "median_income.png"
-  ),
-  width = dimensions_long[1],
-  height = dimensions_long[2],
-  units = "cm"
+  )
 )
 
 # income ----
@@ -195,13 +183,10 @@ ggplot() +
   ) +
   theme_mal_map()
 
-ggsave(
+ggsave_map(
   here(
     "figures",
     config::get("projected_scenario"),
     "cost_income.png"
-  ),
-  width = dimensions_map[1],
-  height = dimensions_map[2],
-  units = "cm"
+  )
 )

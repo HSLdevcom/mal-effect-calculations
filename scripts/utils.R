@@ -32,9 +32,72 @@ verbose_source <- function(file, ...) {
   invisible(source(file, ...))
 }
 
-scale_to_range <- function(x, xmin, xmax, a, b) {
+scale_to_range <- function(x, xmin = min(x), xmax = max(x), a, b) {
   # Scales vector x linearly to range [a, b] so that xmin = a and xmax = b.
   # Usually, xmin and xmax are min(x) and max(x) but they can be other values
   # too.
   return((b - a) * (x - xmin) / (xmax - xmin) + a)
+}
+
+
+# Functions to calculate accessibility to two centers ---------------------
+
+scale_and_squish <- function(x, xrange, a, b) {
+  x_normal <- scale_to_range(x, xrange[1], xrange[2], a, b)
+  x_normal_ab <- pmax(a, pmin(x_normal, b))
+  return(x_normal_ab)
+}
+
+break_twocenters <- function(x) {
+  unique(quantile(x, probs = seq.int(0, 1, by = 1 / 5)))
+}
+
+cut_twocenters <- function(x, breaks) {
+  cut(x, breaks = breaks, include.lowest = TRUE)
+}
+
+ttime_to_bins <- function(x, xrange, a, b, breaks) {
+  x_normal_ab <- scale_and_squish(x, xrange, a, b)
+  return(cut_twocenters(x_normal_ab, breaks = breaks))
+}
+
+twocenters <- function(.data, mode) {
+  # Scaling to 1-100
+  a <- 1
+  b <- 100
+  # Dropping Suomenlinna because it distorts the results too much.
+  outlier_zones <- c(1531)
+
+  column <- sprintf("ttime_twocenters_%s", mode)
+  # If we are on baseline scenario, calculate range of the variable. Otherwise
+  # read it from the result folder.
+  .data_to_range <- .data %>%
+    sf::st_drop_geometry() %>%
+    dplyr::filter(!(zone %in% outlier_zones))
+  if (config::get("scenario") == config::get("baseline_scenario")) {
+    xrange <- range(.data_to_range[[column]])
+    readr::write_rds(xrange, file = here::here("results", sprintf("twocenters_range_%s.rds", mode)))
+  } else {
+    message("twocenters: read ranges...")
+    xrange <- readr::read_rds(here::here("results", sprintf("twocenters_range_%s.rds", mode)))
+  }
+  # Normalise variable.
+  ttime_twocenters_normal = scale_and_squish(.data[[column]],
+                                             xrange = xrange,
+                                             a = a,
+                                             b = b)
+  # If we are on baseline scenario, calculate breaks of the variable for the
+  # plotting. Otherwise read it from the result folder.
+  if (config::get("scenario") == config::get("baseline_scenario")) {
+    breaks <- break_twocenters(ttime_twocenters_normal)
+    readr::write_rds(breaks, file = here::here("results", sprintf("twocenters_breaks_%s.rds", mode)))
+  } else {
+    message("twocenters: read breaks...")
+    breaks <- readr::read_rds(here::here("results", sprintf("twocenters_breaks_%s.rds", mode)))
+  }
+  # Cut variable into bins and plot.
+  bins = cut_twocenters(ttime_twocenters_normal,
+                        breaks = breaks)
+  return(list(ttime_twocenters_normal = ttime_twocenters_normal,
+              bins_twocenters = bins))
 }

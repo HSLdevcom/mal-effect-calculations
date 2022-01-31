@@ -27,11 +27,11 @@ for (scenario in scenarios) {
   scenario_titles <- c(scenario_titles,
                        sprintf("%d %s", config::get("year"), config::get("scenario_name")))
   source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
+  source(here::here("scripts", "figures", "links.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "areas.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "vdfs.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "emissions.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "centers.R"), encoding = "utf-8")
-  source(here::here("scripts", "figures", "links.R"), encoding = "utf-8")
 }
 
 Sys.setenv(R_CONFIG_ACTIVE = "default")

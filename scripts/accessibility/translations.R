@@ -1,12 +1,10 @@
 # -*- coding: utf-8-unix -*-
 
-levels_areas <- c(
-  "Helsingin kantakaupunki" = "helsinki_cbd",
-  "Muu Helsinki" = "helsinki_other",
-  "Espoo, Vantaa, Kau" = "espoo_vant_kau",
-  "Kehyskunnat (raide)" = "surround_train",
-  "Kehyskunnat (muut)" = "surround_other"
-)
+translations_areas <- here::here("utilities", "areas.tsv") %>%
+  readr::read_tsv(col_types = "cc") %>%
+  dplyr::filter(level != "helsinki_region")
+levels_areas <- translations_areas$level
+names(levels_areas) <- translations_areas$label
 
 levels_age_groups <- c(
   "7-17 v" = "age_7-17",
@@ -19,7 +17,7 @@ levels_age_groups <- c(
 levels_genders <- c("naiset" = "female",
                     "miehet" = "male")
 
-levels_modes <- c("kävely" = "walk",
-                  "pyöräily" = "bike",
-                  "auto" = "car",
-                  "joukkoliikenne" = "transit")
+translations_modes <- here::here("utilities", "modes.tsv") %>%
+  readr::read_tsv(col_types = "cc")
+levels_modes <- translations_modes$level
+names(levels_modes) <- translations_modes$label

@@ -21,8 +21,8 @@ results <- results0 %>%
   dplyr::full_join(results1, by = "wkt", suffix = c("0", "1")) %>%
   dplyr::rename(geometry = wkt) %>%
   sf::st_as_sf(wkt = "geometry", remove = TRUE, crs = 3879) %>%
-  dplyr::mutate(in0 = !is.na(volume_aht0),
-                in1 = !is.na(volume_aht1)) %>%
+  dplyr::mutate(in0 = !is.na(car_aht0),
+                in1 = !is.na(car_aht1)) %>%
   dplyr::mutate(car_aht0 = tidyr::replace_na(car_aht0, 0.0),
                 car_aht1 = tidyr::replace_na(car_aht1, 0.0)) %>%
   dplyr::mutate(diff_car_aht = car_aht1 - car_aht0,

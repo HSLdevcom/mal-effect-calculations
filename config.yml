@@ -1,17 +1,18 @@
 default:
   helmet_data: "C:/../helmet-results"
-  present_scenario: "V2018"
-  present_name: "2018"
+  forecast_zonedata_path: "C:/.../Syottodata"
   housing_cost: "AsKustannukset_01062021.xlsx"
   income_data: "tulotiedot_2016_korjattu.xlsx"
-  forecast_zonedata_path: "C:/.../Syottodata"
   baseline_scenario: "2018"
+  present_scenario: "2018_agentti"
+  present_name: "2018 Nykytila"
 
-V2030_mal19_v1:
-  projected_scenario: "V2030_mal19"
-  baseline_scenario: "V2030_ve0"
-  projected_name: "MAL2019"
-  baseline_name: "2030 ve0"
+2040_ve0-2040_ve1:
+  projected_scenario: "2040_ve1_agentti"
+  baseline_scenario: "2040_ve0_agentti"
+  projected_name: "2040 Varjo"
+  baseline_name: "2040 Vertailupohja"
+
 2018:
   scenario: "2018"
   year: 2018
@@ -20,25 +21,20 @@ V2030_mal19_v1:
   results: "2018"
   co2_year: 2018
 
-V2030_ve0_rm:
-  projected_scenario: "V2030_ve0_rm"
-  baseline_scenario: "V2030_ve0"
-  projected_name: "ve0 + Ruuhkamaksut"
-  baseline_name: "2030 ve0"
-2020:
-  scenario: "2020"
-  year: 2020
-  scenario_name: "Nykytila"
-  forecast_zonedata: "2020"
-  results: "2020"
-  co2_year: 2020
-
 2040_ve0:
   scenario: "2040_ve0"
   year: 2040
   scenario_name: "Vertailupohja"
   forecast_zonedata: "2040_ve0"
   results: "2040_ve0"
+  co2_year: 2040
+
+2040_ve1:
+  scenario: "2040_ve1"
+  year: 2040
+  scenario_name: "Varjo"
+  forecast_zonedata: "2040_ve1"
+  results: "2040_ve1"
   co2_year: 2040
 
 2040_ve0_muulitar:

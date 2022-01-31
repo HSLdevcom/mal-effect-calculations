@@ -50,39 +50,38 @@ agent_sums <- agent_sums %>%
 
 # Plot ----
 
-income_names <- c("alin 20 %", rep("", 3), "ylin 20 %")
+income_names <- c("1 (alin 20 %)", "2", "3", "4", "5 (ylin 20 %)")
 max_gap <- max(abs(agent_sums$util_dif)) + 1
 
 agent_sums %>%
-  ggplot(aes(x = income_group, y = util_dif)) +
-  geom_bar(
-    stat = "identity",
-    position = "dodge",
-    fill = hsl_cols("blue"),
-    color = "white",
-    width = 0.8
+  ggplot() +
+  geom_col(
+    aes(x = area, y = util_dif, fill = income_group),
+    position = position_dodge2()
   ) +
-  facet_wrap( ~ area, nrow = 1) +
-  theme_wide +
-  ylim(-max_gap, max_gap) +
+  scale_y_continuous(
+    labels = scales::label_number(decimal.mark = ",")
+  ) +
+  scale_x_discrete(
+    labels = scales::label_wrap(5)
+  ) +
+  scale_fill_brewer(
+    palette = "Dark2",
+    name = NULL,
+    labels = income_names
+  ) +
   geom_abline(slope = 0) +
-  scale_x_discrete(labels = income_names) +
   labs(
-    y = "hyöty (eur / kiertomatka)",
-    x = "Skenaarion tulodesiilit",
-    title = paste0(
-      "Muutos asukkaan tekemien matkojen saavutettavuudessa: ",
-      config::get("projected_name")
-      ),
-    subtitle = "Kotiperäiset työmatkat"
-    )
+    y = "euroa kiertomatkaa kohden",
+    x = NULL,
+    title = "Asukkaan tekemien matkojen saavutettavuuden muutos\nkotiperäisillä työmatkoilla tuloluokan mukaan",
+    subtitle = sprintf("%s \U2192 %s", config::get("baseline_name"), config::get("projected_name"))
+    ) +
+  theme_mal_graph()
 
-ggsave(
+ggsave_graph(
   here("figures",
        config::get("projected_scenario"),
        "access_change_income_areas.png"
-       ),
-  width = dimensions_wide[1],
-  height = dimensions_wide[2],
-  units = "cm"
+       )
 )

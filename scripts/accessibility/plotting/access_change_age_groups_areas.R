@@ -52,34 +52,33 @@ agent_sums <- agent_sums %>%
 max_gap <- max(abs(agent_sums$util_dif)) + 1
 
 agent_sums %>%
-  ggplot(aes(x = age_group, y = util_dif, fill = gender)) +
-  geom_bar(
-    stat = "identity",
-    position = "dodge",
-    color = "white",
-    fill = hsl_cols("blue"),
-    width = 0.8
+  ggplot() +
+  geom_col(
+    aes(x = area, y = util_dif, fill = age_group),
+    position = position_dodge2(),
   ) +
-  facet_wrap( ~ area, nrow = 1) +
-  theme_wide +
-  ylim(-max_gap, max_gap) +
+  scale_y_continuous(
+    labels = scales::label_number(decimal.mark = ",")
+  ) +
+  scale_x_discrete(
+    labels = scales::label_wrap(5)
+  ) +
+  scale_fill_brewer(
+    palette = "Set2",
+    name = NULL
+  ) +
   geom_abline(slope = 0) +
   labs(
-    y = "hyöty (eur / kiertomatka)",
-    x = "Ikäryhmät",
-    title = paste0(
-      "Muutos asukkaan tekemien matkojen saavutettavuudessa: ",
-      config::get("projected_name")
-    ),
-    subtitle = "Kotiperäiset muut matkat"
-  )
+    y = "euroa kiertomatkaa kohden",
+    x = NULL,
+    title = "Asukkaan tekemien matkojen saavutettavuuden muutos\nkotiperäisillä muilla matkoilla ikäryhmän mukaan",
+    subtitle = sprintf("%s \U2192 %s", config::get("baseline_name"), config::get("projected_name"))
+  ) +
+  theme_mal_graph()
 
-ggsave(
+ggsave_graph(
   here("figures",
        config::get("projected_scenario"),
        "access_change_age_group_areas.png"
-       ),
-  width = dimensions_wide[1],
-  height = dimensions_wide[2],
-  units = "cm"
+       )
 )

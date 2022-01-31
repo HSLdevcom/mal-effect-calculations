@@ -78,6 +78,9 @@ zones1 <- zones %>%
   dplyr::group_by(area) %>%
   dplyr::summarise(
     sustainable_accessibility = weighted.mean(sustainable_accessibility, total_pop),
+    twocenters = weighted.mean(ttime_twocenters_normal_all, w = total_pop),
+    cba_car_time = sum(cba_car_time * total_pop),
+    cba_transit_time = sum(cba_transit_time * total_pop),
     total_pop = sum(total_pop),
     total_wrk = sum(total_wrk)
   )
@@ -89,6 +92,18 @@ zones2 <- zones %>%
     .groups = "drop"
   ) %>%
   dplyr::filter(savu_goodness == "SAVU hyvä")
+
+
+# Read and aggregate link data --------------------------------------------
+
+links <- readr::read_rds(here::here("results", sprintf("links_%s.rds", config::get("scenario")))) %>%
+  sf::st_drop_geometry() %>%
+  dplyr::group_by(area) %>%
+  dplyr::summarise(weighted_delay_car_all = sum(weighted_delay_car_all),
+                   weighted_delay_truck_all = sum(weighted_delay_truck_all),
+                   weighted_delay_transit = sum(weighted_delay_transit),
+                   weighted_delay_all = sum(weighted_delay_all),
+                   .groups = "drop")
 
 
 # Join data ---------------------------------------------------------------
@@ -105,6 +120,7 @@ origin_demand <- origin_demand %>%
 areas <- data.frame(area = unique(zones$area)) %>%
   dplyr::left_join(zones1, by = "area") %>%
   dplyr::left_join(zones2, by = "area") %>%
+  dplyr::left_join(links, by = "area") %>%
   dplyr::left_join(vehicle_kms_modes, by = "area") %>%
   dplyr::left_join(workplace_accessibility, by = "area") %>%
   dplyr::left_join(origin_demand, by = "area") %>%
@@ -136,6 +152,10 @@ areas <- areas %>%
 areas <- areas %>%
   dplyr::add_row(
     area = "helsinki_region",
+    weighted_delay_car_all = sum(.$weighted_delay_car_all),
+    weighted_delay_truck_all = sum(.$weighted_delay_truck_all),
+    weighted_delay_transit = sum(.$weighted_delay_transit),
+    weighted_delay_all = sum(.$weighted_delay_all),
     vehicle_kms_total = sum(.$vehicle_kms_total),
     vehicle_kms_car = sum(.$vehicle_kms_car),
     vehicle_kms_van = sum(.$vehicle_kms_van),
@@ -151,6 +171,9 @@ areas <- areas %>%
     origin_share_bike = sum(.$origin_demand_bike) / sum(.$origin_demand_total),
     noise_area_km2 = sum(.$noise_area_km2),
     noise_population = sum(.$noise_population),
+    twocenters = weighted.mean(.$twocenters, .$total_pop),
+    cba_car_time = sum(.$cba_car_time),
+    cba_transit_time = sum(.$cba_transit_time),
     total_pop = sum(.$total_pop),
     total_wrk = sum(.$total_wrk)
   )

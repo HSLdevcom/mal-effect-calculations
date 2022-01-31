@@ -85,7 +85,7 @@ generation <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             config::get("results"),
             "generation.txt"),
-  col_types = "idddddddddddd",
+  col_types = "iddddddddddd",
   first_col_name = "zone"
 )
 impedance_ratio <- read_tsv_helmet(
@@ -138,6 +138,14 @@ ttimes_pt <- read_helmet_omx(file.path(config::get("helmet_data"),
                                        "Matrices",
                                        "time_pt.omx"))
 
+if (config::get("plan")) {
+  cba <- read_tsv_helmet(
+    file.path(config::get("helmet_data"),
+              sprintf("cba_%s_%s.txt", config::get("scenario"), config::get("baseline"))),
+    col_types = "idddddddddddddddddddddddddddd",
+    first_col_name = "zone")
+}
+
 
 # Join data ---------------------------------------------------------------
 
@@ -157,6 +165,8 @@ origins_shares <- origins_shares %>%
                 mode_share_transit = transit,
                 mode_share_bike = bike,
                 mode_share_walk = walk)
+cba <- cba %>%
+  dplyr::rename_with(~ sprintf("cba_%s", .x), -zone)
 
 zones <- zones %>%
   dplyr::rename(zone = SIJ2019) %>%
@@ -169,7 +179,8 @@ zones <- zones %>%
   dplyr::left_join(sustainable_accessibility, by = "zone") %>%
   dplyr::left_join(workplace_accessibility, by = "zone") %>%
   dplyr::left_join(car_density, by = "zone") %>%
-  dplyr::left_join(origins_shares, by = "zone")
+  dplyr::left_join(origins_shares, by = "zone") %>%
+  dplyr::left_join(cba, by = "zone")
 
 
 # Impact assessment columns  ----------------------------------------------
@@ -263,6 +274,53 @@ ttimes <- ttimes_pt %>%
 
 zones <- zones %>%
   dplyr::left_join(ttimes, by = "zone")
+
+# Accessibility to two centers
+car <- twocenters(zones, mode = "car")
+transit <- twocenters(zones, mode = "transit")
+bike <- twocenters(zones, mode = "bike")
+walk <- twocenters(zones, mode = "walk")
+
+if (config::get("scenario") == config::get("baseline_scenario")) {
+  message("twocenters: use current mode shares...")
+  mode_shares <- zones
+} else {
+  message("twocenters: read mode shares...")
+  mode_shares <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("baseline_scenario"))))
+}
+
+zones <- zones %>%
+  dplyr::mutate(
+    ttime_twocenters_normal_car = car$ttime_twocenters_normal,
+    ttime_twocenters_normal_transit = transit$ttime_twocenters_normal,
+    ttime_twocenters_normal_bike = bike$ttime_twocenters_normal,
+    ttime_twocenters_normal_walk = walk$ttime_twocenters_normal,
+    bins_twocenters_car = car$bins_twocenters,
+    bins_twocenters_transit = transit$bins_twocenters,
+    bins_twocenters_bike = bike$bins_twocenters,
+    bins_twocenters_walk = walk$bins_twocenters) %>%
+  dplyr::mutate(
+    ttime_twocenters_all = mode_shares$mode_share_car * ttime_twocenters_normal_car +
+                  mode_shares$mode_share_transit * ttime_twocenters_normal_transit +
+                  mode_shares$mode_share_bike * ttime_twocenters_normal_bike +
+                  mode_shares$mode_share_walk * ttime_twocenters_normal_walk
+  )
+
+# Now, we are handling already normalized travel times but I do not think that
+# is an issue. They are normalized again to fit [1, 100].
+all <- twocenters(zones, mode = "all")
+
+zones <- zones %>%
+  dplyr::mutate(
+    ttime_twocenters_normal_all = all$ttime_twocenters_normal,
+    bins_twocenters_all = all$bins_twocenters
+  ) %>%
+  dplyr::select(!ttime_twocenters_all)
+
+# Calculate travel time changes with CBA data
+zones <- zones %>%
+  dplyr::mutate(cba_car_time = cba_car_work_time + cba_car_leisure_time,
+                cba_transit_time = cba_transit_work_time + cba_transit_leisure_time)
 
 
 # Output ------------------------------------------------------------------

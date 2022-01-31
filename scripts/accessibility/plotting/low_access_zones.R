@@ -26,11 +26,11 @@ zones <- zones %>%
 pks <-
   c("Helsingin kantakaupunki",
     "Muu Helsinki",
-    "Espoo, Vantaa, Kau")
+    "Muu pääkaupunkiseutu")
 
 kehys <-
-  c("Kehyskunnat (raide)",
-    "Kehyskunnat (muut)"
+  c("Junaliikenteen kehyskunnat",
+    "Bussiliikenteen kehyskunnat"
   )
 
 # Join tours to agents data ----
@@ -75,10 +75,10 @@ calc_low_access <- function(df, pks, limit_pks, limit_kehys) {
   df %>%
     mutate(
       low_access = if_else(
-      area %in% pks,
-      tour_access < limit_pks,
-      tour_access < limit_kehys
-    )) %>%
+        area %in% pks,
+        tour_access < limit_pks,
+        tour_access < limit_kehys
+      )) %>%
     group_by(number) %>%
     summarise(nr_agents = n(),
               low_access = sum(low_access, na.rm = TRUE)) %>%
@@ -107,14 +107,7 @@ zones_centroids <- zones %>%
   rename(Asukkaat = "low_access")
 
 ggplot() +
-  geom_sf(
-    data = zones,
-    fill = NA,
-    color = "lightgray",
-    size = 0.01
-    ) +
   geom_basemap() +
-  coord_sf_mal() +
   geom_sf(
     data = zones_centroids,
     mapping = aes(size = Asukkaat),
@@ -124,22 +117,16 @@ ggplot() +
     stroke = 0
   ) +
   scale_size(range = c(0, 4)) +
+  coord_sf_mal() +
   annotate_map(
     title = "Vertailuarvon alle jäävä väestö",
     subtitle = config::get("projected_name")
   ) +
-  theme_mal_map() +
-  coord_sf(
-    xlim = c(bbox$xmin - 500, bbox$xmax + 500),
-    ylim = c(bbox$ymin + 20000, bbox$ymax + 500),
-    expand = FALSE)
+  theme_mal_map()
 
-ggsave(
+ggsave_map(
   here("figures",
        get("projected_scenario"),
        "zones_access_poor_no_car.png"
-  ),
-  width = dimensions_map[1],
-  height = dimensions_map[2],
-  units = "cm"
+  )
 )
