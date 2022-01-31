@@ -48,35 +48,41 @@ agents_1 <- agents_1 %>%
 # Calculate tour access ----
 
 agents <- agents %>%
-  filter(nr_tours > 0) %>%
-  mutate(tour_access = sustainable_access / nr_tours)
+  # After left_join, if an agent did not make ho tours, nr_tours_ho is NA.
+  filter(!is.na(nr_tours_ho)) %>%
+  filter(nr_tours_ho > 0) %>%
+  mutate(tour_access_ho = sustainable_access_ho / nr_tours_ho)
 
 agents_0 <- agents_0 %>%
-  filter(nr_tours > 0) %>%
-  mutate(tour_access = sustainable_access / nr_tours)
+  # After left_join, if an agent did not make ho tours, nr_tours_ho is NA.
+  filter(!is.na(nr_tours_ho)) %>%
+  filter(nr_tours_ho > 0) %>%
+  mutate(tour_access_ho = sustainable_access_ho / nr_tours_ho)
 
 agents_1 <- agents_1 %>%
-  filter(nr_tours > 0) %>%
-  mutate(tour_access = sustainable_access / nr_tours)
+  # After left_join, if an agent did not make ho tours, nr_tours_ho is NA.
+  filter(!is.na(nr_tours_ho)) %>%
+  filter(nr_tours_ho > 0) %>%
+  mutate(tour_access_ho = sustainable_access_ho / nr_tours_ho)
 
 # Group agents tables ----
 
 limit_pks <- agents %>%
   filter(area %in% pks) %>%
-  summarise(limit = quantile(tour_access, probs = 0.05, na.rm = TRUE)) %>%
+  summarise(limit = quantile(tour_access_ho, probs = 0.05, na.rm = TRUE)) %>%
   pull(limit)
 
 limit_kehys <- agents %>%
   filter(area %in% kehys) %>%
-  summarise(limit = quantile(tour_access, probs = 0.05, na.rm = TRUE)) %>%
+  summarise(limit = quantile(tour_access_ho, probs = 0.05, na.rm = TRUE)) %>%
   pull(limit)
 
 calc_low_access <- function(df, pks, limit_pks, limit_kehys) {
   df %>%
     mutate(low_access = if_else(
       area %in% pks,
-      tour_access < limit_pks,
-      tour_access < limit_kehys
+      tour_access_ho < limit_pks,
+      tour_access_ho < limit_kehys
     )) %>%
     group_by(area) %>%
     summarise(nr_agents = n(),
