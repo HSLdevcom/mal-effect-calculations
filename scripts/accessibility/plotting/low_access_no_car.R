@@ -106,33 +106,63 @@ results <- results %>%
   mutate(area2 = if_else(area %in% pks, "Pääkaupunkiseutu", "Kehyskunnat"),
          area2 = forcats::as_factor(area2))
 
-# Plot ----
+# Plot agents ----
 
 results %>%
   filter(!is_car_user) %>%
   ggplot(aes(x = area, y = low_access, fill = scenario)) +
-  geom_bar(
-    stat = "identity",
-    position = "dodge",
-    color = "white",
-    width = 0.8
-  ) +
+  geom_col(position = position_dodge2()) +
   facet_wrap( ~ area2, nrow = 1, drop = TRUE, scales = "free_x") +
-  scale_fill_manual(values = hsl_pal("blues")(3)) +
-  theme_fig +
+  scale_y_continuous(
+    labels = scales::label_number()
+  ) +
+  scale_x_discrete(
+    labels = scales::label_wrap(5)
+  ) +
+  scale_fill_manual(name = NULL, values = hsl_pal("blues")(3)) +
   geom_abline(slope = 0) +
-  theme(panel.spacing = unit(2, "lines")) +
-  labs(fill = "Skenaario",
-       y = "Asukkaat",
+  labs(y = "asukasta",
        x = NULL,
-       title = "Autoriippumaton saavutettavuus alle vertailutason",
-       subtitle = "Kotiperäiset muut matkat, joilla ei autoa käytössä")
+       title = "Autottomat asukkaat, joilla kestävien kulkutapojen saavutettavuus\non heikoimpien 5 % joukossa nykytilassa määritettynä") +
+  theme_mal_graph() +
+  theme(panel.spacing = unit(2, "lines"))
 
 ggsave(
   here("figures",
        config::get("projected_scenario"),
-       "low_access_no_car.png"
-       ),
+       "low_access_no_car_nr.png"
+  ),
+  width = dimensions_fig[1],
+  height = dimensions_fig[2],
+  units = "cm"
+)
+
+# Plot shares ----
+
+results %>%
+  filter(!is_car_user) %>%
+  ggplot(aes(x = area, y = share, fill = scenario)) +
+  geom_col(position = position_dodge2()) +
+  facet_wrap( ~ area2, nrow = 1, drop = TRUE, scales = "free_x") +
+  scale_y_continuous(
+    labels = scales::label_percent(accuracy = 1, suffix = "")
+  ) +
+  scale_x_discrete(
+    labels = scales::label_wrap(5)
+  ) +
+  scale_fill_manual(name = NULL, values = hsl_pal("blues")(3)) +
+  geom_abline(slope = 0) +
+  labs(y = "%",
+       x = NULL,
+       title = "Osuus autottomista asukkaista, joilla kestävien kulkutapojen saavutettavuus\non heikoimpien 5 % joukossa nykytilassa määritettynä") +
+  theme_mal_graph() +
+  theme(panel.spacing = unit(2, "lines"))
+
+ggsave(
+  here("figures",
+       config::get("projected_scenario"),
+       "low_access_no_car_share.png"
+  ),
   width = dimensions_fig[1],
   height = dimensions_fig[2],
   units = "cm"
