@@ -34,17 +34,6 @@ agents_0 <- agents_0 %>%
 agents_1 <- agents_1 %>%
   join_purpose_tours(tours_1, "sustainable_access", "ho")
 
-# Filter persons with no car use ----
-
-agents <- agents %>%
-  filter(is_car_user)
-
-agents_0 <- agents_0 %>%
-  filter(is_car_user)
-
-agents_1 <- agents_1 %>%
-  filter(is_car_user)
-
 # Calculate tour access ----
 
 agents <- agents %>%
@@ -77,6 +66,8 @@ limit_kehys <- agents %>%
   summarise(limit = quantile(tour_access_ho, probs = 0.05, na.rm = TRUE)) %>%
   pull(limit)
 
+# Filter persons with no car use ----
+
 calc_low_access <- function(df, pks, limit_pks, limit_kehys) {
   df %>%
     mutate(low_access = if_else(
@@ -84,9 +75,10 @@ calc_low_access <- function(df, pks, limit_pks, limit_kehys) {
       tour_access_ho < limit_pks,
       tour_access_ho < limit_kehys
     )) %>%
-    group_by(area) %>%
+    group_by(area, is_car_user) %>%
     summarise(nr_agents = n(),
-              low_access = sum(low_access, na.rm = TRUE)) %>%
+              low_access = sum(low_access, na.rm = TRUE),
+              .groups = "drop") %>%
     mutate(share = low_access / nr_agents) %>%
     ungroup()
 }
@@ -117,6 +109,7 @@ results <- results %>%
 # Plot ----
 
 results %>%
+  filter(!is_car_user) %>%
   ggplot(aes(x = area, y = low_access, fill = scenario)) +
   geom_bar(
     stat = "identity",
