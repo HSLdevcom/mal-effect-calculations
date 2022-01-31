@@ -123,7 +123,7 @@ results %>%
   geom_abline(slope = 0) +
   labs(y = "asukasta",
        x = NULL,
-       title = "Autottomat asukkaat, joilla kestävien kulkutapojen saavutettavuus\non heikoimpien 5 % joukossa nykytilassa määritettynä") +
+       title = "Saavutettavuusköyhien autottomien asukkaiden määrä") +
   theme_mal_graph() +
   theme(panel.spacing = unit(2, "lines"))
 
@@ -154,7 +154,7 @@ results %>%
   geom_abline(slope = 0) +
   labs(y = "%",
        x = NULL,
-       title = "Osuus autottomista asukkaista, joilla kestävien kulkutapojen saavutettavuus\non heikoimpien 5 % joukossa nykytilassa määritettynä") +
+       title = "Saavutettavuusköyhien autottomien asukkaiden osuus kaikista autottomista asukkaista") +
   theme_mal_graph() +
   theme(panel.spacing = unit(2, "lines"))
 
