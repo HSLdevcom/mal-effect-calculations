@@ -151,7 +151,7 @@ results %>%
   geom_abline(slope = 0) +
   labs(y = "%",
        x = NULL,
-       title = "Saavutettavuusköyhien autottomien asukkaiden osuus kaikista autottomista asukkaista") +
+       title = "Saavutettavuusköyhien asukkaiden osuus autottomista asukkaista") +
   theme_mal_graph() +
   theme(panel.spacing = unit(2, "lines"))
 
