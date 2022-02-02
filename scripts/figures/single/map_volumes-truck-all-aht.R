@@ -14,56 +14,49 @@ results <- readr::read_rds(here::here("results", sprintf("buffers-truck_all_%s.r
 
 # Plot --------------------------------------------------------------------
 
-w = 7000
-h = 300
-startx = unname(bbox$xmin)
-starty = unname(bbox$ymax) - 12000
+scale_volume <- function(binwidth, height, labels, x0, y0) {
 
-#             ____
-#        ____|    | h
-#   ____|    |    | h
-#  |____|____|____| h
-#    w    w    w
+  #             ____
+  #        ____|    | h
+  #   ____|    |    | h
+  #  |____|____|____| h
+  #    w    w    w
 
-x0 <- c(0, 1, 1, 0)
-x <- c(x0 + 0, x0 + 1, x0 + 2, x0 + 3, x0 + 4) * w + startx
+  n <- length(labels) - 1
 
-y0 <- c(0, 0, 1, 1)
-y <- c(y0 * 1, y0 * 2, y0 * 3, y0 * 4, y0 * 5) * h + starty
+  x <- rep(c(0, 1, 1, 0), times = n)
+  shift <- rep(1:n, each = 4) - 1
+  x <- (x + shift) * binwidth + x0
 
-pols <- data.frame(
-  x = x,
-  y = y,
-  group = rep(c(1, 2, 3, 4, 5), each = 4))
+  y <- rep(c(0, 0, 1, 1), times = n)
+  shift <- rep(1:n, each = 4)
+  y <- (y * shift) * height + y0
 
-x <- (c(0, 1, 2, 3, 4, 5) + 0.5) * w + startx
-y <- starty - 1000
+  volume_bars <- data.frame(x = x, y = y, group = rep(1:n, each = 4))
 
-texts <- data.frame(
-  x = x,
-  y = y,
-  label = c("100", "200", "300", "400", "500", "ajon./h")
-)
+  x <- (1:(n+1) - 0.5) * binwidth + x0
+  y <- y0 - 1000
+
+  volume_labels <- data.frame(x = x, y = y, label = labels)
+
+  return(list(
+    geom_polygon(mapping = aes(x = x, y = y, group = group),
+                 data = volume_bars, fill = "#2a5475"),
+    geom_text(mapping = aes(x = x, y = y, label = label),
+              data = volume_labels, vjust = 1, hjust = 0.5,
+              size = points2mm(10),
+              colour = "#333333")
+  ))
+}
 
 ggplot() +
   geom_basemap(show_roads = FALSE) +
   geom_sf(#mapping = aes(fill = truck_all_aht),
-          data = results, color = NA, fill = "#2a5475", alpha = 0.5) +
-  geom_polygon(mapping = aes(x = x, y = y, group = group),
-               data = pols, fill = "#2a5475") +
-  geom_text(mapping = aes(x = x, y = y, label = label),
-            data = texts, vjust = 1, hjust = 0.5,
-            size = points2mm(10),
-            colour = "#333333") +
-  # scale_fill_fermenter(
-  #   name = "ajon./h",
-  #   palette = "GnBu",
-  #   direction = 1,
-  #   limits = c(0, 600),
-  #   breaks = c(50, 150, 250, 350, 450, 550),
-  #   oob = scales::squish,
-  #   guide = guide_none()
-  # ) +
+    data = results, color = NA, fill = "#2a5475") +
+  scale_volume(binwidth = 7000, height = 300,
+               labels = c("100", "200", "300", "400", "500", "ajon./h"),
+               x0 = unname(bbox$xmin),
+               y0 = unname(bbox$ymax) - 12000) +
   coord_sf_mal() +
   annotate_map(
     title = "Tavaraliikenteen liikennemäärä aamuhuipputuntina",
