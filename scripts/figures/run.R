@@ -31,6 +31,7 @@ for (scenario in scenarios) {
   source(here::here("scripts", "figures", "areas.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "vdfs.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "emissions.R"), encoding = "utf-8")
+  source(here::here("scripts", "figures", "cargo.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "centers.R"), encoding = "utf-8")
 }
 
@@ -58,7 +59,13 @@ emissions_all <- dplyr::bind_rows(
   .id = "scenario") %>%
   dplyr::mutate(scenario = forcats::as_factor(scenario))
 
-readr::write_rds(emissions_all, file = here::here("results", "emissions_all.rds"))
+cargo_all <- dplyr::bind_rows(
+  "2018 Nykytila" = readr::read_rds(here::here("results", "cargo_2018.rds")),
+  "2040 Vertailupohja" = readr::read_rds(here::here("results", "cargo_2040_ve0.rds")),
+  .id = "scenario") %>%
+  dplyr::mutate(scenario = forcats::as_factor(scenario))
+
+readr::write_rds(cargo_all, file = here::here("results", "cargo_all.rds"))
 
 
 # Plot figures -----------------------------------------------------------
