@@ -14,41 +14,6 @@ results <- readr::read_rds(here::here("results", sprintf("buffers-truck_all_%s.r
 
 # Plot --------------------------------------------------------------------
 
-scale_volume <- function(binwidth, height, labels, x0, y0) {
-
-  #             ____
-  #        ____|    | h
-  #   ____|    |    | h
-  #  |____|____|____| h
-  #    w    w    w
-
-  n <- length(labels) - 1
-
-  x <- rep(c(0, 1, 1, 0), times = n)
-  shift <- rep(1:n, each = 4) - 1
-  x <- (x + shift) * binwidth + x0
-
-  y <- rep(c(0, 0, 1, 1), times = n)
-  shift <- rep(1:n, each = 4)
-  y <- (y * shift) * height + y0
-
-  volume_bars <- data.frame(x = x, y = y, group = rep(1:n, each = 4))
-
-  x <- (1:(n+1) - 0.5) * binwidth + x0
-  y <- y0 - 1000
-
-  volume_labels <- data.frame(x = x, y = y, label = labels)
-
-  return(list(
-    geom_polygon(mapping = aes(x = x, y = y, group = group),
-                 data = volume_bars, fill = "#2a5475"),
-    geom_text(mapping = aes(x = x, y = y, label = label),
-              data = volume_labels, vjust = 1, hjust = 0.5,
-              size = points2mm(10),
-              colour = "#333333")
-  ))
-}
-
 ggplot() +
   geom_basemap(show_roads = FALSE) +
   geom_sf(#mapping = aes(fill = truck_all_aht),
