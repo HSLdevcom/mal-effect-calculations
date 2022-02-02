@@ -26,6 +26,7 @@ links <- here::here(config::get("helmet_data"), config::get("results"), "links.t
   dplyr::filter(!type %in% 2:6) %>%
   dplyr::mutate(volume_aht = car_leisure_aht + car_work_aht + bus_aht + trailer_truck_aht + truck_aht + van_aht,
                 car_aht = car_work_aht + car_leisure_aht,
+                truck_all_aht = trailer_truck_aht + truck_aht,
                 relative_speed = car_time_pt / car_time_aht) %>%
   # Filter for improved plotting
   dplyr::filter(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE))
@@ -109,9 +110,17 @@ buffers_car <- links %>%
   # Filter for improved plotting
   dplyr::filter(car_aht > 0.01)
 
+buffers_truck_all <- links %>%
+  sf::st_buffer(dist = -links$truck_all_aht * 3,
+                endCapStyle = "FLAT",
+                singleSide = TRUE) %>%
+  # Filter for improved plotting
+  dplyr::filter(truck_all_aht > 0.01)
+
 
 # Output ------------------------------------------------------------------
 
 readr::write_rds(links, file = here::here("results", sprintf("links_%s.rds", config::get("scenario"))))
 readr::write_rds(buffers, file = here::here("results", sprintf("buffers_%s.rds", config::get("scenario"))))
 readr::write_rds(buffers_car, file = here::here("results", sprintf("buffers-car_%s.rds", config::get("scenario"))))
+readr::write_rds(buffers_truck_all, file = here::here("results", sprintf("buffers-truck_all_%s.rds", config::get("scenario"))))
