@@ -5,8 +5,6 @@ library(tidyverse)
 
 # Read data ---------------------------------------------------------------
 
-# TODO: Add other time periods
-
 demand_aht <- read_helmet_omx(file.path(config::get("helmet_data"),
                                         config::get("results"),
                                         "Matrices",
