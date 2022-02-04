@@ -75,23 +75,25 @@ calc_low_access <- function(df, pks, limit_pks, limit_kehys) {
       tour_access_ho < limit_pks,
       tour_access_ho < limit_kehys
     )) %>%
-    group_by(area, is_car_user) %>%
+    group_by(area) %>%
     summarise(nr_agents = n(),
               low_access = sum(low_access, na.rm = TRUE),
               .groups = "drop") %>%
-    mutate(share = low_access / nr_agents) %>%
-    ungroup()
+    mutate(share = low_access / nr_agents)
 }
 
 low_access <- agents %>%
+  filter(!is_car_user) %>%
   calc_low_access(pks, limit_pks, limit_kehys) %>%
   mutate(scenario = config::get("present_name"))
 
 low_access_0 <- agents_0 %>%
+  filter(!is_car_user) %>%
   calc_low_access(pks, limit_pks, limit_kehys) %>%
   mutate(scenario = config::get("baseline_name"))
 
 low_access_1 <- agents_1 %>%
+  filter(!is_car_user) %>%
   calc_low_access(pks, limit_pks, limit_kehys) %>%
   mutate(scenario = config::get("projected_name"))
 
@@ -109,7 +111,6 @@ results <- results %>%
 # Plot agents ----
 
 results %>%
-  filter(!is_car_user) %>%
   ggplot(aes(x = area, y = low_access, fill = scenario)) +
   geom_col(position = position_dodge2()) +
   facet_wrap( ~ area2, nrow = 1, drop = TRUE, scales = "free_x") +
@@ -137,7 +138,6 @@ ggsave_graph(
 # Plot shares ----
 
 results %>%
-  filter(!is_car_user) %>%
   ggplot(aes(x = area, y = share, fill = scenario)) +
   geom_col(position = position_dodge2()) +
   facet_wrap( ~ area2, nrow = 1, drop = TRUE, scales = "free_x") +
