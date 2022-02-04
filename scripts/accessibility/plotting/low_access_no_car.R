@@ -109,62 +109,64 @@ results <- results %>%
   mutate(area2 = if_else(area %in% pks, "Pääkaupunkiseutu", "Kehyskunnat"),
          area2 = forcats::as_factor(area2))
 
-# Plot pks ----
+# Plot ----
 
-p1 <- results %>%
-  filter(area2 == "Pääkaupunkiseutu") %>%
-  ggplot(aes(x = area, y = low_access, fill = scenario)) +
-  geom_col(position = position_dodge2()) +
-  scale_y_continuous(
-    labels = scales::label_number()
-  ) +
-  scale_x_discrete(
-    labels = scales::label_wrap(5)
-  ) +
-  scale_fill_manual(name = NULL, values = hsl_pal("blues")(3)) +
-  geom_abline(slope = 0) +
-  labs(y = "asukasta",
-       x = NULL,
-       title = "Saavutettavuusköyhien autottomien\nasukkaiden määrä") +
-  theme_mal_graph()
+plot_agents_and_shares <- function(area2) {
+  p1 <- results %>%
+    filter(area2 == {{ area2 }}) %>%
+    ggplot(aes(x = area, y = low_access, fill = scenario)) +
+    geom_col(position = position_dodge2()) +
+    scale_y_continuous(
+      labels = scales::label_number()
+    ) +
+    scale_x_discrete(
+      labels = scales::label_wrap(5)
+    ) +
+    scale_fill_manual(name = NULL, values = hsl_pal("blues")(3)) +
+    geom_abline(slope = 0) +
+    labs(y = "asukasta",
+         x = NULL,
+         title = "Saavutettavuusköyhien autottomien\nasukkaiden määrä") +
+    theme_mal_graph()
 
-p2 <- results %>%
-  filter(area2 == "Pääkaupunkiseutu") %>%
-  ggplot(aes(x = area, y = share, fill = scenario)) +
-  geom_col(position = position_dodge2()) +
-  scale_y_continuous(
-    labels = scales::label_percent(accuracy = 1, suffix = "")
-  ) +
-  scale_x_discrete(
-    labels = scales::label_wrap(5)
-  ) +
-  scale_fill_manual(name = NULL, values = hsl_pal("blues")(3)) +
-  geom_abline(slope = 0) +
-  labs(y = "%",
-       x = NULL,
-       title = "Saavutettavuusköyhien asukkaiden\nosuus autottomista asukkaista") +
-  theme_mal_graph()
+  p2 <- results %>%
+    filter(area2 == {{ area2 }}) %>%
+    ggplot(aes(x = area, y = share, fill = scenario)) +
+    geom_col(position = position_dodge2()) +
+    scale_y_continuous(
+      labels = scales::label_percent(accuracy = 1, suffix = ""),
+      limits = c(0, 0.15)
+    ) +
+    scale_x_discrete(
+      labels = scales::label_wrap(5)
+    ) +
+    scale_fill_manual(name = NULL, values = hsl_pal("blues")(3)) +
+    geom_abline(slope = 0) +
+    labs(y = "%",
+         x = NULL,
+         title = "Saavutettavuusköyhien asukkaiden\nosuus autottomista asukkaista") +
+    theme_mal_graph()
 
-legend_b <- get_legend(
-  p1 +
-    guides(color = guide_legend(nrow = 1)) +
-    theme(legend.position = "bottom")
-)
-
-prow <- plot_grid(
-  p1 + theme(legend.position = "none"),
-  p2 + theme(legend.position = "none"),
-  align = "vh",
-  axis = "l",
-  hjust = -1,
-  nrow = 1
-)
-
-plot_grid(prow, legend_b, ncol = 1, rel_heights = c(1, .1))
-
-ggsave_graph(
-  here("figures",
-       config::get("projected_scenario"),
-       "low_access_no_car_share.png"
+  legend_b <- get_legend(
+    p1 +
+      guides(color = guide_legend(nrow = 1)) +
+      theme(legend.position = "bottom")
   )
-)
+
+  prow <- plot_grid(
+    p1 + theme(legend.position = "none"),
+    p2 + theme(legend.position = "none"),
+    align = "vh",
+    axis = "l",
+    hjust = -1,
+    nrow = 1
+  )
+
+  plot_grid(prow, legend_b, ncol = 1, rel_heights = c(1, .1))
+}
+
+plot_agents_and_shares("Pääkaupunkiseutu")
+ggsave_graph(here::here("figures", config::get("projected_scenario"), "low_access_pks.png"))
+
+plot_agents_and_shares("Kehyskunnat")
+ggsave_graph(here::here("figures", config::get("projected_scenario"), "low_access_kehys.png"))
