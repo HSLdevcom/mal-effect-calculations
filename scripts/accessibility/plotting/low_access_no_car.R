@@ -1,6 +1,7 @@
 library(tidyverse)
 library(config)
 library(here)
+library(cowplot)
 source(here("scripts", "accessibility", "helpers.R"),
        encoding = "utf-8")
 
@@ -34,66 +35,66 @@ agents_0 <- agents_0 %>%
 agents_1 <- agents_1 %>%
   join_purpose_tours(tours_1, "sustainable_access", "ho")
 
-# Filter persons with no car use ----
-
-agents <- agents %>%
-  filter(is_car_user)
-
-agents_0 <- agents_0 %>%
-  filter(is_car_user)
-
-agents_1 <- agents_1 %>%
-  filter(is_car_user)
-
 # Calculate tour access ----
 
 agents <- agents %>%
-  filter(nr_tours > 0) %>%
-  mutate(tour_access = sustainable_access / nr_tours)
+  # After left_join, if an agent did not make ho tours, nr_tours_ho is NA.
+  filter(!is.na(nr_tours_ho)) %>%
+  filter(nr_tours_ho > 0) %>%
+  mutate(tour_access_ho = sustainable_access_ho / nr_tours_ho)
 
 agents_0 <- agents_0 %>%
-  filter(nr_tours > 0) %>%
-  mutate(tour_access = sustainable_access / nr_tours)
+  # After left_join, if an agent did not make ho tours, nr_tours_ho is NA.
+  filter(!is.na(nr_tours_ho)) %>%
+  filter(nr_tours_ho > 0) %>%
+  mutate(tour_access_ho = sustainable_access_ho / nr_tours_ho)
 
 agents_1 <- agents_1 %>%
-  filter(nr_tours > 0) %>%
-  mutate(tour_access = sustainable_access / nr_tours)
+  # After left_join, if an agent did not make ho tours, nr_tours_ho is NA.
+  filter(!is.na(nr_tours_ho)) %>%
+  filter(nr_tours_ho > 0) %>%
+  mutate(tour_access_ho = sustainable_access_ho / nr_tours_ho)
 
 # Group agents tables ----
 
 limit_pks <- agents %>%
   filter(area %in% pks) %>%
-  summarise(limit = quantile(tour_access, probs = 0.05, na.rm = TRUE)) %>%
+  summarise(limit = quantile(tour_access_ho, probs = 0.05, na.rm = TRUE)) %>%
   pull(limit)
 
 limit_kehys <- agents %>%
   filter(area %in% kehys) %>%
-  summarise(limit = quantile(tour_access, probs = 0.05, na.rm = TRUE)) %>%
+  summarise(limit = quantile(tour_access_ho, probs = 0.05, na.rm = TRUE)) %>%
   pull(limit)
+
+# Filter persons with no car use ----
 
 calc_low_access <- function(df, pks, limit_pks, limit_kehys) {
   df %>%
     mutate(low_access = if_else(
       area %in% pks,
-      tour_access < limit_pks,
-      tour_access < limit_kehys
+      tour_access_ho < limit_pks,
+      tour_access_ho < limit_kehys
     )) %>%
     group_by(area) %>%
     summarise(nr_agents = n(),
-              low_access = sum(low_access, na.rm = TRUE)) %>%
-    mutate(share = low_access / nr_agents) %>%
-    ungroup()
+              low_access = sum(low_access, na.rm = TRUE),
+              .groups = "drop") %>%
+    mutate(share = low_access / nr_agents)
 }
 
 low_access <- agents %>%
+  filter(!is_car_user) %>%
   calc_low_access(pks, limit_pks, limit_kehys) %>%
   mutate(scenario = config::get("present_name"))
 
 low_access_0 <- agents_0 %>%
+  filter(!is_car_user) %>%
   calc_low_access(pks, limit_pks, limit_kehys) %>%
   mutate(scenario = config::get("baseline_name"))
 
 low_access_1 <- agents_1 %>%
+  filter(!is_car_user) %>%
   calc_low_access(pks, limit_pks, limit_kehys) %>%
   mutate(scenario = config::get("projected_name"))
 
@@ -110,31 +111,62 @@ results <- results %>%
 
 # Plot ----
 
-results %>%
-  ggplot(aes(x = area, y = low_access, fill = scenario)) +
-  geom_bar(
-    stat = "identity",
-    position = "dodge",
-    color = "white",
-    width = 0.8
-  ) +
-  facet_wrap( ~ area2, nrow = 1, drop = TRUE, scales = "free_x") +
-  scale_fill_manual(values = hsl_pal("blues")(3)) +
-  theme_fig +
-  geom_abline(slope = 0) +
-  theme(panel.spacing = unit(2, "lines")) +
-  labs(fill = "Skenaario",
-       y = "Asukkaat",
-       x = NULL,
-       title = "Autoriippumaton saavutettavuus alle vertailutason",
-       subtitle = "Kotiperäiset muut matkat, joilla ei autoa käytössä")
+plot_agents_and_shares <- function(area2) {
+  p1 <- results %>%
+    filter(area2 == {{ area2 }}) %>%
+    ggplot(aes(x = area, y = low_access, fill = scenario)) +
+    geom_col(position = position_dodge2()) +
+    scale_y_continuous(
+      labels = scales::label_number()
+    ) +
+    scale_x_discrete(
+      labels = scales::label_wrap(5)
+    ) +
+    scale_fill_manual(name = NULL, values = hsl_pal("blues")(3)) +
+    geom_abline(slope = 0) +
+    labs(y = "asukasta",
+         x = NULL,
+         title = "Saavutettavuusköyhien autottomien\nasukkaiden määrä") +
+    theme_mal_graph()
 
-ggsave(
-  here("figures",
-       config::get("projected_scenario"),
-       "low_access_no_car.png"
-       ),
-  width = dimensions_fig[1],
-  height = dimensions_fig[2],
-  units = "cm"
-)
+  p2 <- results %>%
+    filter(area2 == {{ area2 }}) %>%
+    ggplot(aes(x = area, y = share, fill = scenario)) +
+    geom_col(position = position_dodge2()) +
+    scale_y_continuous(
+      labels = scales::label_percent(accuracy = 1, suffix = ""),
+      limits = c(0, 0.15)
+    ) +
+    scale_x_discrete(
+      labels = scales::label_wrap(5)
+    ) +
+    scale_fill_manual(name = NULL, values = hsl_pal("blues")(3)) +
+    geom_abline(slope = 0) +
+    labs(y = "%",
+         x = NULL,
+         title = "Saavutettavuusköyhien asukkaiden\nosuus autottomista asukkaista") +
+    theme_mal_graph()
+
+  legend_b <- get_legend(
+    p1 +
+      guides(color = guide_legend(nrow = 1)) +
+      theme(legend.position = "bottom")
+  )
+
+  prow <- plot_grid(
+    p1 + theme(legend.position = "none"),
+    p2 + theme(legend.position = "none"),
+    align = "vh",
+    axis = "l",
+    hjust = -1,
+    nrow = 1
+  )
+
+  plot_grid(prow, legend_b, ncol = 1, rel_heights = c(1, .1))
+}
+
+plot_agents_and_shares("Pääkaupunkiseutu")
+ggsave_graph(here::here("figures", config::get("projected_scenario"), "low_access_pks.png"))
+
+plot_agents_and_shares("Kehyskunnat")
+ggsave_graph(here::here("figures", config::get("projected_scenario"), "low_access_kehys.png"))

@@ -31,7 +31,7 @@ pks <-
 kehys <-
   c("Junaliikenteen kehyskunnat",
     "Bussiliikenteen kehyskunnat"
-  )
+    )
 
 # Join tours to agents data ----
 
@@ -41,34 +41,30 @@ agents <- agents %>%
 agents_1 <- agents_1 %>%
   join_purpose_tours(tours_1, "sustainable_access", "ho")
 
-# Filter persons with no car use ----
-
-agents <- agents %>%
-  filter(is_car_user)
-
-agents_1 <- agents_1 %>%
-  filter(is_car_user)
-
 # Calculate tour access ----
 
 agents <- agents %>%
-  filter(nr_tours > 0) %>%
-  mutate(tour_access = sustainable_access / nr_tours)
+  # After left_join, if an agent did not make ho tours, nr_tours_ho is NA.
+  filter(!is.na(nr_tours_ho)) %>%
+  filter(nr_tours_ho > 0) %>%
+  mutate(tour_access_ho = sustainable_access_ho / nr_tours_ho)
 
 agents_1 <- agents_1 %>%
-  filter(nr_tours > 0) %>%
-  mutate(tour_access = sustainable_access / nr_tours)
+  # After left_join, if an agent did not make ho tours, nr_tours_ho is NA.
+  filter(!is.na(nr_tours_ho)) %>%
+  filter(nr_tours_ho > 0) %>%
+  mutate(tour_access_ho = sustainable_access_ho / nr_tours_ho)
 
 # Group agents tables ----
 
 limit_pks <- agents %>%
   filter(area %in% pks) %>%
-  summarise(limit = quantile(tour_access, probs = 0.05, na.rm = TRUE)) %>%
+  summarise(limit = quantile(tour_access_ho, probs = 0.05, na.rm = TRUE)) %>%
   pull(limit)
 
 limit_kehys <- agents %>%
   filter(area %in% kehys) %>%
-  summarise(limit = quantile(tour_access, probs = 0.05, na.rm = TRUE)) %>%
+  summarise(limit = quantile(tour_access_ho, probs = 0.05, na.rm = TRUE)) %>%
   pull(limit)
 
 calc_low_access <- function(df, pks, limit_pks, limit_kehys) {
@@ -76,21 +72,23 @@ calc_low_access <- function(df, pks, limit_pks, limit_kehys) {
     mutate(
       low_access = if_else(
         area %in% pks,
-        tour_access < limit_pks,
-        tour_access < limit_kehys
+        tour_access_ho < limit_pks,
+        tour_access_ho < limit_kehys
       )) %>%
     group_by(number) %>%
     summarise(nr_agents = n(),
-              low_access = sum(low_access, na.rm = TRUE)) %>%
-    mutate(share = low_access / nr_agents) %>%
-    ungroup()
+              low_access = sum(low_access, na.rm = TRUE),
+              .groups = "drop") %>%
+    mutate(share = low_access / nr_agents)
 }
 
 low_access <- agents %>%
+  filter(!is_car_user) %>%
   calc_low_access(pks, limit_pks, limit_kehys) %>%
   mutate(scenario = config::get("present_name"))
 
 low_access_1 <- agents_1 %>%
+  filter(!is_car_user) %>%
   calc_low_access(pks, limit_pks, limit_kehys) %>%
   mutate(scenario = config::get("projected_name"))
 
