@@ -27,4 +27,10 @@ squares2 <- squares %>%
                 zone = Lsijalue19) %>%
   dplyr::select(zone, area, total_pop, total_wrk, kem2_pop)
 
+ensi <- readr::read_rds(here::here("results", "ensi.rds"))
+
+squares2 <- squares2 %>%
+  sf::st_join(ensi) %>%
+  dplyr::mutate(ensi = tidyr::replace_na(ensi, FALSE))
+
 readr::write_rds(squares2, file = here::here("results", "squares.rds"))
