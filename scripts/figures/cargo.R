@@ -17,15 +17,11 @@ dist_aht <- read_helmet_omx(file.path(config::get("helmet_data"),
                                       "dist_aht.omx")) %>%
   dplyr::select(origin, destination, trailer_truck, truck)
 
-# TODO: Get real trailer_truck and truck travel times
 ttimes_aht <- read_helmet_omx(file.path(config::get("helmet_data"),
                                         config::get("results"),
                                         "Matrices",
                                         "time_aht.omx")) %>%
-  # dplyr::select(origin, destination, trailer_truck, truck)
-  dplyr::select(origin, destination, car_work) %>%
-  dplyr::rename(trailer_truck = car_work) %>%
-  dplyr::mutate(truck = trailer_truck)
+  dplyr::select(origin, destination, trailer_truck, truck)
 
 
 # Join data ---------------------------------------------------------------
