@@ -7,6 +7,7 @@ library(tidyverse)
 
 source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 source(here::here("scripts", "utils.R"), encoding = "utf-8")
+source(here::here("scripts", "basemap", "ensi.R"), encoding = "utf-8")
 
 
 # Plot common figures -----------------------------------------------------
