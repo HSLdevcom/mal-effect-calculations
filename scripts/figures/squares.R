@@ -18,10 +18,13 @@ squares2 <- squares %>%
       TRUE ~ NA_character_
     )
   ) %>%
-  dplyr::select(As40_Rvah, Tp40y_Rvah, Lsijalue19) %>%
+  dplyr::select(Aska40, As40_Rvah, Tp40y_Rvah, Lsijalue19, area) %>%
   dplyr::mutate(
     total_pop = pmax(As40_Rvah, 0.0),
     total_wrk = pmax(Tp40y_Rvah, 0.0),
-  )
+  ) %>%
+  dplyr::rename(kem2_pop = Aska40,
+                zone = Lsijalue19) %>%
+  dplyr::select(zone, area, total_pop, total_wrk, kem2_pop)
 
 readr::write_rds(squares2, file = here::here("results", "squares.rds"))
