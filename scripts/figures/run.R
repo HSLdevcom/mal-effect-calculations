@@ -5,6 +5,7 @@ library(tidyverse)
 
 # Utility functions -------------------------------------------------------
 
+source(here::here("scripts", "basemap", "run.R"), encoding = "utf-8")
 source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 source(here::here("scripts", "utils.R"), encoding = "utf-8")
 
@@ -58,6 +59,8 @@ emissions_all <- dplyr::bind_rows(
   "2040 Vertailupohja" = readr::read_rds(here::here("results", "emissions_2040_ve0.rds")),
   .id = "scenario") %>%
   dplyr::mutate(scenario = forcats::as_factor(scenario))
+
+readr::write_rds(emissions_all, file = here::here("results", "emissions_all.rds"))
 
 cargo_all <- dplyr::bind_rows(
   "2018 Nykytila" = readr::read_rds(here::here("results", "cargo_2018.rds")),
