@@ -20,6 +20,7 @@ default:
   forecast_zonedata: "2018"
   results: "2018"
   co2_year: 2018
+  plan: FALSE
 
 2040_ve0:
   scenario: "2040_ve0"
@@ -28,6 +29,7 @@ default:
   forecast_zonedata: "2040_ve0"
   results: "2040_ve0"
   co2_year: 2040
+  plan: FALSE
 
 2040_ve1:
   scenario: "2040_ve1"
@@ -36,6 +38,7 @@ default:
   forecast_zonedata: "2040_ve1"
   results: "2040_ve1"
   co2_year: 2040
+  plan: TRUE
 
 2040_ve0_muulitar:
   scenario: "2040_ve0_muulitar"
