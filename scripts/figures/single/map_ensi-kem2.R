@@ -7,25 +7,27 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-results <- readr::read_rds(here::here("results", "squares.rds"))
+results <- readr::read_rds(here::here("results", "squares.rds")) %>%
+  dplyr::mutate(floor_area_diff = dplyr::if_else(!ensi, -floor_area_increase_2021_2040_ve0, floor_area_increase_2021_2040_ve0))
+
 ensi <- readr::read_rds(here::here("results", "ensi.rds"))
 
 
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_sf(mapping = aes(fill = kem2_pop),
+  geom_sf(mapping = aes(fill = floor_area_diff),
           data = results, color = NA) +
-  geom_sf(mapping = aes(),
-          data = ensi, color = NA, fill = "#3E8606", alpha = 0.5) +
   geom_basemap() +
-  scale_fill_steps(
+  geom_sf(mapping = aes(),
+          data = ensi, color = "#333333", fill = NA) +
+  scale_fill_fermenter(
+    palette = "PiYG",
+    direction = 1,
     name = "kerros-m2",
     labels = scales::label_number(accuracy = 1),
-    breaks = c(250, 500, 1000),
-    limits = c(0, 1500),
-    low = "#ffffff",
-    high = "#000000",
+    breaks = c(-1000, -500, -250, -5, 5, 250, 500, 1000),
+    limits = c(-1500, 1500),
     oob = scales::squish
   ) +
   coord_sf_mal() +

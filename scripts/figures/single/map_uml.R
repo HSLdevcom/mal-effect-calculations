@@ -8,7 +8,7 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 # Data --------------------------------------------------------------------
 
 results <- readr::read_rds(here::here("results", "squares.rds")) %>%
-  dplyr::mutate(diff_pop = total_pop - total_pop_2019) %>%
+  dplyr::mutate(diff_pop = pop_increase_2020_2040_ve0) %>%
   dplyr::filter(diff_pop >= 5) %>%
   dplyr::mutate(diff_pop = dplyr::if_else(is.na(luokka), -diff_pop, diff_pop))
 
