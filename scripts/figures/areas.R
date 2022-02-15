@@ -94,6 +94,41 @@ zones2 <- zones %>%
   dplyr::filter(savu_goodness == "SAVU hyvä")
 
 
+# Read and aggregate square data ------------------------------------------
+
+if (config::get("scenario") != "2018") {
+  squares <- readr::read_rds(here::here("results", "squares.rds")) %>%
+    sf::st_drop_geometry()
+
+  squares1 <- squares %>%
+    dplyr::group_by(area, ensi) %>%
+    dplyr::summarise(
+      pop_increase_2020 = sum(pop_increase_2020_2040_ve0),
+      .groups = "drop_last"
+    ) %>%
+    dplyr::mutate(
+      pop_increase_ensi_share = pop_increase_2020 / sum(pop_increase_2020),
+      pop_increase_2020 = sum(pop_increase_2020)
+    ) %>%
+    dplyr::filter(ensi) %>%
+    dplyr::select(-ensi)
+
+  squares2 <- squares %>%
+    dplyr::mutate(uml = !is.na(luokka)) %>%
+    dplyr::group_by(area, uml) %>%
+    dplyr::summarise(
+      floor_area_increase_2021 = sum(floor_area_increase_2021_2040_ve0),
+      .groups = "drop_last"
+    ) %>%
+    dplyr::mutate(
+      floor_area_increase_uml_share = floor_area_increase_2021 / sum(floor_area_increase_2021),
+      floor_area_increase_2021 = sum(floor_area_increase_2021)
+    ) %>%
+    dplyr::filter(uml) %>%
+    dplyr::select(-uml)
+}
+
+
 # Read and aggregate link data --------------------------------------------
 
 links <- readr::read_rds(here::here("results", sprintf("links_%s.rds", config::get("scenario")))) %>%
@@ -126,6 +161,12 @@ areas <- data.frame(area = unique(zones$area)) %>%
   dplyr::left_join(origin_demand, by = "area") %>%
   dplyr::left_join(car_density, by = "area") %>%
   dplyr::left_join(noise, by = "area")
+
+if (config::get("scenario") != "2018") {
+  areas <- areas %>%
+    dplyr::left_join(squares1, by = "area") %>%
+    dplyr::left_join(squares2, by = "area")
+}
 
 
 # Impact assessment columns  ----------------------------------------------
@@ -175,7 +216,9 @@ areas <- areas %>%
     cba_car_time = sum(.$cba_car_time),
     cba_transit_time = sum(.$cba_transit_time),
     total_pop = sum(.$total_pop),
-    total_wrk = sum(.$total_wrk)
+    total_wrk = sum(.$total_wrk),
+    pop_increase_ensi_share = weighted.mean(.$pop_increase_ensi_share, w = .$pop_increase_2020),
+    floor_area_increase_uml_share = weighted.mean(.$floor_area_increase_uml_share, w = .$floor_area_increase_2021)
   )
 
 
