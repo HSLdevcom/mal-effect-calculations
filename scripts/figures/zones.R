@@ -165,8 +165,10 @@ origins_shares <- origins_shares %>%
                 mode_share_transit = transit,
                 mode_share_bike = bike,
                 mode_share_walk = walk)
-cba <- cba %>%
+if (config::get("plan")) {
+  cba <- cba %>%
   dplyr::rename_with(~ sprintf("cba_%s", .x), -zone)
+}
 
 zones <- zones %>%
   dplyr::rename(zone = SIJ2019) %>%
@@ -179,8 +181,12 @@ zones <- zones %>%
   dplyr::left_join(sustainable_accessibility, by = "zone") %>%
   dplyr::left_join(workplace_accessibility, by = "zone") %>%
   dplyr::left_join(car_density, by = "zone") %>%
-  dplyr::left_join(origins_shares, by = "zone") %>%
+  dplyr::left_join(origins_shares, by = "zone")
+
+if (config::get("plan")) {
+  zones <- zones %>%
   dplyr::left_join(cba, by = "zone")
+}
 
 
 # Impact assessment columns  ----------------------------------------------
@@ -317,10 +323,12 @@ zones <- zones %>%
   ) %>%
   dplyr::select(!ttime_twocenters_all)
 
-# Calculate travel time changes with CBA data
-zones <- zones %>%
-  dplyr::mutate(cba_car_time = cba_car_work_time + cba_car_leisure_time,
-                cba_transit_time = cba_transit_work_time + cba_transit_leisure_time)
+if (config::get("plan")) {
+  # Calculate travel time changes with CBA data
+  zones <- zones %>%
+    dplyr::mutate(cba_car_time = cba_car_work_time + cba_car_leisure_time,
+                  cba_transit_time = cba_transit_work_time + cba_transit_leisure_time)
+}
 
 
 # Output ------------------------------------------------------------------
