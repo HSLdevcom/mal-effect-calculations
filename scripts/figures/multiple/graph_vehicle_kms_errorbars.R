@@ -11,21 +11,21 @@ results <- readr::read_rds(here::here("results", "areas_all.rds"))
 
 # Plot --------------------------------------------------------------------
 
-ggplot(results, aes(x = area, y = car_density, fill = scenario)) +
+ggplot(results, aes(x = area, y = vehicle_kms_total, fill = scenario)) +
   geom_col(position = position_dodge2()) +
   geom_errorbar(
-    mapping = aes(ymin = car_density_lower, ymax = car_density_upper),
+    mapping = aes(ymin = vehicle_kms_total_lower, ymax = vehicle_kms_total_upper),
     position =  position_dodge2(width = 0.9, padding = 0.66),
     color = "#333333"
   ) +
   geom_text(
-    aes(y = car_density / 2, label = scales::label_number(accuracy = 1)(car_density)),
+    aes(y = vehicle_kms_total / 2, label = scales::label_number(scale = 0.000001, accuracy = 0.1, decimal.mark = ",")(vehicle_kms_total)),
     position = position_dodge2(width = 0.9),
     size = points2mm(8),
     color = "#333333"
   ) +
   scale_y_continuous(
-    labels = scales::label_number(),
+    labels = scales::label_number(scale = 0.000001),
     expand = expansion(mult = 0.1)
   ) +
   scale_x_discrete(
@@ -36,10 +36,10 @@ ggplot(results, aes(x = area, y = car_density, fill = scenario)) +
     values = c("#3E8606", "#7DAD58", "#BFD7AC")
   ) +
   labs(
-    title = "Henkilöautotiheys",
+    title = "Moottoriajoneuvoliikenteen liikennesuorite Helsingin seudulla",
     x =  NULL,
-    y = "autoa / 1000 asukasta"
+    y = "milj. ajon.km / arki-vrk"
   ) +
   theme_mal_graph()
 
-ggsave_graph(here::here("figures", "graph_car_density_errorbars.png"))
+ggsave_graph(here::here("figures", "graph_vehicle_kms_errorbars.png"))
