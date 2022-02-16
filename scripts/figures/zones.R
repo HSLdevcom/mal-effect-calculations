@@ -326,8 +326,8 @@ zones <- zones %>%
 if (config::get("plan")) {
   # Calculate travel time changes with CBA data
   zones <- zones %>%
-    dplyr::mutate(cba_car_time = cba_car_work_time + cba_car_leisure_time,
-                  cba_transit_time = cba_transit_work_time + cba_transit_leisure_time)
+    dplyr::mutate(cba_car_time_per_person = (cba_car_work_time + cba_car_leisure_time) / total_pop,
+                  cba_transit_time_per_person = (cba_transit_work_time + cba_transit_leisure_time) / total_pop)
 }
 
 
