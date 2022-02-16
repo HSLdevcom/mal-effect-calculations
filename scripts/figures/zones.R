@@ -142,7 +142,7 @@ if (config::get("plan")) {
   cba <- read_tsv_helmet(
     file.path(config::get("helmet_data"),
               sprintf("cba_%s_%s.txt", config::get("scenario"), config::get("baseline"))),
-    col_types = "idddddddddddddddddddddddddddd",
+    col_types = "iddddddddddddddddddddddddddddd",
     first_col_name = "zone")
 }
 
