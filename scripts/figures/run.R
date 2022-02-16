@@ -63,7 +63,7 @@ readr::write_rds(emissions_all, file = here::here("results", "emissions_all.rds"
 
 # Sensitivity analysis ----------------------------------------------------
 
-sensitivity_scenarios <- c("2040_ve0_car--", "2040_ve0_car++")
+sensitivity_scenarios <- c("2040_ve0_etatyo", "2040_ve0_jklmaksi", "2040_ve0_mini", "2040_ve0_muulitar", "2040_ve0_tieruuhka")
 
 for (scenario in sensitivity_scenarios) {
   Sys.setenv(R_CONFIG_ACTIVE = scenario)

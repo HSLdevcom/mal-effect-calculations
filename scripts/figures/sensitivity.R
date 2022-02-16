@@ -15,8 +15,11 @@ areas_all <- dplyr::bind_rows(
 # scenario except the baseline scenario.
 areas_sensitivity <- dplyr::bind_rows(
   "2040 Vertailupohja" = readr::read_rds(here::here("results", "areas_2040_ve0.rds")),
-  "2040 Vertailupohja" = readr::read_rds(here::here("results", "areas_2040_ve0_car--.rds")),
-  "2040 Vertailupohja" = readr::read_rds(here::here("results", "areas_2040_ve0_car++.rds")),
+  "2040 Vertailupohja" = readr::read_rds(here::here("results", "areas_2040_ve0_etatyo.rds")),
+  "2040 Vertailupohja" = readr::read_rds(here::here("results", "areas_2040_ve0_jklmaksi.rds")),
+  "2040 Vertailupohja" = readr::read_rds(here::here("results", "areas_2040_ve0_mini.rds")),
+  "2040 Vertailupohja" = readr::read_rds(here::here("results", "areas_2040_ve0_muulitar.rds")),
+  "2040 Vertailupohja" = readr::read_rds(here::here("results", "areas_2040_ve0_tieruuhka.rds")),
   .id = "scenario")
 
 
