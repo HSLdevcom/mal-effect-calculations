@@ -123,7 +123,7 @@ ggplot() +
 
 ggsave_map(
   here("figures",
-       get("projected_scenario"),
+       config::get("projected_scenario"),
        "zones_access_poor_no_car.png"
   )
 )
