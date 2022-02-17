@@ -1,5 +1,4 @@
 library(tidyverse)
-library(config)
 library(here)
 library(cowplot)
 source(here("scripts", "accessibility", "helpers.R"),

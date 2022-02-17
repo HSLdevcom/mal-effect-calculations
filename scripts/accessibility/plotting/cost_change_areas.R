@@ -1,5 +1,4 @@
 library(tidyverse)
-library(config)
 library(here)
 source(here("scripts", "accessibility", "helpers.R"),
        encoding = "utf-8")

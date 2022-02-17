@@ -1,5 +1,4 @@
 library(tidyverse)
-library(config)
 library(here)
 
 # Load data ----
