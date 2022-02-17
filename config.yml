@@ -6,6 +6,7 @@ default:
   baseline_scenario: "2018"
   present_scenario: "2018_agentti"
   present_name: "2018 Nykytila"
+  baseline: "2040_ve0"
 
 2040_ve0-2040_ve1:
   projected_scenario: "2040_ve1_agentti"

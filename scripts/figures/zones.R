@@ -142,7 +142,7 @@ if (config::get("plan")) {
   cba <- read_tsv_helmet(
     file.path(config::get("helmet_data"),
               sprintf("cba_%s_%s.txt", config::get("scenario"), config::get("baseline"))),
-    col_types = "idddddddddddddddddddddddddddd",
+    col_types = "iddddddddddddddddddddddddddddd",
     first_col_name = "zone")
 }
 
@@ -326,8 +326,8 @@ zones <- zones %>%
 if (config::get("plan")) {
   # Calculate travel time changes with CBA data
   zones <- zones %>%
-    dplyr::mutate(cba_car_time = cba_car_work_time + cba_car_leisure_time,
-                  cba_transit_time = cba_transit_work_time + cba_transit_leisure_time)
+    dplyr::mutate(cba_car_time_per_person = (cba_car_work_time + cba_car_leisure_time) / total_pop,
+                  cba_transit_time_per_person = (cba_transit_work_time + cba_transit_leisure_time) / total_pop)
 }
 
 
