@@ -53,7 +53,7 @@ if (scenario_attributes[["present"]]) {
   emission_statistics <- here::here("utilities", "co2_statistics.tsv") %>%
     readr::read_tsv(col_types = "id") %>%
     tibble::deframe()
-  correction <- emission_statistics[[scenario_attributes[["year"]]]] / sum(emissions$emission)
+  correction <- emission_statistics[[as.character(scenario_attributes[["year"]])]] / sum(emissions$emission)
   message(sprintf("Correction factor for baseline emissions is %.3f.", correction))
   readr::write_rds(correction, file = here::here("results", "emission_correction.rds"))
 } else {
