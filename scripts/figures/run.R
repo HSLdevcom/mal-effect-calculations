@@ -3,6 +3,11 @@ library(here)
 library(tidyverse)
 
 
+# Validate scenarios ------------------------------------------------------
+
+source(here::here("scripts", "figures", "validate_scenarios.R"), encoding = "utf-8")
+
+
 # Utility functions -------------------------------------------------------
 
 source(here::here("scripts", "basemap", "run.R"), encoding = "utf-8")
