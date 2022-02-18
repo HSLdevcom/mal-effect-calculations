@@ -18,7 +18,7 @@ buses <- tibble::tribble(
 
 # This data is only for total Helsinki region
 transit_kms <- file.path(config::get("helmet_data"),
-                         config::get("results"),
+                         scenario_attributes[["results"]],
                          "transit_kms.txt") %>%
   read_tsv(skip = 1, # skip old column names
            col_types = "cdd",

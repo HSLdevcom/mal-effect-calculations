@@ -10,42 +10,42 @@ translations <- here::here("utilities", "areas.tsv") %>%
 
 car_density <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "car_density_areas.txt"),
   col_types = "cd",
   first_col_name = "area"
 )
 car_use <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "car_use_areas.txt"),
   col_types = "cd",
   first_col_name = "area"
 )
 origin_demand <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "origin_demand_areas.txt"),
   col_types = "cdddd",
   first_col_name = "area"
 )
 own_zone_demand <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "own_zone_demand.txt"),
   col_types = "cdddddddddddddddddddddddddddddddddddd",
   first_col_name = "area"
 )
 vehicle_kms_modes <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "vehicle_kms_areas.txt"),
   col_types = "cdddddddddd",
   first_col_name = "area"
 )
 workplace_accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "workplace_accessibility_areas.txt"),
   col_types = "cdd",
   first_col_name = "area"
@@ -53,7 +53,7 @@ workplace_accessibility <- read_tsv_helmet(
 
 noise <- read_tsv(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "noise_areas.txt"),
   skip = 1, # skip old column names
   col_types = "cdd",
@@ -61,7 +61,7 @@ noise <- read_tsv(
 )
 aggregated_demand <- read_tsv(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "aggregated_demand.txt"),
   col_types = "ccccd",
   col_names = c("area_origin", "area_destination", "purpose", "mode", "demand"),

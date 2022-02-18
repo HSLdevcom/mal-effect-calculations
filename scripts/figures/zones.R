@@ -13,7 +13,7 @@ land_area <- readxl::read_xlsx(here::here("data", "maapinta_ala_ja_asutut_ruudut
 
 pop <- read_tsv_helmet(
   list.files(file.path(config::get("forecast_zonedata_path"),
-                       config::get("forecast_zonedata")),
+                       scenario_attributes[["forecast"]]),
              pattern = ".pop$",
              full.names = TRUE),
   col_types = "iiddddd",
@@ -21,7 +21,7 @@ pop <- read_tsv_helmet(
 )
 lnd <- read_tsv_helmet(
   list.files(file.path(config::get("forecast_zonedata_path"),
-                       config::get("forecast_zonedata")),
+                       scenario_attributes[["forecast"]]),
              pattern = ".lnd$",
              full.names = TRUE),
   col_types = "idd",
@@ -29,7 +29,7 @@ lnd <- read_tsv_helmet(
 )
 edu <- read_tsv_helmet(
   list.files(file.path(config::get("forecast_zonedata_path"),
-                       config::get("forecast_zonedata")),
+                       scenario_attributes[["forecast"]]),
              pattern = ".edu$",
              full.names = TRUE),
   col_types = "iiii",
@@ -37,7 +37,7 @@ edu <- read_tsv_helmet(
 )
 wrk <- read_tsv_helmet(
   list.files(file.path(config::get("forecast_zonedata_path"),
-                       config::get("forecast_zonedata")),
+                       scenario_attributes[["forecast"]]),
              pattern = ".wrk$",
              full.names = TRUE),
   col_types = "iidddd",
@@ -45,7 +45,7 @@ wrk <- read_tsv_helmet(
 )
 prk <- read_tsv_helmet(
   list.files(file.path(config::get("forecast_zonedata_path"),
-                       config::get("forecast_zonedata")),
+                       scenario_attributes[["forecast"]]),
              pattern = ".prk$",
              full.names = TRUE),
   col_types = "iii",
@@ -54,14 +54,14 @@ prk <- read_tsv_helmet(
 
 accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "accessibility.txt"),
   col_types = "idddddddddddddddddddddddddddddddddddddddddddddddddd",
   first_col_name = "zone"
 )
 attraction <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "attraction.txt"),
   col_types = "idddddddddddd",
   first_col_name = "zone"
@@ -69,63 +69,63 @@ attraction <- read_tsv_helmet(
 car_density <- read_tsv_helmet(
 
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "car_density.txt"),
   col_types = "id",
   first_col_name = "zone"
 )
 car_use <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "car_use.txt"),
   col_types = "id",
   first_col_name = "zone"
 )
 generation <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "generation.txt"),
   col_types = "iddddddddddd",
   first_col_name = "zone"
 )
 impedance_ratio <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "impedance_ratio.txt"),
   col_types = "idd",
   first_col_name = "zone"
 )
 origins_demand <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "origins_demand.txt"),
   col_types = "idddd",
   first_col_name = "zone"
 )
 origins_shares <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "origins_shares.txt"),
   col_types = "idddd",
   first_col_name = "zone"
 )
 savu <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "savu.txt"),
   col_types = "id",
   first_col_name = "zone"
 )
 sustainable_accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "sustainable_accessibility.txt"),
   col_types = "idddddddddddd",
   first_col_name = "zone"
 )
 workplace_accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "workplace_accessibility.txt"),
   col_types = "idd",
   first_col_name = "zone"
@@ -134,7 +134,7 @@ workplace_accessibility <- read_tsv_helmet(
 centers <- readr::read_rds(here::here("results", "centers_uusimaa-2050.rds"))
 
 ttimes_pt <- read_helmet_omx(file.path(config::get("helmet_data"),
-                                       config::get("results"),
+                                       scenario_attributes[["results"]],
                                        "Matrices",
                                        "time_pt.omx"))
 

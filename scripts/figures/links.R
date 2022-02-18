@@ -11,7 +11,7 @@ region <- readr::read_rds(here::here("results", "region.rds"))
 volume_factors <- readr::read_tsv(here::here("utilities", "volume_factors.tsv"), col_types = "cddd")
 zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario_attributes[["scenario"]])))
 
-links <- here::here(config::get("helmet_data"), config::get("results"), "links.txt") %>%
+links <- here::here(config::get("helmet_data"), scenario_attributes[["results"]], "links.txt") %>%
   readr::read_tsv(col_types = cols(Link = col_character(),
                                    .default = col_double())) %>%
   dplyr::rename_with(~ gsub("@", "", .x, fixed = TRUE)) %>%
