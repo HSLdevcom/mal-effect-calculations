@@ -29,7 +29,7 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Työpaikkatiheys hyvillä ja heikoilla SAVU-vyöhykkeillä maa-alaa kohden",
-    subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name"))
+    subtitle = sprintf("%d %s", scenario_attributes[["year"]], config::get("scenario_name"))
   ) +
   theme_mal_map()
 

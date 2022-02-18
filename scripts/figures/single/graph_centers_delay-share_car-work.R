@@ -31,7 +31,7 @@ ggplot(data = results) +
   ) +
   labs(
     title = "Ruuhkaviiveen osuus henkilöautoliikenteen\nmatka-ajasta aamuhuipputuntina",
-    subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name")),
+    subtitle = sprintf("%d %s", scenario_attributes[["year"]], config::get("scenario_name")),
     x = "Määräpaikka",
     y = "Lähtöpaikka"
   ) +

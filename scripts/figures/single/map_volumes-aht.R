@@ -30,7 +30,7 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Moottoriajoneuvoliikenteen liikennemäärä aamuhuipputuntina",
-    subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name"))
+    subtitle = sprintf("%d %s", scenario_attributes[["year"]], config::get("scenario_name"))
   ) +
   theme_mal_map()
 
