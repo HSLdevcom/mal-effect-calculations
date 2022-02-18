@@ -24,10 +24,16 @@ source(here::here("scripts", "figures", "map_hubs.R"), encoding = "utf-8")
 
 # Prepare data ------------------------------------------------------------
 
-scenarios <- c("2018", "2040_ve0")
+set_scenario <- function(scenario) {
+  stopifnot(length(scenario) == 1)
+  dplyr::filter(scenarios, scenario == "2018")
+}
 
-for (scenario in scenarios) {
+scenario_list <- c("2018", "2040_ve0")
+
+for (scenario in scenario_list) {
   Sys.setenv(R_CONFIG_ACTIVE = scenario)
+  scenario_attributes <- set_scenario(scenario)
   message(sprintf("Prepare data in scenario %s...", scenario))
   source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "links.R"), encoding = "utf-8")
@@ -86,7 +92,7 @@ multiples <- list.files(here::here("scripts", "figures", "multiple"),
                       full.names = TRUE)
 
 for (scenario in scenarios) {
-  Sys.setenv(R_CONFIG_ACTIVE = scenario)
+  scenario_attributes <- set_scenario(scenario)
   lapply(singles, verbose_source, encoding = "utf-8")
 }
 
