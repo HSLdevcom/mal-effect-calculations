@@ -46,37 +46,30 @@ for (scenario in scenario_list) {
 
 Sys.setenv(R_CONFIG_ACTIVE = "default")
 
-areas_all <- dplyr::bind_rows(
-  "2018 Nykytila" = readr::read_rds(here::here("results", "areas_2018.rds")),
-  "2040 Vertailupohja" = readr::read_rds(here::here("results", "areas_2040_ve0.rds")),
-  .id = "scenario") %>%
-  dplyr::mutate(scenario = forcats::as_factor(scenario))
+read_and_bind <- function(scenario_list, prefix, suffix = "rds") {
+  # Read files
+  file_names <- sprintf("%s_%s.%s", prefix, scenario_list, suffix)
+  files <- lapply(file_names, function(x) { readr::read_rds(here::here("results", x)) })
+  # Get human-readable name
+  m <- match(scenario_list, scenarios$scenario)
+  scenario_names <- sprintf("%i %s", scenarios$year[m], scenarios$name[m])
+  names(files) <- scenario_names
+  # Bind all and add human-readable name to `scenario`
+  all <- dplyr::bind_rows(files, .id = "scenario") %>%
+    dplyr::mutate(scenario = forcats::as_factor(scenario))
+}
 
-readr::write_rds(areas_all, file = here::here("results", "areas_all.rds"))
+read_and_bind(scenario_list, "areas") %>%
+  readr::write_rds(here::here("results", "areas_all.rds"))
 
-vdfs_all <- dplyr::bind_rows(
-  "2018 Nykytila" = readr::read_rds(here::here("results", "vdfs_2018.rds")),
-  "2040 Vertailupohja" = readr::read_rds(here::here("results", "vdfs_2040_ve0.rds")),
-  .id = "scenario") %>%
-  dplyr::mutate(scenario = forcats::as_factor(scenario))
+read_and_bind(scenario_list, "vdfs") %>%
+  readr::write_rds(here::here("results", "vdfs_all.rds"))
 
-readr::write_rds(vdfs_all, file = here::here("results", "vdfs_all.rds"))
+read_and_bind(scenario_list, "emissions") %>%
+  readr::write_rds(here::here("results", "emissions_all.rds"))
 
-emissions_all <- dplyr::bind_rows(
-  "2018 Nykytila" = readr::read_rds(here::here("results", "emissions_2018.rds")),
-  "2040 Vertailupohja" = readr::read_rds(here::here("results", "emissions_2040_ve0.rds")),
-  .id = "scenario") %>%
-  dplyr::mutate(scenario = forcats::as_factor(scenario))
-
-readr::write_rds(emissions_all, file = here::here("results", "emissions_all.rds"))
-
-cargo_all <- dplyr::bind_rows(
-  "2018 Nykytila" = readr::read_rds(here::here("results", "cargo_2018.rds")),
-  "2040 Vertailupohja" = readr::read_rds(here::here("results", "cargo_2040_ve0.rds")),
-  .id = "scenario") %>%
-  dplyr::mutate(scenario = forcats::as_factor(scenario))
-
-readr::write_rds(cargo_all, file = here::here("results", "cargo_all.rds"))
+read_and_bind(scenario_list, "cargo") %>%
+  readr::write_rds(here::here("results", "cargo_all.rds"))
 
 
 # Plot figures -----------------------------------------------------------
