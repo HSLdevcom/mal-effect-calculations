@@ -25,13 +25,10 @@ source(here::here("scripts", "figures", "map_hubs.R"), encoding = "utf-8")
 # Prepare data ------------------------------------------------------------
 
 scenarios <- c("2018", "2040_ve0")
-scenario_titles <- NULL
 
 for (scenario in scenarios) {
   Sys.setenv(R_CONFIG_ACTIVE = scenario)
   message(sprintf("Prepare data in scenario %s...", scenario))
-  scenario_titles <- c(scenario_titles,
-                       sprintf("%d %s", config::get("year"), config::get("scenario_name")))
   source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "links.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "areas.R"), encoding = "utf-8")
