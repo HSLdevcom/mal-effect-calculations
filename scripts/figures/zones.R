@@ -138,10 +138,11 @@ ttimes_pt <- read_helmet_omx(file.path(config::get("helmet_data"),
                                        "Matrices",
                                        "time_pt.omx"))
 
+# TODO: Maybe fix scenarios$scenario[...
 if (config::get("plan")) {
   cba <- read_tsv_helmet(
     file.path(config::get("helmet_data"),
-              sprintf("cba_%s_%s.txt", config::get("scenario"), config::get("baseline"))),
+              sprintf("cba_%s_%s.txt", scenario_attributes[["scenario"]], scenarios$scenario[scenarios$baseline])),
     col_types = "iddddddddddddddddddddddddddddd",
     first_col_name = "zone")
 }
@@ -287,12 +288,13 @@ transit <- twocenters(zones, mode = "transit")
 bike <- twocenters(zones, mode = "bike")
 walk <- twocenters(zones, mode = "walk")
 
-if (config::get("scenario") == config::get("baseline_scenario")) {
+if (scenario_attributes[["present"]]) {
   message("twocenters: use current mode shares...")
   mode_shares <- zones
 } else {
   message("twocenters: read mode shares...")
-  mode_shares <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("baseline_scenario"))))
+  # TODO: Maybe fix scenarios$scenario[...
+  mode_shares <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenarios$scenario[scenarios$present])))
 }
 
 zones <- zones %>%

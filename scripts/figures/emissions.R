@@ -49,7 +49,7 @@ emissions <- kms %>%
   dplyr::left_join(co2, by = "vehicle") %>%
   dplyr::mutate(emission = dist * co2 * 300)
 
-if (config::get("scenario") == config::get("baseline_scenario")) {
+if (scenario_attributes[["present"]]) {
   emission_statistics <- here::here("utilities", "co2_statistics.tsv") %>%
     readr::read_tsv(col_types = "id") %>%
     tibble::deframe()
