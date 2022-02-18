@@ -42,7 +42,7 @@ kms <- readr::read_rds(here::here("results", sprintf("areas_%s.rds", scenario_at
 
 co2 <- here::here("utilities", "co2.tsv") %>%
   readr::read_tsv(col_types = "cid") %>%
-  dplyr::filter(year == config::get("co2_year")) %>%
+  dplyr::filter(year == scenario_attributes[["co2"]]) %>%
   dplyr::select(vehicle, co2)
 
 emissions <- kms %>%
@@ -53,7 +53,7 @@ if (scenario_attributes[["present"]]) {
   emission_statistics <- here::here("utilities", "co2_statistics.tsv") %>%
     readr::read_tsv(col_types = "id") %>%
     tibble::deframe()
-  correction <- emission_statistics["2018"] / sum(emissions$emission)
+  correction <- emission_statistics[[scenario_attributes[["year"]]]] / sum(emissions$emission)
   message(sprintf("Correction factor for baseline emissions is %.3f.", correction))
   readr::write_rds(correction, file = here::here("results", "emission_correction.rds"))
 } else {
