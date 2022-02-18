@@ -139,7 +139,7 @@ ttimes_pt <- read_helmet_omx(file.path(config::get("helmet_data"),
                                        "time_pt.omx"))
 
 # TODO: Maybe fix scenarios$scenario[...
-if (config::get("plan")) {
+if (scenario_attributes[["projected"]]) {
   cba <- read_tsv_helmet(
     file.path(config::get("helmet_data"),
               sprintf("cba_%s_%s.txt", scenario_attributes[["scenario"]], scenarios$scenario[scenarios$baseline])),
@@ -166,7 +166,7 @@ origins_shares <- origins_shares %>%
                 mode_share_transit = transit,
                 mode_share_bike = bike,
                 mode_share_walk = walk)
-if (config::get("plan")) {
+if (scenario_attributes[["projected"]]) {
   cba <- cba %>%
   dplyr::rename_with(~ sprintf("cba_%s", .x), -zone)
 }
@@ -184,7 +184,7 @@ zones <- zones %>%
   dplyr::left_join(car_density, by = "zone") %>%
   dplyr::left_join(origins_shares, by = "zone")
 
-if (config::get("plan")) {
+if (scenario_attributes[["projected"]]) {
   zones <- zones %>%
   dplyr::left_join(cba, by = "zone")
 }
@@ -325,7 +325,7 @@ zones <- zones %>%
   ) %>%
   dplyr::select(!ttime_twocenters_all)
 
-if (config::get("plan")) {
+if (scenario_attributes[["projected"]]) {
   # Calculate travel time changes with CBA data
   zones <- zones %>%
     dplyr::mutate(cba_car_time_per_person = (cba_car_work_time + cba_car_leisure_time) / total_pop,
