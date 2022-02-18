@@ -32,7 +32,6 @@ set_scenario <- function(scenario) {
 scenario_list <- c("2018", "2040_ve0")
 
 for (scenario in scenario_list) {
-  Sys.setenv(R_CONFIG_ACTIVE = scenario)
   scenario_attributes <- set_scenario(scenario)
   message(sprintf("Prepare data in scenario %s...", scenario))
   source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
