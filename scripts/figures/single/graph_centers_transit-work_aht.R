@@ -30,7 +30,7 @@ ggplot(data = results) +
   ) +
   labs(
     title = "Joukkoliikenteen matkavastus\naamuhuipputuntina",
-    subtitle = sprintf("%d %s", scenario_attributes[["year"]], config::get("scenario_name")),
+    subtitle = sprintf("%d %s", scenario_attributes[["year"]], scenario_attributes[["name"]]),
     x = "Määräpaikka",
     y = "Lähtöpaikka"
   ) +

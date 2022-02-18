@@ -31,7 +31,7 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Pisteluku",
-    subtitle = sprintf("%d %s", scenario_attributes[["year"]], config::get("scenario_name"))
+    subtitle = sprintf("%d %s", scenario_attributes[["year"]], scenario_attributes[["name"]])
   ) +
   theme_mal_map()
 
