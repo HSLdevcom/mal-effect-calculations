@@ -15,9 +15,9 @@ scenarios <- readr::read_tsv(
   )
 )
 
-stopifnot(all(!duplicated(scenarios$uid)))
+stopifnot(all(!duplicated(scenarios$scenario)))
 stopifnot(sum(scenarios$present) == 1)
 stopifnot(sum(scenarios$baseline) == 1)
 stopifnot(sum(scenarios$projected) >= 1)
 stopifnot(all(rowSums(dplyr::select(scenarios, present, baseline, projected, sensitivity)) == 1))
-stopifnot(all(scenarios$root %in% scenarios$uid))
+stopifnot(all(scenarios$root %in% scenarios$scenario))

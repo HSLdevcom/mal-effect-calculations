@@ -1,4 +1,4 @@
-uid	year	name	forecast	results	co2	basemap	present	baseline	projected	sensitivity	root
+scenario	year	name	forecast	results	co2	basemap	present	baseline	projected	sensitivity	root
 2018	2018	Nykytila	2018	2018	2018	2018	TRUE	FALSE	FALSE	FALSE	2018
 2040_ve0	2040	Vertailupohja	2040_ve0	2040_ve0	2040	2040_ve0	FALSE	TRUE	FALSE	FALSE	2040_ve0
 2040_ve0_ruuhkautuva	2040	Vertailupohja	2040_ve0_bulepois	2040_ve0_ruuhkautuva	2040	2040_ve0	FALSE	FALSE	FALSE	TRUE	2040_ve0
