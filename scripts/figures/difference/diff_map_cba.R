@@ -8,7 +8,7 @@ source(here::here("scripts", "utils.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
+results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario_attributes[["scenario"]])))
 
 
 # Plot --------------------------------------------------------------------
@@ -33,7 +33,7 @@ ggplot() +
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_cba_transit-time_%s.png", config::get("scenario"))))
+ggsave_map(here::here("figures", sprintf("map_cba_transit-time_%s.png", scenario_attributes[["scenario"]])))
 
 
 # Plot --------------------------------------------------------------------
@@ -58,7 +58,7 @@ ggplot() +
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_cba_car-time_%s.png", config::get("scenario"))))
+ggsave_map(here::here("figures", sprintf("map_cba_car-time_%s.png", scenario_attributes[["scenario"]])))
 
 
 # Plot --------------------------------------------------------------------
@@ -82,4 +82,4 @@ ggplot() +
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_cba_car-transit-time_%s.png", config::get("scenario"))))
+ggsave_map(here::here("figures", sprintf("map_cba_car-transit-time_%s.png", scenario_attributes[["scenario"]])))

@@ -333,4 +333,4 @@ if (config::get("plan")) {
 
 # Output ------------------------------------------------------------------
 
-readr::write_rds(zones, file = here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
+readr::write_rds(zones, file = here::here("results", sprintf("zones_%s.rds", scenario_attributes[["scenario"]])))

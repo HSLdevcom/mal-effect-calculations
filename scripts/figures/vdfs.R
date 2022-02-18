@@ -51,4 +51,4 @@ vdfs <- vdfs %>%
 
 # Output ------------------------------------------------------------------
 
-readr::write_rds(vdfs, file = here::here("results", sprintf("vdfs_%s.rds", config::get("scenario"))))
+readr::write_rds(vdfs, file = here::here("results", sprintf("vdfs_%s.rds", scenario_attributes[["scenario"]])))

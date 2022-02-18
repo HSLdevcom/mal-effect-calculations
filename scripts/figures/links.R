@@ -9,7 +9,7 @@ library(lwgeom)
 
 region <- readr::read_rds(here::here("results", "region.rds"))
 volume_factors <- readr::read_tsv(here::here("utilities", "volume_factors.tsv"), col_types = "cddd")
-zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
+zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario_attributes[["scenario"]])))
 
 links <- here::here(config::get("helmet_data"), config::get("results"), "links.txt") %>%
   readr::read_tsv(col_types = cols(Link = col_character(),
@@ -120,7 +120,7 @@ buffers_truck_all <- links %>%
 
 # Output ------------------------------------------------------------------
 
-readr::write_rds(links, file = here::here("results", sprintf("links_%s.rds", config::get("scenario"))))
-readr::write_rds(buffers, file = here::here("results", sprintf("buffers_%s.rds", config::get("scenario"))))
-readr::write_rds(buffers_car, file = here::here("results", sprintf("buffers-car_%s.rds", config::get("scenario"))))
-readr::write_rds(buffers_truck_all, file = here::here("results", sprintf("buffers-truck_all_%s.rds", config::get("scenario"))))
+readr::write_rds(links, file = here::here("results", sprintf("links_%s.rds", scenario_attributes[["scenario"]])))
+readr::write_rds(buffers, file = here::here("results", sprintf("buffers_%s.rds", scenario_attributes[["scenario"]])))
+readr::write_rds(buffers_car, file = here::here("results", sprintf("buffers-car_%s.rds", scenario_attributes[["scenario"]])))
+readr::write_rds(buffers_truck_all, file = here::here("results", sprintf("buffers-truck_all_%s.rds", scenario_attributes[["scenario"]])))

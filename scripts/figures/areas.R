@@ -71,7 +71,7 @@ aggregated_demand <- read_tsv(
 
 # Read and aggregate zone data --------------------------------------------
 
-zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario")))) %>%
+zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario_attributes[["scenario"]]))) %>%
   sf::st_drop_geometry()
 
 zones1 <- zones %>%
@@ -96,7 +96,7 @@ zones2 <- zones %>%
 
 # Read and aggregate link data --------------------------------------------
 
-links <- readr::read_rds(here::here("results", sprintf("links_%s.rds", config::get("scenario")))) %>%
+links <- readr::read_rds(here::here("results", sprintf("links_%s.rds", scenario_attributes[["scenario"]]))) %>%
   sf::st_drop_geometry() %>%
   dplyr::group_by(area) %>%
   dplyr::summarise(weighted_delay_car_all = sum(weighted_delay_car_all),
@@ -188,4 +188,4 @@ areas <- areas %>%
 
 # Output ------------------------------------------------------------------
 
-readr::write_rds(areas, file = here::here("results", sprintf("areas_%s.rds", config::get("scenario"))))
+readr::write_rds(areas, file = here::here("results", sprintf("areas_%s.rds", scenario_attributes[["scenario"]])))

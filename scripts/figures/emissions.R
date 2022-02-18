@@ -29,7 +29,7 @@ transit_kms <- file.path(config::get("helmet_data"),
   dplyr::group_by(vehicle) %>%
   dplyr::summarise(dist = sum(dist))
 
-kms <- readr::read_rds(here::here("results", sprintf("areas_%s.rds", config::get("scenario")))) %>%
+kms <- readr::read_rds(here::here("results", sprintf("areas_%s.rds", scenario_attributes[["scenario"]]))) %>%
   dplyr::filter(area %in% "Helsingin seutu") %>%
   dplyr::select(vehicle_kms_car, vehicle_kms_van, vehicle_kms_truck_all) %>%
   tidyr::pivot_longer(
@@ -76,4 +76,4 @@ emissions <- emissions %>%
 
 # Output ------------------------------------------------------------------
 
-readr::write_rds(emissions, file = here::here("results", sprintf("emissions_%s.rds", config::get("scenario"))))
+readr::write_rds(emissions, file = here::here("results", sprintf("emissions_%s.rds", scenario_attributes[["scenario"]])))

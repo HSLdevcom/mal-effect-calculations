@@ -8,7 +8,7 @@ library(tidyverse)
 centers <- readr::read_tsv(here::here("data", "centers.tsv"), col_types = "icll") %>%
   dplyr::filter(hub)
 
-results <- readr::read_rds(here::here("results", sprintf("centers_%s.rds", config::get("scenario")))) %>%
+results <- readr::read_rds(here::here("results", sprintf("centers_%s.rds", scenario_attributes[["scenario"]]))) %>%
   dplyr::filter(origin %in% centers$label & destination %in% centers$label)
 
 
@@ -39,4 +39,4 @@ ggplot(data = results) +
   theme(legend.position = "right",
         panel.grid.major.y = element_blank())
 
-ggsave_graph(here::here("figures", sprintf("graph_ttime_transit-work_aht_%s.png", config::get("scenario"))))
+ggsave_graph(here::here("figures", sprintf("graph_ttime_transit-work_aht_%s.png", scenario_attributes[["scenario"]])))

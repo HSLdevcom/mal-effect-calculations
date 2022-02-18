@@ -38,4 +38,4 @@ ttimes <- dplyr::left_join(ttimes_aht, ttimes_pt, by = c("origin", "destination"
 
 # Output ------------------------------------------------------------------
 
-readr::write_rds(ttimes, file = here::here("results", sprintf("centers_%s.rds", config::get("scenario"))))
+readr::write_rds(ttimes, file = here::here("results", sprintf("centers_%s.rds", scenario_attributes[["scenario"]])))

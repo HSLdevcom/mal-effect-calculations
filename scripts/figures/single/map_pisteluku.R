@@ -8,7 +8,7 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario")))) %>%
+results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario_attributes[["scenario"]]))) %>%
   dplyr::mutate(sustainable_accessibility = -sustainable_accessibility) %>%
   dplyr::arrange(sustainable_accessibility)
 
@@ -35,4 +35,4 @@ ggplot() +
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_pisteluku_%s.png", config::get("scenario"))))
+ggsave_map(here::here("figures", sprintf("map_pisteluku_%s.png", scenario_attributes[["scenario"]])))

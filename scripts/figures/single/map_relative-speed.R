@@ -8,7 +8,7 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-results <- readr::read_rds(here::here("results", sprintf("buffers_%s.rds", config::get("scenario")))) %>%
+results <- readr::read_rds(here::here("results", sprintf("buffers_%s.rds", scenario_attributes[["scenario"]]))) %>%
   # Arrange for improved plotting
   dplyr::arrange(-relative_speed)
 
@@ -35,4 +35,4 @@ ggplot() +
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_relative-speed_%s.png", config::get("scenario"))))
+ggsave_map(here::here("figures", sprintf("map_relative-speed_%s.png", scenario_attributes[["scenario"]])))

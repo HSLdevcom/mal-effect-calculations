@@ -7,7 +7,7 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
+results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario_attributes[["scenario"]])))
 
 
 # Plot --------------------------------------------------------------------
@@ -45,4 +45,4 @@ ggplot() +
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_car-density_%s.png", config::get("scenario"))))
+ggsave_map(here::here("figures", sprintf("map_car-density_%s.png", scenario_attributes[["scenario"]])))

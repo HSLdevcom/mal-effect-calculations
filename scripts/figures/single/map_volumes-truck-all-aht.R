@@ -7,7 +7,7 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-results <- readr::read_rds(here::here("results", sprintf("buffers-truck_all_%s.rds", config::get("scenario")))) %>%
+results <- readr::read_rds(here::here("results", sprintf("buffers-truck_all_%s.rds", scenario_attributes[["scenario"]]))) %>%
   # Arrange for improved plotting
   dplyr::arrange(truck_all_aht)
 
@@ -29,4 +29,4 @@ ggplot() +
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_volumes-truck-all-aht_%s.png", config::get("scenario"))))
+ggsave_map(here::here("figures", sprintf("map_volumes-truck-all-aht_%s.png", scenario_attributes[["scenario"]])))

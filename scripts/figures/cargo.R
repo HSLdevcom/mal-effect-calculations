@@ -80,4 +80,4 @@ cargo <- cargo %>%
 
 # Output ------------------------------------------------------------------
 
-readr::write_rds(cargo, file = here::here("results", sprintf("cargo_%s.rds", config::get("scenario"))))
+readr::write_rds(cargo, file = here::here("results", sprintf("cargo_%s.rds", scenario_attributes[["scenario"]])))
