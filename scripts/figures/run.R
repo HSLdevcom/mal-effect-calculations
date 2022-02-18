@@ -26,7 +26,7 @@ source(here::here("scripts", "figures", "map_hubs.R"), encoding = "utf-8")
 
 set_scenario <- function(scenario) {
   stopifnot(length(scenario) == 1)
-  dplyr::filter(scenarios, scenario == "2018")
+  dplyr::filter(scenarios, scenario == !!scenario)
 }
 
 scenario_list <- c("2018", "2040_ve0")
