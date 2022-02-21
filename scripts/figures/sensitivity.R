@@ -6,21 +6,11 @@ library(tidyverse)
 # Data --------------------------------------------------------------------
 
 # TODO: These need to be looped through main scenarios.
-areas_all <- dplyr::bind_rows(
-  "2018 Nykytila" = readr::read_rds(here::here("results", "areas_2018.rds")),
-  "2040 Vertailupohja" = readr::read_rds(here::here("results", "areas_2040_ve0.rds")),
-  .id = "scenario")
+areas_all <- read_and_bind(scenario_list, "areas")
 
 # TODO: These need to be looped through sensitivity scenarios of every main
 # scenario except the baseline scenario.
-areas_sensitivity <- dplyr::bind_rows(
-  "2040 Vertailupohja" = readr::read_rds(here::here("results", "areas_2040_ve0.rds")),
-  "2040 Vertailupohja" = readr::read_rds(here::here("results", "areas_2040_ve0_etatyo.rds")),
-  "2040 Vertailupohja" = readr::read_rds(here::here("results", "areas_2040_ve0_jklmaksi.rds")),
-  "2040 Vertailupohja" = readr::read_rds(here::here("results", "areas_2040_ve0_mini.rds")),
-  "2040 Vertailupohja" = readr::read_rds(here::here("results", "areas_2040_ve0_muulitar.rds")),
-  "2040 Vertailupohja" = readr::read_rds(here::here("results", "areas_2040_ve0_tieruuhka.rds")),
-  .id = "scenario")
+areas_sensitivity <- read_and_bind(sensitivity_scenario_list, "areas")
 
 
 # Sensitivity analysis ----------------------------------------------------
