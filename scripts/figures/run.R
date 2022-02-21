@@ -2,6 +2,13 @@
 library(here)
 library(tidyverse)
 
+Sys.setenv(R_CONFIG_ACTIVE = "default")
+
+
+# Validate scenarios ------------------------------------------------------
+
+source(here::here("scripts", "figures", "validate_scenarios.R"), encoding = "utf-8")
+
 
 # Utility functions -------------------------------------------------------
 
@@ -19,14 +26,16 @@ source(here::here("scripts", "figures", "map_hubs.R"), encoding = "utf-8")
 
 # Prepare data ------------------------------------------------------------
 
-scenarios <- c("2018", "2040_ve0")
-scenario_titles <- NULL
+set_scenario <- function(scenario) {
+  stopifnot(length(scenario) == 1)
+  dplyr::filter(scenarios, scenario == !!scenario)
+}
 
-for (scenario in scenarios) {
-  Sys.setenv(R_CONFIG_ACTIVE = scenario)
+scenario_list <- c("2018", "2040_ve0", "2040_ve1")
+
+for (scenario in scenario_list) {
+  scenario_attributes <- set_scenario(scenario)
   message(sprintf("Prepare data in scenario %s...", scenario))
-  scenario_titles <- c(scenario_titles,
-                       sprintf("%d %s", config::get("year"), config::get("scenario_name")))
   source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "links.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "areas.R"), encoding = "utf-8")
@@ -36,39 +45,30 @@ for (scenario in scenarios) {
   source(here::here("scripts", "figures", "centers.R"), encoding = "utf-8")
 }
 
-Sys.setenv(R_CONFIG_ACTIVE = "default")
+read_and_bind <- function(scenario_list, prefix, suffix = "rds") {
+  # Read files
+  file_names <- sprintf("%s_%s.%s", prefix, scenario_list, suffix)
+  files <- lapply(file_names, function(x) { readr::read_rds(here::here("results", x)) })
+  # Get human-readable name
+  m <- match(scenario_list, scenarios$scenario)
+  scenario_names <- sprintf("%i %s", scenarios$year[m], scenarios$name[m])
+  names(files) <- scenario_names
+  # Bind all and add human-readable name to `scenario`
+  all <- dplyr::bind_rows(files, .id = "scenario") %>%
+    dplyr::mutate(scenario = forcats::as_factor(scenario))
+}
 
-areas_all <- dplyr::bind_rows(
-  "2018 Nykytila" = readr::read_rds(here::here("results", "areas_2018.rds")),
-  "2040 Vertailupohja" = readr::read_rds(here::here("results", "areas_2040_ve0.rds")),
-  .id = "scenario") %>%
-  dplyr::mutate(scenario = forcats::as_factor(scenario))
+read_and_bind(scenario_list, "areas") %>%
+  readr::write_rds(here::here("results", "areas_all.rds"))
 
-readr::write_rds(areas_all, file = here::here("results", "areas_all.rds"))
+read_and_bind(scenario_list, "vdfs") %>%
+  readr::write_rds(here::here("results", "vdfs_all.rds"))
 
-vdfs_all <- dplyr::bind_rows(
-  "2018 Nykytila" = readr::read_rds(here::here("results", "vdfs_2018.rds")),
-  "2040 Vertailupohja" = readr::read_rds(here::here("results", "vdfs_2040_ve0.rds")),
-  .id = "scenario") %>%
-  dplyr::mutate(scenario = forcats::as_factor(scenario))
+read_and_bind(scenario_list, "emissions") %>%
+  readr::write_rds(here::here("results", "emissions_all.rds"))
 
-readr::write_rds(vdfs_all, file = here::here("results", "vdfs_all.rds"))
-
-emissions_all <- dplyr::bind_rows(
-  "2018 Nykytila" = readr::read_rds(here::here("results", "emissions_2018.rds")),
-  "2040 Vertailupohja" = readr::read_rds(here::here("results", "emissions_2040_ve0.rds")),
-  .id = "scenario") %>%
-  dplyr::mutate(scenario = forcats::as_factor(scenario))
-
-readr::write_rds(emissions_all, file = here::here("results", "emissions_all.rds"))
-
-cargo_all <- dplyr::bind_rows(
-  "2018 Nykytila" = readr::read_rds(here::here("results", "cargo_2018.rds")),
-  "2040 Vertailupohja" = readr::read_rds(here::here("results", "cargo_2040_ve0.rds")),
-  .id = "scenario") %>%
-  dplyr::mutate(scenario = forcats::as_factor(scenario))
-
-readr::write_rds(cargo_all, file = here::here("results", "cargo_all.rds"))
+read_and_bind(scenario_list, "cargo") %>%
+  readr::write_rds(here::here("results", "cargo_all.rds"))
 
 
 # Plot figures -----------------------------------------------------------
@@ -83,11 +83,10 @@ multiples <- list.files(here::here("scripts", "figures", "multiple"),
                       pattern = ".R$",
                       full.names = TRUE)
 
-for (scenario in scenarios) {
-  Sys.setenv(R_CONFIG_ACTIVE = scenario)
+for (scenario in scenario_list) {
+  scenario_attributes <- set_scenario(scenario)
   lapply(singles, verbose_source, encoding = "utf-8")
 }
 
-Sys.setenv(R_CONFIG_ACTIVE = "default")
 invisible(lapply(differences, verbose_source, encoding = "utf-8"))
 invisible(lapply(multiples, verbose_source, encoding = "utf-8"))

@@ -74,7 +74,7 @@ twocenters <- function(.data, mode) {
   .data_to_range <- .data %>%
     sf::st_drop_geometry() %>%
     dplyr::filter(!(zone %in% outlier_zones))
-  if (config::get("scenario") == config::get("baseline_scenario")) {
+  if (scenario_attributes[["present"]]) {
     xrange <- range(.data_to_range[[column]])
     readr::write_rds(xrange, file = here::here("results", sprintf("twocenters_range_%s.rds", mode)))
   } else {
@@ -88,7 +88,7 @@ twocenters <- function(.data, mode) {
                                              b = b)
   # If we are on baseline scenario, calculate breaks of the variable for the
   # plotting. Otherwise read it from the result folder.
-  if (config::get("scenario") == config::get("baseline_scenario")) {
+  if (scenario_attributes[["present"]]) {
     breaks <- break_twocenters(ttime_twocenters_normal)
     readr::write_rds(breaks, file = here::here("results", sprintf("twocenters_breaks_%s.rds", mode)))
   } else {

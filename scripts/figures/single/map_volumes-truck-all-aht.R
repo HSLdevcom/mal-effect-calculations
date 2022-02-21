@@ -7,7 +7,7 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-results <- readr::read_rds(here::here("results", sprintf("buffers-truck_all_%s.rds", config::get("scenario")))) %>%
+results <- readr::read_rds(here::here("results", sprintf("buffers-truck_all_%s.rds", scenario_attributes[["scenario"]]))) %>%
   # Arrange for improved plotting
   dplyr::arrange(truck_all_aht)
 
@@ -25,8 +25,8 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Tavaraliikenteen liikennemäärä aamuhuipputuntina",
-    subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name"))
+    subtitle = sprintf("%d %s", scenario_attributes[["year"]], scenario_attributes[["name"]])
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_volumes-truck-all-aht_%s.png", config::get("scenario"))))
+ggsave_map(here::here("figures", sprintf("map_volumes-truck-all-aht_%s.png", scenario_attributes[["scenario"]])))

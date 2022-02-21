@@ -6,19 +6,19 @@ library(tidyverse)
 # Read data ---------------------------------------------------------------
 
 demand_aht <- read_helmet_omx(file.path(config::get("helmet_data"),
-                                        config::get("results"),
+                                        scenario_attributes[["results"]],
                                         "Matrices",
                                         "demand_aht.omx")) %>%
   dplyr::select(origin, destination, trailer_truck, truck)
 
 dist_aht <- read_helmet_omx(file.path(config::get("helmet_data"),
-                                      config::get("results"),
+                                      scenario_attributes[["results"]],
                                       "Matrices",
                                       "dist_aht.omx")) %>%
   dplyr::select(origin, destination, trailer_truck, truck)
 
 ttimes_aht <- read_helmet_omx(file.path(config::get("helmet_data"),
-                                        config::get("results"),
+                                        scenario_attributes[["results"]],
                                         "Matrices",
                                         "time_aht.omx")) %>%
   dplyr::select(origin, destination, trailer_truck, truck)
@@ -80,4 +80,4 @@ cargo <- cargo %>%
 
 # Output ------------------------------------------------------------------
 
-readr::write_rds(cargo, file = here::here("results", sprintf("cargo_%s.rds", config::get("scenario"))))
+readr::write_rds(cargo, file = here::here("results", sprintf("cargo_%s.rds", scenario_attributes[["scenario"]])))

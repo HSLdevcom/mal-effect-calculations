@@ -18,7 +18,7 @@ buses <- tibble::tribble(
 
 # This data is only for total Helsinki region
 transit_kms <- file.path(config::get("helmet_data"),
-                         config::get("results"),
+                         scenario_attributes[["results"]],
                          "transit_kms.txt") %>%
   read_tsv(skip = 1, # skip old column names
            col_types = "cdd",
@@ -29,7 +29,7 @@ transit_kms <- file.path(config::get("helmet_data"),
   dplyr::group_by(vehicle) %>%
   dplyr::summarise(dist = sum(dist))
 
-kms <- readr::read_rds(here::here("results", sprintf("areas_%s.rds", config::get("scenario")))) %>%
+kms <- readr::read_rds(here::here("results", sprintf("areas_%s.rds", scenario_attributes[["scenario"]]))) %>%
   dplyr::filter(area %in% "Helsingin seutu") %>%
   dplyr::select(vehicle_kms_car, vehicle_kms_van, vehicle_kms_truck_all) %>%
   tidyr::pivot_longer(
@@ -42,18 +42,18 @@ kms <- readr::read_rds(here::here("results", sprintf("areas_%s.rds", config::get
 
 co2 <- here::here("utilities", "co2.tsv") %>%
   readr::read_tsv(col_types = "cid") %>%
-  dplyr::filter(year == config::get("co2_year")) %>%
+  dplyr::filter(year == scenario_attributes[["co2"]]) %>%
   dplyr::select(vehicle, co2)
 
 emissions <- kms %>%
   dplyr::left_join(co2, by = "vehicle") %>%
   dplyr::mutate(emission = dist * co2 * 300)
 
-if (config::get("scenario") == config::get("baseline_scenario")) {
+if (scenario_attributes[["present"]]) {
   emission_statistics <- here::here("utilities", "co2_statistics.tsv") %>%
     readr::read_tsv(col_types = "id") %>%
     tibble::deframe()
-  correction <- emission_statistics["2018"] / sum(emissions$emission)
+  correction <- emission_statistics[[as.character(scenario_attributes[["year"]])]] / sum(emissions$emission)
   message(sprintf("Correction factor for baseline emissions is %.3f.", correction))
   readr::write_rds(correction, file = here::here("results", "emission_correction.rds"))
 } else {
@@ -76,4 +76,4 @@ emissions <- emissions %>%
 
 # Output ------------------------------------------------------------------
 
-readr::write_rds(emissions, file = here::here("results", sprintf("emissions_%s.rds", config::get("scenario"))))
+readr::write_rds(emissions, file = here::here("results", sprintf("emissions_%s.rds", scenario_attributes[["scenario"]])))
