@@ -71,6 +71,20 @@ read_and_bind(scenario_list, "cargo") %>%
   readr::write_rds(here::here("results", "cargo_all.rds"))
 
 
+# Sensitivity analysis ----------------------------------------------------
+
+sensitivity_scenarios <- c("2040_ve0_etatyo", "2040_ve0_jklmaksi", "2040_ve0_mini", "2040_ve0_muulitar", "2040_ve0_tieruuhka")
+
+for (scenario in sensitivity_scenarios) {
+  Sys.setenv(R_CONFIG_ACTIVE = scenario)
+  message(sprintf("Prepare data in scenario %s...", scenario))
+  source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
+  source(here::here("scripts", "figures", "areas.R"), encoding = "utf-8")
+}
+
+source(here::here("scripts", "figures", "sensitivity.R"), encoding = "utf-8")
+
+
 # Plot figures -----------------------------------------------------------
 
 singles <- list.files(here::here("scripts", "figures", "single"),
