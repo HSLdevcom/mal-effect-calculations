@@ -73,10 +73,10 @@ read_and_bind(scenario_list, "cargo") %>%
 
 # Sensitivity analysis ----------------------------------------------------
 
-sensitivity_scenarios <- c("2040_ve0_etatyo", "2040_ve0_jklmaksi", "2040_ve0_mini", "2040_ve0_muulitar", "2040_ve0_tieruuhka")
+sensitivity_scenario_list <- scenarios$scenario[scenarios$sensitivity]
 
-for (scenario in sensitivity_scenarios) {
-  Sys.setenv(R_CONFIG_ACTIVE = scenario)
+for (scenario in sensitivity_scenario_list) {
+  scenario_attributes <- set_scenario(scenario)
   message(sprintf("Prepare data in scenario %s...", scenario))
   source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "areas.R"), encoding = "utf-8")
