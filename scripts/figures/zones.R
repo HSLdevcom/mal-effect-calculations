@@ -13,7 +13,7 @@ land_area <- readxl::read_xlsx(here::here("data", "maapinta_ala_ja_asutut_ruudut
 
 pop <- read_tsv_helmet(
   list.files(file.path(config::get("forecast_zonedata_path"),
-                       config::get("forecast_zonedata")),
+                       scenario_attributes[["forecast"]]),
              pattern = ".pop$",
              full.names = TRUE),
   col_types = "iiddddd",
@@ -21,7 +21,7 @@ pop <- read_tsv_helmet(
 )
 lnd <- read_tsv_helmet(
   list.files(file.path(config::get("forecast_zonedata_path"),
-                       config::get("forecast_zonedata")),
+                       scenario_attributes[["forecast"]]),
              pattern = ".lnd$",
              full.names = TRUE),
   col_types = "idd",
@@ -29,7 +29,7 @@ lnd <- read_tsv_helmet(
 )
 edu <- read_tsv_helmet(
   list.files(file.path(config::get("forecast_zonedata_path"),
-                       config::get("forecast_zonedata")),
+                       scenario_attributes[["forecast"]]),
              pattern = ".edu$",
              full.names = TRUE),
   col_types = "iiii",
@@ -37,7 +37,7 @@ edu <- read_tsv_helmet(
 )
 wrk <- read_tsv_helmet(
   list.files(file.path(config::get("forecast_zonedata_path"),
-                       config::get("forecast_zonedata")),
+                       scenario_attributes[["forecast"]]),
              pattern = ".wrk$",
              full.names = TRUE),
   col_types = "iidddd",
@@ -45,7 +45,7 @@ wrk <- read_tsv_helmet(
 )
 prk <- read_tsv_helmet(
   list.files(file.path(config::get("forecast_zonedata_path"),
-                       config::get("forecast_zonedata")),
+                       scenario_attributes[["forecast"]]),
              pattern = ".prk$",
              full.names = TRUE),
   col_types = "iii",
@@ -54,14 +54,14 @@ prk <- read_tsv_helmet(
 
 accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "accessibility.txt"),
   col_types = "idddddddddddddddddddddddddddddddddddddddddddddddddd",
   first_col_name = "zone"
 )
 attraction <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "attraction.txt"),
   col_types = "idddddddddddd",
   first_col_name = "zone"
@@ -69,63 +69,63 @@ attraction <- read_tsv_helmet(
 car_density <- read_tsv_helmet(
 
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "car_density.txt"),
   col_types = "id",
   first_col_name = "zone"
 )
 car_use <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "car_use.txt"),
   col_types = "id",
   first_col_name = "zone"
 )
 generation <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "generation.txt"),
   col_types = "iddddddddddd",
   first_col_name = "zone"
 )
 impedance_ratio <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "impedance_ratio.txt"),
   col_types = "idd",
   first_col_name = "zone"
 )
 origins_demand <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "origins_demand.txt"),
   col_types = "idddd",
   first_col_name = "zone"
 )
 origins_shares <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "origins_shares.txt"),
   col_types = "idddd",
   first_col_name = "zone"
 )
 savu <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "savu.txt"),
   col_types = "id",
   first_col_name = "zone"
 )
 sustainable_accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "sustainable_accessibility.txt"),
   col_types = "idddddddddddd",
   first_col_name = "zone"
 )
 workplace_accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "workplace_accessibility.txt"),
   col_types = "idd",
   first_col_name = "zone"
@@ -134,15 +134,17 @@ workplace_accessibility <- read_tsv_helmet(
 centers <- readr::read_rds(here::here("results", "centers_uusimaa-2050.rds"))
 
 ttimes_pt <- read_helmet_omx(file.path(config::get("helmet_data"),
-                                       config::get("results"),
+                                       scenario_attributes[["results"]],
                                        "Matrices",
                                        "time_pt.omx"))
 
-if (config::get("plan")) {
+# TODO: Maybe fix scenarios$scenario[...
+if (scenario_attributes[["projected"]]) {
   cba <- read_tsv_helmet(
     file.path(config::get("helmet_data"),
-              sprintf("cba_%s_%s.txt", config::get("scenario"), config::get("baseline"))),
-    col_types = "idddddddddddddddddddddddddddd",
+              scenario_attributes[["results"]],
+              sprintf("cba_%s_%s.txt", scenario_attributes[["scenario"]], scenarios$scenario[scenarios$baseline])),
+    col_types = "iddddddddddddddddddddddddddddd",
     first_col_name = "zone")
 }
 
@@ -165,8 +167,10 @@ origins_shares <- origins_shares %>%
                 mode_share_transit = transit,
                 mode_share_bike = bike,
                 mode_share_walk = walk)
-cba <- cba %>%
+if (scenario_attributes[["projected"]]) {
+  cba <- cba %>%
   dplyr::rename_with(~ sprintf("cba_%s", .x), -zone)
+}
 
 zones <- zones %>%
   dplyr::rename(zone = SIJ2019) %>%
@@ -179,8 +183,12 @@ zones <- zones %>%
   dplyr::left_join(sustainable_accessibility, by = "zone") %>%
   dplyr::left_join(workplace_accessibility, by = "zone") %>%
   dplyr::left_join(car_density, by = "zone") %>%
-  dplyr::left_join(origins_shares, by = "zone") %>%
+  dplyr::left_join(origins_shares, by = "zone")
+
+if (scenario_attributes[["projected"]]) {
+  zones <- zones %>%
   dplyr::left_join(cba, by = "zone")
+}
 
 
 # Impact assessment columns  ----------------------------------------------
@@ -281,12 +289,13 @@ transit <- twocenters(zones, mode = "transit")
 bike <- twocenters(zones, mode = "bike")
 walk <- twocenters(zones, mode = "walk")
 
-if (config::get("scenario") == config::get("baseline_scenario")) {
+if (scenario_attributes[["present"]]) {
   message("twocenters: use current mode shares...")
   mode_shares <- zones
 } else {
   message("twocenters: read mode shares...")
-  mode_shares <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("baseline_scenario"))))
+  # TODO: Maybe fix scenarios$scenario[...
+  mode_shares <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenarios$scenario[scenarios$present])))
 }
 
 zones <- zones %>%
@@ -317,12 +326,22 @@ zones <- zones %>%
   ) %>%
   dplyr::select(!ttime_twocenters_all)
 
-# Calculate travel time changes with CBA data
-zones <- zones %>%
-  dplyr::mutate(cba_car_time = cba_car_work_time + cba_car_leisure_time,
-                cba_transit_time = cba_transit_work_time + cba_transit_leisure_time)
+if (scenario_attributes[["projected"]]) {
+  # Calculate travel time changes with CBA data
+  zones <- zones %>%
+    dplyr::mutate(cba_car_time_per_person = (cba_car_work_time + cba_car_leisure_time) / total_pop,
+                  cba_transit_time_per_person = (cba_transit_work_time + cba_transit_leisure_time) / total_pop)
+} else {
+  zones <- zones %>%
+    dplyr::mutate(cba_car_work_time = 0,
+                  cba_car_leisure_time = 0,
+                  cba_transit_work_time = 0,
+                  cba_transit_leisure_time = 0,
+                  cba_car_time_per_person = 0,
+                  cba_transit_time_per_person = 0)
+}
 
 
 # Output ------------------------------------------------------------------
 
-readr::write_rds(zones, file = here::here("results", sprintf("zones_%s.rds", config::get("scenario"))))
+readr::write_rds(zones, file = here::here("results", sprintf("zones_%s.rds", scenario_attributes[["scenario"]])))

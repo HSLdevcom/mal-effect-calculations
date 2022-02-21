@@ -10,42 +10,42 @@ translations <- here::here("utilities", "areas.tsv") %>%
 
 car_density <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "car_density_areas.txt"),
   col_types = "cd",
   first_col_name = "area"
 )
 car_use <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "car_use_areas.txt"),
   col_types = "cd",
   first_col_name = "area"
 )
 origin_demand <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "origin_demand_areas.txt"),
   col_types = "cdddd",
   first_col_name = "area"
 )
 own_zone_demand <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "own_zone_demand.txt"),
   col_types = "cdddddddddddddddddddddddddddddddddddd",
   first_col_name = "area"
 )
 vehicle_kms_modes <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "vehicle_kms_areas.txt"),
   col_types = "cdddddddddd",
   first_col_name = "area"
 )
 workplace_accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "workplace_accessibility_areas.txt"),
   col_types = "cdd",
   first_col_name = "area"
@@ -53,7 +53,7 @@ workplace_accessibility <- read_tsv_helmet(
 
 noise <- read_tsv(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "noise_areas.txt"),
   skip = 1, # skip old column names
   col_types = "cdd",
@@ -61,7 +61,7 @@ noise <- read_tsv(
 )
 aggregated_demand <- read_tsv(
   file.path(config::get("helmet_data"),
-            config::get("results"),
+            scenario_attributes[["results"]],
             "aggregated_demand.txt"),
   col_types = "ccccd",
   col_names = c("area_origin", "area_destination", "purpose", "mode", "demand"),
@@ -71,7 +71,7 @@ aggregated_demand <- read_tsv(
 
 # Read and aggregate zone data --------------------------------------------
 
-zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", config::get("scenario")))) %>%
+zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario_attributes[["scenario"]]))) %>%
   sf::st_drop_geometry()
 
 zones1 <- zones %>%
@@ -79,8 +79,10 @@ zones1 <- zones %>%
   dplyr::summarise(
     sustainable_accessibility = weighted.mean(sustainable_accessibility, total_pop),
     twocenters = weighted.mean(ttime_twocenters_normal_all, w = total_pop),
-    cba_car_time = sum(cba_car_time * total_pop),
-    cba_transit_time = sum(cba_transit_time * total_pop),
+    cba_car_time = sum(cba_car_work_time + cba_car_leisure_time),
+    cba_transit_time = sum(cba_transit_work_time + cba_transit_leisure_time),
+    cba_car_time_per_person = weighted.mean(cba_car_time_per_person, w = total_pop),
+    cba_transit_time_per_person = weighted.mean(cba_transit_time_per_person, w = total_pop),
     total_pop = sum(total_pop),
     total_wrk = sum(total_wrk)
   )
@@ -131,7 +133,7 @@ if (config::get("scenario") != "2018") {
 
 # Read and aggregate link data --------------------------------------------
 
-links <- readr::read_rds(here::here("results", sprintf("links_%s.rds", config::get("scenario")))) %>%
+links <- readr::read_rds(here::here("results", sprintf("links_%s.rds", scenario_attributes[["scenario"]]))) %>%
   sf::st_drop_geometry() %>%
   dplyr::group_by(area) %>%
   dplyr::summarise(weighted_delay_car_all = sum(weighted_delay_car_all),
@@ -215,6 +217,8 @@ areas <- areas %>%
     twocenters = weighted.mean(.$twocenters, .$total_pop),
     cba_car_time = sum(.$cba_car_time),
     cba_transit_time = sum(.$cba_transit_time),
+    cba_car_time_per_person = weighted.mean(.$cba_car_time_per_person, .$total_pop),
+    cba_transit_time_per_person = weighted.mean(.$cba_transit_time_per_person, .$total_pop),
     total_pop = sum(.$total_pop),
     total_wrk = sum(.$total_wrk),
     pop_increase_ensi_share = weighted.mean(.$pop_increase_ensi_share, w = .$pop_increase_2020),
@@ -231,4 +235,4 @@ areas <- areas %>%
 
 # Output ------------------------------------------------------------------
 
-readr::write_rds(areas, file = here::here("results", sprintf("areas_%s.rds", config::get("scenario"))))
+readr::write_rds(areas, file = here::here("results", sprintf("areas_%s.rds", scenario_attributes[["scenario"]])))

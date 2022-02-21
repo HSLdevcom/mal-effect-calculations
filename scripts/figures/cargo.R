@@ -6,26 +6,22 @@ library(tidyverse)
 # Read data ---------------------------------------------------------------
 
 demand_aht <- read_helmet_omx(file.path(config::get("helmet_data"),
-                                        config::get("results"),
+                                        scenario_attributes[["results"]],
                                         "Matrices",
                                         "demand_aht.omx")) %>%
   dplyr::select(origin, destination, trailer_truck, truck)
 
 dist_aht <- read_helmet_omx(file.path(config::get("helmet_data"),
-                                      config::get("results"),
+                                      scenario_attributes[["results"]],
                                       "Matrices",
                                       "dist_aht.omx")) %>%
   dplyr::select(origin, destination, trailer_truck, truck)
 
-# TODO: Get real trailer_truck and truck travel times
 ttimes_aht <- read_helmet_omx(file.path(config::get("helmet_data"),
-                                        config::get("results"),
+                                        scenario_attributes[["results"]],
                                         "Matrices",
                                         "time_aht.omx")) %>%
-  # dplyr::select(origin, destination, trailer_truck, truck)
-  dplyr::select(origin, destination, car_work) %>%
-  dplyr::rename(trailer_truck = car_work) %>%
-  dplyr::mutate(truck = trailer_truck)
+  dplyr::select(origin, destination, trailer_truck, truck)
 
 
 # Join data ---------------------------------------------------------------
@@ -37,7 +33,9 @@ terminals <- c(31400, 31500, 31501, 31502, 31503)
 matrices <- demand_aht %>%
   dplyr::left_join(dist_aht, by = c("origin", "destination"), suffix = c("", "_dist")) %>%
   dplyr::left_join(ttimes_aht, by = c("origin", "destination"), suffix = c("_demand", "_time")) %>%
-  dplyr::filter(origin %in% c(helsinki_region, terminals) | destination %in% c(helsinki_region, terminals))
+  dplyr::filter(origin %in% c(helsinki_region, terminals) | destination %in% c(helsinki_region, terminals)) %>%
+  # Remove disallowed links from analysis
+  dplyr::filter(across(-c(origin, destination), ~ !(.x > 1000)))
 
 matrices <- matrices %>%
   dplyr::mutate(group = dplyr::case_when(
@@ -82,4 +80,4 @@ cargo <- cargo %>%
 
 # Output ------------------------------------------------------------------
 
-readr::write_rds(cargo, file = here::here("results", sprintf("cargo_%s.rds", config::get("scenario"))))
+readr::write_rds(cargo, file = here::here("results", sprintf("cargo_%s.rds", scenario_attributes[["scenario"]])))

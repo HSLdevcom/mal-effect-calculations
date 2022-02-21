@@ -3,7 +3,6 @@ default:
   forecast_zonedata_path: "C:/.../Syottodata"
   housing_cost: "AsKustannukset_01062021.xlsx"
   income_data: "tulotiedot_2016_korjattu.xlsx"
-  baseline_scenario: "2018"
   present_scenario: "2018_agentti"
   present_name: "2018 Nykytila"
 
@@ -12,35 +11,3 @@ default:
   baseline_scenario: "2040_ve0_agentti"
   projected_name: "2040 Varjo"
   baseline_name: "2040 Vertailupohja"
-
-2018:
-  scenario: "2018"
-  year: 2018
-  scenario_name: "Nykytila"
-  forecast_zonedata: "2018"
-  results: "2018"
-  co2_year: 2018
-
-2040_ve0:
-  scenario: "2040_ve0"
-  year: 2040
-  scenario_name: "Vertailupohja"
-  forecast_zonedata: "2040_ve0"
-  results: "2040_ve0"
-  co2_year: 2040
-
-2040_ve1:
-  scenario: "2040_ve1"
-  year: 2040
-  scenario_name: "Varjo"
-  forecast_zonedata: "2040_ve1"
-  results: "2040_ve1"
-  co2_year: 2040
-
-2040_ve0_muulitar:
-  scenario: "2040_ve0_muulitar"
-  year: 2040
-  scenario_name: "Etätyö+"
-  forecast_zonedata: "2040_ve0"
-  results: "2040_ve0_muulitar"
-  co2_year: 2040

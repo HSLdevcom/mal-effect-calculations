@@ -9,7 +9,7 @@ translations <- here::here("utilities", "vdfs.tsv") %>%
   readr::read_tsv(col_types = "ic")
 
 vdfs <- read_tsv_helmet(
-  here::here(config::get("helmet_data"), config::get("results"), "vehicle_kms_vdfs_areas.txt"),
+  here::here(config::get("helmet_data"), scenario_attributes[["results"]], "vehicle_kms_vdfs_areas.txt"),
   col_types = "cddddddd",
   first_col_name = "area"
 )
@@ -51,4 +51,4 @@ vdfs <- vdfs %>%
 
 # Output ------------------------------------------------------------------
 
-readr::write_rds(vdfs, file = here::here("results", sprintf("vdfs_%s.rds", config::get("scenario"))))
+readr::write_rds(vdfs, file = here::here("results", sprintf("vdfs_%s.rds", scenario_attributes[["scenario"]])))

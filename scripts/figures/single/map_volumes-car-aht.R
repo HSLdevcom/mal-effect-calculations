@@ -8,7 +8,7 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-results <- readr::read_rds(here::here("results", sprintf("buffers-car_%s.rds", config::get("scenario")))) %>%
+results <- readr::read_rds(here::here("results", sprintf("buffers-car_%s.rds", scenario_attributes[["scenario"]]))) %>%
   # Arrange for improved plotting
   dplyr::arrange(car_aht)
 
@@ -30,8 +30,8 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Henkilöautoliikenteen liikennemäärä aamuhuipputuntina",
-    subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name"))
+    subtitle = sprintf("%d %s", scenario_attributes[["year"]], scenario_attributes[["name"]])
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_volumes-car-aht_espoo_%s.png", config::get("scenario"))))
+ggsave_map(here::here("figures", sprintf("map_volumes-car-aht_espoo_%s.png", scenario_attributes[["scenario"]])))

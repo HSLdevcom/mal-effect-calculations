@@ -9,7 +9,7 @@ library(omxr)
 centers <- readr::read_tsv(here::here("data", "centers.tsv"), col_types = "icll")
 
 ttimes_aht <- read_helmet_omx(file.path(config::get("helmet_data"),
-                                        config::get("results"),
+                                        scenario_attributes[["results"]],
                                         "Matrices",
                                         "time_aht.omx")) %>%
   dplyr::select(origin, destination, car_work, transit_work) %>%
@@ -19,7 +19,7 @@ ttimes_aht <- read_helmet_omx(file.path(config::get("helmet_data"),
   dplyr::mutate(ttime_ratio_aht = ttime_transit_work_aht / ttime_car_work_aht)
 
 ttimes_pt <- read_helmet_omx(file.path(config::get("helmet_data"),
-                                        config::get("results"),
+                                        scenario_attributes[["results"]],
                                         "Matrices",
                                         "time_pt.omx")) %>%
   dplyr::select(origin, destination, car_work, transit_work) %>%
@@ -38,4 +38,4 @@ ttimes <- dplyr::left_join(ttimes_aht, ttimes_pt, by = c("origin", "destination"
 
 # Output ------------------------------------------------------------------
 
-readr::write_rds(ttimes, file = here::here("results", sprintf("centers_%s.rds", config::get("scenario"))))
+readr::write_rds(ttimes, file = here::here("results", sprintf("centers_%s.rds", scenario_attributes[["scenario"]])))
