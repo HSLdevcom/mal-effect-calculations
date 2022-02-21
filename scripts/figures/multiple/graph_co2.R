@@ -11,16 +11,17 @@ emission_statistics <- here::here("utilities", "co2_statistics.tsv") %>%
 
 results <- readr::read_rds(here::here("results", "emissions_all.rds")) %>%
   dplyr::add_row(
-    scenario = "2005",
+    scenario = factor("2005"),
     vehicle = factor("Kaikki ajoneuvotyypit"),
     emission = emission_statistics["2005"]
   ) %>%
   dplyr::add_row(
-    scenario = "2005",
+    scenario = factor("2005"),
     vehicle = factor("total"),
     emission = emission_statistics["2005"]
   ) %>%
-  dplyr::mutate(vehicle = forcats::fct_rev(vehicle))
+  dplyr::mutate(vehicle = forcats::fct_rev(vehicle),
+                scenario = forcats::fct_relevel(scenario, "2005"))
 
 results_total <- results %>%
   dplyr::filter(vehicle == "total")
