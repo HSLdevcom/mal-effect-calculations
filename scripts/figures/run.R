@@ -2,6 +2,8 @@
 library(here)
 library(tidyverse)
 
+Sys.setenv(R_CONFIG_ACTIVE = "default")
+
 
 # Validate scenarios ------------------------------------------------------
 
@@ -42,8 +44,6 @@ for (scenario in scenario_list) {
   source(here::here("scripts", "figures", "cargo.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "centers.R"), encoding = "utf-8")
 }
-
-Sys.setenv(R_CONFIG_ACTIVE = "default")
 
 read_and_bind <- function(scenario_list, prefix, suffix = "rds") {
   # Read files
@@ -88,6 +88,5 @@ for (scenario in scenarios) {
   lapply(singles, verbose_source, encoding = "utf-8")
 }
 
-Sys.setenv(R_CONFIG_ACTIVE = "default")
 invisible(lapply(differences, verbose_source, encoding = "utf-8"))
 invisible(lapply(multiples, verbose_source, encoding = "utf-8"))
