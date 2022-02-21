@@ -79,8 +79,10 @@ zones1 <- zones %>%
   dplyr::summarise(
     sustainable_accessibility = weighted.mean(sustainable_accessibility, total_pop),
     twocenters = weighted.mean(ttime_twocenters_normal_all, w = total_pop),
-    cba_car_time = sum(cba_car_time * total_pop),
-    cba_transit_time = sum(cba_transit_time * total_pop),
+    cba_car_time = sum(cba_car_work_time + cba_car_leisure_time),
+    cba_transit_time = sum(cba_transit_work_time + cba_transit_leisure_time),
+    cba_car_time_per_person = weighted.mean(cba_car_time_per_person, w = total_pop),
+    cba_transit_time_per_person = weighted.mean(cba_transit_time_per_person, w = total_pop),
     total_pop = sum(total_pop),
     total_wrk = sum(total_wrk)
   )
@@ -174,6 +176,8 @@ areas <- areas %>%
     twocenters = weighted.mean(.$twocenters, .$total_pop),
     cba_car_time = sum(.$cba_car_time),
     cba_transit_time = sum(.$cba_transit_time),
+    cba_car_time_per_person = weighted.mean(.$cba_car_time_per_person, .$total_pop),
+    cba_transit_time_per_person = weighted.mean(.$cba_transit_time_per_person, .$total_pop),
     total_pop = sum(.$total_pop),
     total_wrk = sum(.$total_wrk)
   )
