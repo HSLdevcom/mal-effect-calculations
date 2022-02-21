@@ -17,7 +17,8 @@ areas_sensitivity <- read_and_bind(sensitivity_scenario_list, "areas")
 
 areas_sensitivity <- areas_sensitivity %>%
   dplyr::group_by(scenario, area) %>%
-  dplyr::summarise(across(where(is.numeric), list(lower = min, upper = max), .names = "{.col}_{.fn}"), .groups = "drop")
+  dplyr::summarise(across(where(is.numeric), list(lower = min, upper = max),
+                          .names = "{.col}_{.fn}"), .groups = "drop")
 
 areas_all <- areas_all %>%
   dplyr::left_join(areas_sensitivity, by = c("scenario", "area")) %>%
