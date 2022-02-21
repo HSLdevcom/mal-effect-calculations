@@ -55,8 +55,12 @@ travel_time_cost_trailer_truck <- 40.22 # e/h/auto
 
 matrices <- matrices %>%
   dplyr::mutate(
-    trailer_truck_cost = (vehicle_cost_trailer_truck * trailer_truck_dist + capital_cost_trailer_truck / 60 * trailer_truck_time + travel_time_cost_trailer_truck / 60 * trailer_truck_time) * trailer_truck_demand,
-    truck_cost = (vehicle_cost_truck * truck_dist + capital_cost_truck / 60 * truck_time + travel_time_cost_truck / 60 * truck_time) * truck_demand,
+    trailer_truck_cost = vehicle_cost_trailer_truck * trailer_truck_dist +
+                           capital_cost_trailer_truck / 60 * trailer_truck_time +
+                           travel_time_cost_trailer_truck / 60 * trailer_truck_time,
+    truck_cost = vehicle_cost_truck * truck_dist +
+                   capital_cost_truck / 60 * truck_time +
+                   travel_time_cost_truck / 60 * truck_time,
   )
 
 
@@ -64,17 +68,28 @@ matrices <- matrices %>%
 
 cargo <- matrices %>%
   dplyr::group_by(group) %>%
-  dplyr::summarise(cost = sum(trailer_truck_cost + truck_cost) / sum(trailer_truck_demand + truck_demand)) %>%
+  dplyr::summarise(
+    cost = sum(trailer_truck_cost * trailer_truck_demand + truck_cost * truck_demand) /
+                     sum(trailer_truck_demand + truck_demand),
+    trailer_truck_total_cost = sum(trailer_truck_cost * trailer_truck_demand),
+    truck_total_cost = sum(truck_cost * truck_demand),
+    trailer_truck_demand = sum(trailer_truck_demand),
+    truck_demand = sum(truck_demand)) %>%
   dplyr::add_row(
     group = "all",
-    cost = sum(matrices$trailer_truck_cost + matrices$truck_cost) / sum(matrices$trailer_truck_demand + matrices$truck_demand)
+    cost = sum(.$trailer_truck_total_cost + .$truck_total_cost) / sum(.$trailer_truck_demand + .$truck_demand)
   )
 
 
 # Translate data ----------------------------------------------------------
 
 cargo <- cargo %>%
-  dplyr::mutate(group = factor(group, levels = c("all", "terminals", "external", "internal"), labels = c("Helsingin seutu", "Terminaalikuljetukset", "Seudun maarajan ylittävät kuljetukset", "Seudun sisäiset kuljetukset"))) %>%
+  dplyr::mutate(group = factor(group,
+                               levels = c("all", "terminals", "external", "internal"),
+                               labels = c("Helsingin seutu",
+                                          "Terminaalikuljetukset",
+                                          "Seudun maarajan ylittävät kuljetukset",
+                                          "Seudun sisäiset kuljetukset"))) %>%
   dplyr::arrange(group)
 
 
