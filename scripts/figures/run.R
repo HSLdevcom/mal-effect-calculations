@@ -31,7 +31,7 @@ set_scenario <- function(scenario) {
   dplyr::filter(scenarios, scenario == !!scenario)
 }
 
-scenario_list <- c("2018", "2040_ve0")
+scenario_list <- c("2018", "2040_ve0", "2040_ve1")
 
 for (scenario in scenario_list) {
   scenario_attributes <- set_scenario(scenario)
