@@ -83,7 +83,7 @@ multiples <- list.files(here::here("scripts", "figures", "multiple"),
                       pattern = ".R$",
                       full.names = TRUE)
 
-for (scenario in scenarios) {
+for (scenario in scenario_list) {
   scenario_attributes <- set_scenario(scenario)
   lapply(singles, verbose_source, encoding = "utf-8")
 }
