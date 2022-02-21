@@ -142,6 +142,7 @@ ttimes_pt <- read_helmet_omx(file.path(config::get("helmet_data"),
 if (scenario_attributes[["projected"]]) {
   cba <- read_tsv_helmet(
     file.path(config::get("helmet_data"),
+              scenario_attributes[["results"]],
               sprintf("cba_%s_%s.txt", scenario_attributes[["scenario"]], scenarios$scenario[scenarios$baseline])),
     col_types = "iddddddddddddddddddddddddddddd",
     first_col_name = "zone")
