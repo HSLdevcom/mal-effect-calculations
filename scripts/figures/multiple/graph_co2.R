@@ -35,10 +35,10 @@ results <- results %>%
 ggplot(results, aes(x = scenario, y = emission)) +
   geom_col(aes(fill = vehicle), position = position_stack()) +
   geom_text(
-    aes(label = scales::label_number(scale = 10^(-9), accuracy = 1)(emission), group = vehicle),
+    aes(color = vehicle,
+        label = scales::label_number(scale = 10^(-9), accuracy = 1)(emission), group = vehicle),
     position = position_stack(vjust = 0.5),
-    size = points2mm(8),
-    color = "#333333"
+    size = points2mm(8)
   ) +
   geom_text(data = results_total,
             aes(label = scales::label_number(scale = 10^(-9), accuracy = 1)(emission)),
@@ -56,6 +56,16 @@ ggplot(results, aes(x = scenario, y = emission)) +
   scale_fill_manual(
     name = NULL,
     values = c("#e0e0e0", "#333333", "#AAD3ED", "#007AC9", "#F7C8E6", "#f092cd")
+  ) +
+  scale_color_manual(
+    name = NULL,
+    values = c("Henkilöautot" = "#333333",
+               "Kuorma-autot" = "#ffffff",
+               "Kaikki ajoneuvotyypit" = "#333333",
+               "Pakettiautot" = NA,
+               "HSL:n linja-autoliikenne" = NA,
+               "Muu linja-autoliikenne" = NA),
+    guide = guide_none()
   ) +
   labs(
     title = "Moottoriajoneuvoliikenteen CO2-päästöt Helsingin seudulla",
