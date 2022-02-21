@@ -331,6 +331,14 @@ if (scenario_attributes[["projected"]]) {
   zones <- zones %>%
     dplyr::mutate(cba_car_time_per_person = (cba_car_work_time + cba_car_leisure_time) / total_pop,
                   cba_transit_time_per_person = (cba_transit_work_time + cba_transit_leisure_time) / total_pop)
+} else {
+  zones <- zones %>%
+    dplyr::mutate(cba_car_work_time = 0,
+                  cba_car_leisure_time = 0,
+                  cba_transit_work_time = 0,
+                  cba_transit_leisure_time = 0,
+                  cba_car_time_per_person = 0,
+                  cba_transit_time_per_person = 0)
 }
 
 
