@@ -18,7 +18,27 @@ links <- here::here(config::get("helmet_data"), scenario_attributes[["results"]]
   dplyr::rename(geometry = Link) %>%
   sf::st_as_sf(wkt = "geometry", remove = TRUE, crs = 3879) %>%
   # Add unique column for identification
-  dplyr::mutate(fid = dplyr::row_number()) %>%
+  dplyr::mutate(fid = dplyr::row_number())
+
+areas <- links %>%
+  dplyr::select(data1) %>%
+  # Get starting points of each linestring
+  sf::st_set_geometry(lwgeom::st_startpoint(.)) %>%
+  # Find out which area each starting point belongs to. Using
+  # `sf::st_nearest_feature` because links outside region are not all
+  # matched with `sf::st_intersects`.
+  sf::st_join(zones, join = sf::st_nearest_feature) %>%
+  dplyr::select(area) %>%
+  # Links outside region have area = "peripheral"
+  dplyr::mutate(area = dplyr::if_else(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE), area, "peripheral")) %>%
+  sf::st_drop_geometry()
+
+stopifnot(nrow(areas) == nrow(links))
+links$area <- areas$area
+
+links %>% sf::write_sf(here::here("results", sprintf("links_toolbox_%s.gpkg", scenario_attributes[["scenario"]])))
+
+links <- links %>%
   dplyr::filter(!(volume_delay_func %in% 99)) %>%
   # Remove links where only walking and bicycling are allowed
   dplyr::filter(!(type %in% 70)) %>%
@@ -29,7 +49,7 @@ links <- here::here(config::get("helmet_data"), scenario_attributes[["results"]]
                 truck_all_aht = trailer_truck_aht + truck_aht,
                 relative_speed = car_time_pt / car_time_aht) %>%
   # Filter for improved plotting
-  dplyr::filter(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE))
+  dplyr::filter(area != "peripheral")
 
 volume_factors <- volume_factors %>%
   tidyr::pivot_longer(-mode, names_to = "period", values_to = "volume_factor")
@@ -81,20 +101,6 @@ links0 <- links %>%
 
 links <- links %>%
   dplyr::left_join(links0, by = "fid")
-
-areas <- links %>%
-  dplyr::select(data1) %>%
-  # Get starting points of each linestring
-  sf::st_set_geometry(lwgeom::st_startpoint(.)) %>%
-  # Find out which area each starting point belongs to. Using
-  # `sf::st_nearest_feature` because links at the region border are not all
-  # matched with `sf::st_intersects`.
-  sf::st_join(zones, join = sf::st_nearest_feature) %>%
-  dplyr::select(area) %>%
-  sf::st_drop_geometry()
-
-stopifnot(nrow(areas) == nrow(links))
-links$area <- areas$area
 
 buffers <- links %>%
   sf::st_buffer(dist = -links$volume_aht / 5,
