@@ -7,9 +7,8 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-ensi <- sf::read_sf(here::here("data", "ensisijaisetvyohykkeet2019",
-                               "MAL_ensisijaiset_vyöhykkeet_20190329_GK25.shp"),
-                    options = "ENCODING=UTF-8") %>%
+ensi <- sf::read_sf(here::here("data", "MAL2023_ensisijaiset_vyohykkeet_luonnos_Ve1",
+                               "MAL2023_ensisijaiset_vyohykkeet_luonnos_Ve1.shp")) %>%
   sf::st_cast("POLYGON") %>%
   sf::st_transform(3879) %>%
   dplyr::mutate(ensi = TRUE) %>%
@@ -26,7 +25,7 @@ ggplot() +
           data = ensi, color = NA, fill = "#3E8606", alpha = 0.5) +
   coord_sf_mal() +
   annotate_map(
-    title = "Ensisijaisesti kehitettävät maankäytön vyöhykkeet",
+    title = "Ensisijaisesti kehitettävät vyöhykkeet",
     subtitle = sprintf("%d %s", config::get("year"), config::get("scenario_name"))
   ) +
   theme_mal_map()
