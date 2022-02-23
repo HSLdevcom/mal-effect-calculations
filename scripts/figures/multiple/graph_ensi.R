@@ -7,7 +7,7 @@ library(sf)
 # Data --------------------------------------------------------------------
 
 results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
-  dplyr::filter(scenario != "2018 Nykytila")
+  dplyr::filter(scenario == "2040 Vertailupohja")
 
 
 # Plot --------------------------------------------------------------------
