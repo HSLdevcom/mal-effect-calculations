@@ -238,7 +238,7 @@ if (scenario_attributes[["present"]]) {
   message("workplace_accessibility: read ranges...")
   xrange <- readr::read_rds(here::here("results", "workplace-accessibility_range.rds"))
 }
-zones$workplace_accessibility = scale_to_range(
+zones$workplace_accessibility_scaled = scale_to_range(
   zones$workplace_accessibility, xmin = xrange[1], xmax = xrange[2], a = 0, b = 100)
 
 # Change sign

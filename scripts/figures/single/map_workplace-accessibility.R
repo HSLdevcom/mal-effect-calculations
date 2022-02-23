@@ -13,7 +13,7 @@ results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenari
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_sf(mapping = aes(fill = workplace_accessibility),
+  geom_sf(mapping = aes(fill = workplace_accessibility_scaled),
           data = results, color = NA) +
   scale_fill_viridis_c(
     option="viridis",

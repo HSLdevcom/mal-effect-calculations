@@ -83,7 +83,7 @@ zones1 <- zones %>%
     cba_transit_time = sum(cba_transit_work_time + cba_transit_leisure_time),
     cba_car_time_per_person = weighted.mean(cba_car_time_per_person, w = total_pop),
     cba_transit_time_per_person = weighted.mean(cba_transit_time_per_person, w = total_pop),
-    workplace_accessibility = weighted.mean(workplace_accessibility, w = total_wrk),
+    workplace_accessibility_scaled = weighted.mean(workplace_accessibility_scaled, w = total_wrk),
     total_pop = sum(total_pop),
     total_wrk = sum(total_wrk)
   )
@@ -165,7 +165,7 @@ areas <- areas %>%
     vehicle_kms_van = sum(.$vehicle_kms_van),
     vehicle_kms_truck_all = sum(.$vehicle_kms_truck_all),
     sustainable_accessibility = weighted.mean(.$sustainable_accessibility, .$total_pop),
-    workplace_accessibility = weighted.mean(.$workplace_accessibility, .$total_wrk),
+    workplace_accessibility_scaled = weighted.mean(.$workplace_accessibility_scaled, .$total_wrk),
     workforce_accessibility = weighted.mean(.$workforce_accessibility, .$total_wrk),
     car_density = weighted.mean(.$car_density, .$total_pop),
     goodness_share = sum(.$goodness_wrk) / sum(.$total_wrk),

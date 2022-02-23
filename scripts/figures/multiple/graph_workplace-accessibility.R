@@ -10,10 +10,10 @@ results <- readr::read_rds(here::here("results", "areas_all.rds"))
 
 # Plot --------------------------------------------------------------------
 
-ggplot(results, aes(x = area, y = workplace_accessibility)) +
+ggplot(results, aes(x = area, y = workplace_accessibility_scaled)) +
   geom_col(aes(fill = scenario), position = position_dodge2()) +
   geom_text(
-    aes(label = scales::label_number(accuracy = 1)(workplace_accessibility)),
+    aes(label = scales::label_number(accuracy = 1)(workplace_accessibility_scaled)),
     position = position_dodge2(width = 0.9),
     vjust = -0.5,
     size = points2mm(8),
