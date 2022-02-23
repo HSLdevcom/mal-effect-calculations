@@ -3,6 +3,24 @@ library(here)
 library(tidyverse)
 
 
+set_scenario <- function(scenario) {
+  stopifnot(length(scenario) == 1)
+  dplyr::filter(scenarios, scenario == !!scenario)
+}
+
+read_and_bind <- function(scenario_list, prefix, suffix = "rds") {
+  # Read files
+  file_names <- sprintf("%s_%s.%s", prefix, scenario_list, suffix)
+  files <- lapply(file_names, function(x) { readr::read_rds(here::here("results", x)) })
+  # Get human-readable name
+  m <- match(scenario_list, scenarios$scenario)
+  scenario_names <- sprintf("%i %s", scenarios$year[m], scenarios$name[m])
+  names(files) <- scenario_names
+  # Bind all and add human-readable name to `scenario`
+  all <- dplyr::bind_rows(files, .id = "scenario") %>%
+    dplyr::mutate(scenario = forcats::as_factor(scenario))
+}
+
 read_tsv_helmet <- function(..., first_col_name, comment = "#") {
   withCallingHandlers({
     readr::read_tsv(..., comment = comment) %>%
