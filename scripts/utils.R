@@ -80,8 +80,8 @@ ttime_to_bins <- function(x, xrange, a, b, breaks) {
 }
 
 twocenters <- function(.data, mode) {
-  # Scaling to 1-100
-  a <- 1
+  # Scaling to 0-100
+  a <- 0
   b <- 100
   # Dropping Suomenlinna because it distorts the results too much.
   outlier_zones <- c(1531)
