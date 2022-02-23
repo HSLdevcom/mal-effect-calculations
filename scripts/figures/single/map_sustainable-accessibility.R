@@ -13,19 +13,14 @@ results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenari
 
 # Plot --------------------------------------------------------------------
 
-breaks <- seq(from = 135, to = 185, by = 5)
-limits <- range(breaks)
-breaks <- breaks[c(-1, -length(breaks))]
-
 ggplot() +
-  geom_sf(mapping = aes(fill = sustainable_accessibility),
+  geom_sf(mapping = aes(fill = sustainable_accessibility_scaled),
           data = results, color = NA) +
-  scale_fill_viridis_b(
-    option="magma",
-    name = NULL,
+  scale_fill_viridis(
+    option = "magma",
+    name = "indeksi",
     labels = scales::label_number(accuracy = 1),
-    breaks = breaks,
-    limits = limits,
+    limits = c(0, 100),
     direction = -1,
     oob = scales::squish
   ) +

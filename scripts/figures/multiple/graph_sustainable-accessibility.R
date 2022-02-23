@@ -10,10 +10,10 @@ results <- readr::read_rds(here::here("results", "areas_all.rds"))
 
 # Plot --------------------------------------------------------------------
 
-ggplot(results, aes(x = area, y = sustainable_accessibility)) +
+ggplot(results, aes(x = area, y = sustainable_accessibility_scaled)) +
   geom_col(aes(fill = scenario), position = position_dodge2()) +
   geom_text(
-    aes(label = scales::label_number(accuracy = 1, big.mark = "")(sustainable_accessibility)),
+    aes(label = scales::label_number(accuracy = 1)(sustainable_accessibility_scaled)),
     position = position_dodge2(width = 0.9),
     vjust = -0.5,
     size = points2mm(8),
@@ -21,6 +21,7 @@ ggplot(results, aes(x = area, y = sustainable_accessibility)) +
   ) +
   scale_y_continuous(
     labels = scales::label_number(),
+    limits = c(0, 100),
     expand = expansion(mult = 0.1)
   ) +
   scale_x_discrete(
@@ -33,7 +34,7 @@ ggplot(results, aes(x = area, y = sustainable_accessibility)) +
   labs(
     title = "Saavutettavuus asukkaiden näkökulmasta",
     x = NULL,
-    y = NULL
+    y = "indeksi"
   ) +
   theme_mal_graph()
 
