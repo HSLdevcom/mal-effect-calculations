@@ -98,7 +98,7 @@ zones2 <- zones %>%
 
 # Read and aggregate square data ------------------------------------------
 
-if (config::get("scenario") != "2018") {
+if (!scenario_attributes[["present"]]) {
   squares <- readr::read_rds(here::here("results", "squares.rds")) %>%
     sf::st_drop_geometry()
 
@@ -116,8 +116,7 @@ if (config::get("scenario") != "2018") {
     dplyr::select(-ensi)
 
   squares2 <- squares %>%
-    dplyr::mutate(uml = !is.na(luokka)) %>%
-    dplyr::group_by(area, uml) %>%
+    dplyr::group_by(area, center) %>%
     dplyr::summarise(
       floor_area_increase_2021 = sum(floor_area_increase_2021_2040_ve0),
       .groups = "drop_last"
@@ -126,8 +125,8 @@ if (config::get("scenario") != "2018") {
       floor_area_increase_uml_share = floor_area_increase_2021 / sum(floor_area_increase_2021),
       floor_area_increase_2021 = sum(floor_area_increase_2021)
     ) %>%
-    dplyr::filter(uml) %>%
-    dplyr::select(-uml)
+    dplyr::filter(center) %>%
+    dplyr::select(-center)
 }
 
 
@@ -164,10 +163,18 @@ areas <- data.frame(area = unique(zones$area)) %>%
   dplyr::left_join(car_density, by = "area") %>%
   dplyr::left_join(noise, by = "area")
 
-if (config::get("scenario") != "2018") {
+if (!scenario_attributes[["present"]]) {
   areas <- areas %>%
     dplyr::left_join(squares1, by = "area") %>%
     dplyr::left_join(squares2, by = "area")
+} else {
+  areas <- areas %>%
+    dplyr::mutate(
+      pop_increase_ensi_share = 0.0,
+      pop_increase_2020 = 0.0,
+      floor_area_increase_uml_share = 0.0,
+      floor_area_increase_2021 = 0.0
+    )
 }
 
 

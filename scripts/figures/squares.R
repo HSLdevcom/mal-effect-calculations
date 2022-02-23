@@ -36,12 +36,16 @@ squares2 <- squares %>%
   )
 
 ensi <- readr::read_rds(here::here("results", "ensi.rds"))
-uml <- readr::read_rds(here::here("results", "uml.rds"))
+
+uml <- readr::read_rds(here::here("results", "centers-and-stations.rds")) %>%
+  dplyr::mutate(center = TRUE) %>%
+  dplyr::select(center)
 # TODO: Add train and metro stations
 
 squares2 <- squares2 %>%
   sf::st_join(ensi) %>%
   sf::st_join(uml) %>%
-  dplyr::mutate(ensi = tidyr::replace_na(ensi, FALSE))
+  dplyr::mutate(ensi = tidyr::replace_na(ensi, FALSE),
+                center = tidyr::replace_na(center, FALSE))
 
 readr::write_rds(squares2, file = here::here("results", "squares.rds"))
