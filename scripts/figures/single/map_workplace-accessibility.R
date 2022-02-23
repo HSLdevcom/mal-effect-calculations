@@ -12,26 +12,21 @@ results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenari
 
 # Plot --------------------------------------------------------------------
 
-breaks <- seq(from = 0, to = 1600000, by = 200000)
-limits <- range(breaks)
-breaks <- breaks[c(-1, -length(breaks))]
-
 ggplot() +
   geom_sf(mapping = aes(fill = workplace_accessibility),
           data = results, color = NA) +
-  scale_fill_viridis_b(
+  scale_fill_viridis_c(
     option="viridis",
-    name = NULL,
+    name = "indeksi",
     labels = scales::label_number(accuracy = 1),
-    breaks = breaks,
-    limits = limits,
+    limits = c(0, 100),
     direction = -1,
     oob = scales::squish
   ) +
   geom_basemap() +
   coord_sf_mal() +
   annotate_map(
-    title = "Työpaikkasaavutettavuus",
+    title = "Työpaikkojen kasautuminen",
     subtitle = sprintf("%d %s", scenario_attributes[["year"]], scenario_attributes[["name"]])
   ) +
   theme_mal_map()

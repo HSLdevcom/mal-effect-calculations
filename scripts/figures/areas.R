@@ -83,6 +83,7 @@ zones1 <- zones %>%
     cba_transit_time = sum(cba_transit_work_time + cba_transit_leisure_time),
     cba_car_time_per_person = weighted.mean(cba_car_time_per_person, w = total_pop),
     cba_transit_time_per_person = weighted.mean(cba_transit_time_per_person, w = total_pop),
+    workplace_accessibility = weighted.mean(workplace_accessibility, w = total_wrk),
     total_pop = sum(total_pop),
     total_wrk = sum(total_wrk)
   )
@@ -115,7 +116,8 @@ vehicle_kms_modes <- vehicle_kms_modes %>%
   dplyr::rename_with(~ paste0("vehicle_kms_", .x), -area)
 workplace_accessibility <- workplace_accessibility %>%
   dplyr::rename(workplace_accessibility = hw,
-                workforce_accessibility = wh)
+                workforce_accessibility = wh) %>%
+  dplyr::select(-workplace_accessibility)
 origin_demand <- origin_demand %>%
   dplyr::rename_with(~ paste0("origin_demand_", .x), -area)
 

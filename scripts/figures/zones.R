@@ -230,6 +230,17 @@ zones <- zones %>%
 zones <- zones %>%
   dplyr::mutate(car_density = 1000 * car_density)
 
+# Scale from 0 to 100 using 2018 ranges
+if (scenario_attributes[["present"]]) {
+  xrange <- range(zones$workplace_accessibility[zones$zone != 1531])
+  readr::write_rds(xrange, file = here::here("results", "workplace-accessibility_range.rds"))
+} else {
+  message("workplace_accessibility: read ranges...")
+  xrange <- readr::read_rds(here::here("results", "workplace-accessibility_range.rds"))
+}
+zones$workplace_accessibility = scale_to_range(
+  zones$workplace_accessibility, xmin = xrange[1], xmax = xrange[2], a = 0, b = 100)
+
 # Change sign
 zones <- zones %>%
   dplyr::mutate(sustainable_accessibility = -sustainable_accessibility)
