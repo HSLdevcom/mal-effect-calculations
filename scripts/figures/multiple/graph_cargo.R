@@ -39,7 +39,7 @@ ggplot(results, aes(x = group, y = cost)) +
   labs(
     title = "Tavaraliikennekuljetuksen keskikustannus",
     x =  NULL,
-    y = "e / matka"
+    y = "euroa"
   ) +
   theme_mal_graph()
 
