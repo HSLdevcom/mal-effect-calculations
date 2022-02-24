@@ -11,12 +11,17 @@ results <- readr::read_rds(here::here("results", "areas_all.rds"))
 
 # Plot --------------------------------------------------------------------
 
-ggplot(results, aes(x = area, y = car_density)) +
-  geom_col(aes(fill = scenario), position = position_dodge2()) +
+ggplot(results, aes(x = area, y = car_density, fill = scenario)) +
+  geom_col(position = position_dodge2()) +
+  geom_errorbar(
+    mapping = aes(ymin = car_density_lower, ymax = car_density_upper),
+    position =  position_dodge2(width = 0.9, padding = 0.66),
+    color = "#333333",
+    size = 0.35
+  ) +
   geom_text(
-    aes(label = scales::label_number(accuracy = 1)(car_density)),
+    aes(y = car_density / 2, label = scales::label_number(accuracy = 1)(car_density)),
     position = position_dodge2(width = 0.9),
-    vjust = -0.5,
     size = points2mm(8),
     color = "#333333"
   ) +
