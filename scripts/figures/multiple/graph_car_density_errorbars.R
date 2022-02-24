@@ -16,7 +16,8 @@ ggplot(results, aes(x = area, y = car_density, fill = scenario)) +
   geom_errorbar(
     mapping = aes(ymin = car_density_lower, ymax = car_density_upper),
     position =  position_dodge2(width = 0.9, padding = 0.66),
-    color = "#333333"
+    color = "#333333",
+    size = 0.35
   ) +
   geom_text(
     aes(y = car_density / 2, label = scales::label_number(accuracy = 1)(car_density)),
@@ -42,4 +43,4 @@ ggplot(results, aes(x = area, y = car_density, fill = scenario)) +
   ) +
   theme_mal_graph()
 
-ggsave_graph(here::here("figures", "graph_car_density_errorbars.png"))
+ggsave_graph(here::here("figures", "graph_car_density.png"))
