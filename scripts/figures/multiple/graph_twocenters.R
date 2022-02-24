@@ -22,6 +22,7 @@ ggplot(results, aes(x = area, y = twocenters)) +
   ) +
   scale_y_continuous(
     labels = scales::label_number(accuracy = 1),
+    limits = c(0, 50),
     expand = expansion(mult = 0.1)
   ) +
   scale_x_discrete(

@@ -83,3 +83,28 @@ ggplot() +
   theme_mal_map()
 
 ggsave_map(here::here("figures", sprintf("map_cba_car-transit-time_%s.png", scenario_attributes[["scenario"]])))
+
+
+# Plot --------------------------------------------------------------------
+
+ggplot() +
+  geom_sf(mapping = aes(fill = cba_transit_revenue / total_pop),
+          data = results, color = NA) +
+  scale_fill_fermenter(
+    palette = "RdBu",
+    name = "euroa",
+    limits = c(-1, 1),
+    labels = scales::label_number(decimal_mark = ","),
+    breaks = c(-0.75, -0.50, -0.25, -0.05, 0.05, 0.25, 0.50, 0.75),
+    direction = -1,
+    oob = scales::oob_squish_any
+  ) +
+  geom_basemap() +
+  coord_sf_mal() +
+  annotate_map(
+    title = "Tulot joukkoliikenteestä asukasta kohden",
+    subtitle = "2040 Vertailupohja \U2192 2040 Varjo"
+  ) +
+  theme_mal_map()
+
+ggsave_map(here::here("figures", sprintf("map_cba_revenue_transit_%s.png", scenario_attributes[["scenario"]])))

@@ -10,17 +10,18 @@ results <- readr::read_rds(here::here("results", "areas_all.rds"))
 
 # Plot --------------------------------------------------------------------
 
-ggplot(results, aes(x = area, y = workplace_accessibility)) +
+ggplot(results, aes(x = area, y = workplace_accessibility_scaled)) +
   geom_col(aes(fill = scenario), position = position_dodge2()) +
   geom_text(
-    aes(label = scales::label_number(accuracy = 1, scale = 0.001, big.mark = "")(workplace_accessibility)),
+    aes(label = scales::label_number(accuracy = 1)(workplace_accessibility_scaled)),
     position = position_dodge2(width = 0.9),
     vjust = -0.5,
     size = points2mm(8),
     color = "#333333"
   ) +
   scale_y_continuous(
-    labels = scales::label_number(scale = 0.001),
+    labels = scales::label_number(accuracy = 1),
+    limits = c(0, 100),
     expand = expansion(mult = 0.1)
   ) +
   scale_x_discrete(
@@ -31,9 +32,9 @@ ggplot(results, aes(x = area, y = workplace_accessibility)) +
     values = c("#3E8606", "#7DAD58", "#BFD7AC")
   ) +
   labs(
-    title = "Työpaikkasaavutettavuus",
+    title = "Työpaikkojen kasautuminen",
     x = NULL,
-    y = "tuhatta työpaikkaa"
+    y = "indeksi"
   ) +
   theme_mal_graph()
 
