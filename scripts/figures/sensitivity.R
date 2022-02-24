@@ -5,11 +5,7 @@ library(tidyverse)
 
 # Data --------------------------------------------------------------------
 
-# TODO: These need to be looped through main scenarios.
 areas_all <- read_and_bind(scenario_list, "areas")
-
-# TODO: These need to be looped through sensitivity scenarios of every main
-# scenario except the baseline scenario.
 areas_sensitivity <- read_and_bind(sensitivity_scenario_list, "areas")
 
 
