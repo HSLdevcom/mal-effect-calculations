@@ -13,10 +13,15 @@ results <- readr::read_rds(here::here("results", "cargo_all.rds"))
 
 ggplot(results, aes(x = group, y = cost)) +
   geom_col(aes(fill = scenario), position = position_dodge2()) +
+  geom_errorbar(
+    mapping = aes(ymin = cost_lower, ymax = cost_upper),
+    position =  position_dodge2(width = 0.9, padding = 0.66),
+    color = "#333333",
+    size = 0.35
+  ) +
   geom_text(
-    aes(label = scales::label_number(accuracy = 0.1, decimal.mark = ",")(cost)),
+    aes(y = cost / 2, label = scales::label_number(accuracy = 0.1, decimal.mark = ",")(cost)),
     position = position_dodge2(width = 0.9),
-    vjust = -0.5,
     size = points2mm(8),
     color = "#333333"
   ) +

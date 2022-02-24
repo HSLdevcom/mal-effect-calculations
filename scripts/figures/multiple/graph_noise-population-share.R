@@ -14,10 +14,15 @@ results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
 
 ggplot(results, aes(x = area, y = noise_population_share)) +
   geom_col(aes(fill = scenario), position = position_dodge2()) +
+  geom_errorbar(
+    mapping = aes(ymin = noise_population_share_lower, ymax = noise_population_share_upper),
+    position =  position_dodge2(width = 0.9, padding = 0.66),
+    color = "#333333",
+    size = 0.35
+  ) +
   geom_text(
-    aes(label = scales::label_percent(accuracy = 1, suffix = "")(noise_population_share)),
+    aes(y = noise_population_share / 2, label = scales::label_percent(accuracy = 1, suffix = "")(noise_population_share)),
     position = position_dodge2(width = 0.9),
-    vjust = -0.5,
     size = points2mm(8),
     color = "#333333"
   ) +
