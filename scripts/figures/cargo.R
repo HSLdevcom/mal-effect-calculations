@@ -86,7 +86,7 @@ cargo <- matrices %>%
 cargo <- cargo %>%
   dplyr::mutate(group = factor(group,
                                levels = c("all", "terminals", "external", "internal"),
-                               labels = c("Helsingin seutu",
+                               labels = c("Kaikki seudun kuljetukset",
                                           "Terminaalikuljetukset",
                                           "Seudun maarajan ylittävät kuljetukset",
                                           "Seudun sisäiset kuljetukset"))) %>%
