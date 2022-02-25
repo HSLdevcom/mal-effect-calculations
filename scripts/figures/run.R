@@ -2,6 +2,7 @@
 library(here)
 library(tidyverse)
 
+options(warn=1)
 Sys.setenv(R_CONFIG_ACTIVE = "default")
 
 
