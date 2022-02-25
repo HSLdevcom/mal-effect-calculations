@@ -7,7 +7,9 @@ library(sf)
 # Data --------------------------------------------------------------------
 
 results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
-  dplyr::mutate(noise_population_share = noise_population / total_pop)
+  dplyr::mutate(noise_population_share = noise_population / total_pop,
+                noise_population_share_lower = noise_population_lower / total_pop,
+                noise_population_share_upper = noise_population_upper / total_pop)
 
 
 # Plot --------------------------------------------------------------------
