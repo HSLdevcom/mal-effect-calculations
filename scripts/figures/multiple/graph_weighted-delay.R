@@ -20,13 +20,13 @@ ggplot(results, aes(x = area, y = weighted_delay_all, fill = scenario)) +
     size = 0.35
   ) +
   geom_text(
-    aes(y = weighted_delay_all / 2, label = scales::label_number(accuracy = 1)(weighted_delay_all), group = area),
+    aes(y = weighted_delay_all / 2, label = scales::label_number(accuracy = 1, scale = 0.001)(weighted_delay_all), group = area),
     position = position_dodge2(width = 0.9),
     size = points2mm(8),
     color = "#333333"
   ) +
   scale_y_continuous(
-    labels = scales::label_number(),
+    labels = scales::label_number(accuracy = 1, scale = 0.001),
     expand = expansion(mult = 0.1)
   ) +
   scale_x_discrete(
@@ -39,7 +39,7 @@ ggplot(results, aes(x = area, y = weighted_delay_all, fill = scenario)) +
   labs(
     title = "Tieliikenteen ruuhkautuvuussuorite",
     x =  NULL,
-    y = "ekvivalentti-h / vrk"
+    y = "tuhatta ekvivalentti-h / vrk"
   ) +
   theme_mal_graph()
 

@@ -41,13 +41,13 @@ ggplot(results, aes(x = mode, y = value)) +
     size = 0.35
   ) +
   geom_text(
-    aes(y = value / 2, label = scales::label_number(accuracy = 100)(value)),
+    aes(y = value / 2, label = scales::label_number(accuracy = 1, scale = 0.001)(value)),
     position = position_dodge2(width = 0.9),
     size = points2mm(8),
     color = "#333333"
   ) +
   scale_y_continuous(
-    labels = scales::label_number(accuracy = 1),
+    labels = scales::label_number(accuracy = 1, scale = 0.001),
     expand = expansion(mult = 0.1)
   ) +
   scale_x_discrete(
@@ -60,7 +60,7 @@ ggplot(results, aes(x = mode, y = value)) +
   labs(
     title = "Tieliikenteen ruuhkautuvuussuorite kulkutavoittain",
     x = NULL,
-    y = "ekvivalentti-h / vrk"
+    y = "tuhatta ekvivalentti-h / vrk"
   ) +
   theme_mal_graph()
 
