@@ -40,7 +40,7 @@ ggplot(results, aes(x = area, y = noise_population_share)) +
     values = c("#3E8606", "#7DAD58", "#BFD7AC")
   ) +
   labs(
-    title = "Meluvyöhykkeillä asuvien osuus alueen asukkaista",
+    title = "Meluvyöhykkeillä asuvien asukkaiden osuus alueen asukkaista",
     x =  NULL,
     y = "%"
   ) +
