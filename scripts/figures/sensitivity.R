@@ -12,6 +12,9 @@ areas_sensitivity <- read_and_bind(sensitivity_scenario_list, "areas")
 # Sensitivity analysis ----------------------------------------------------
 
 areas_sensitivity <- areas_sensitivity %>%
+  # Values in main scenarios are always inside error bars
+  dplyr::bind_rows(areas_all) %>%
+  dplyr::filter(scenario != sprintf("%i %s", scenarios$year[scenarios$present], scenarios$name[scenarios$present])) %>%
   dplyr::group_by(scenario, area) %>%
   dplyr::summarise(across(where(is.numeric), list(lower = min, upper = max),
                           .names = "{.col}_{.fn}"), .groups = "drop")
