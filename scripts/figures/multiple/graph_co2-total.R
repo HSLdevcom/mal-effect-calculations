@@ -27,7 +27,13 @@ results <- readr::read_rds(here::here("results", "emissions_all.rds")) %>%
 # Plot --------------------------------------------------------------------
 
 ggplot(results, aes(x = scenario, y = emission, fill = scenario)) +
-  geom_col(position = position_dodge2()) +
+  geom_col() +
+  geom_errorbar(
+    mapping = aes(ymin = emission_lower, ymax = emission_upper),
+    color = "#333333",
+    width = 0.35,
+    size = 0.35
+  ) +
   geom_text(
     aes(y = emission / 2, label = label),
     position = position_dodge2(width = 0.9),
