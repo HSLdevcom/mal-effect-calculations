@@ -23,16 +23,23 @@ results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
       mode == "transit" ~ origin_share_transit_lower,
       mode == "bike" ~ origin_share_bike_lower,
       mode == "walk" ~ origin_share_walk_lower,
+      mode == "sustainable" ~ origin_share_sustainable_lower,
       TRUE ~ NA_real_
     ),
     upper = dplyr::case_when(
       mode == "transit" ~ origin_share_transit_upper,
       mode == "bike" ~ origin_share_bike_upper,
       mode == "walk" ~ origin_share_walk_upper,
+      mode == "sustainable" ~ origin_share_sustainable_upper,
       TRUE ~ NA_real_
     )
   ) %>%
-  dplyr::select(scenario, area, mode, value, lower, upper) %>%
+  dplyr::select(scenario, area, mode, value, lower, upper)
+
+results_sustainable <- results %>%
+  dplyr::filter(mode == "sustainable")
+
+results <- results %>%
   dplyr::mutate(mode = factor(mode, levels = translations$level, labels = translations$label))
 
 results_transit <- results %>%
@@ -43,10 +50,6 @@ results_bike <- results %>%
 
 results_walk <- results %>%
   dplyr::filter(mode == "Kävely")
-
-results_sustainable <- results %>%
-  dplyr::group_by(scenario, area) %>%
-  dplyr::summarise(value = sum(value))
 
 
 # Plot --------------------------------------------------------------------
@@ -67,6 +70,7 @@ ggplot(results_sustainable, aes(x = area, y = value, fill = scenario)) +
   ) +
   scale_y_continuous(
     labels = scales::label_percent(accuracy = 1, suffix = ""),
+    limits = c(0, 1),
     expand = expansion(mult = 0.05)
   ) +
   scale_x_discrete(
@@ -74,10 +78,10 @@ ggplot(results_sustainable, aes(x = area, y = value, fill = scenario)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#00B9E4", "#55D0ED", "#AAE8F6")
+    values = c("#007AC9", "#55A6DB", "#AAD3ED")
   ) +
   labs(
-    title = "Joukkoliikenteen osuus alueelta alkavista kiertomatkoista",
+    title = "Kestävien kulkutapojen osuus alueelta alkavista kiertomatkoista",
     x = NULL,
     y = "%"
   ) +
