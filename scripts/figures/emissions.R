@@ -57,6 +57,7 @@ if (scenario_attributes[["present"]]) {
   message(sprintf("Correction factor for baseline emissions is %.3f.", correction))
   readr::write_rds(correction, file = here::here("results", "emission_correction.rds"))
 } else {
+  message("emissions: read correction factor...")
   correction <- readr::read_rds(here::here("results", "emission_correction.rds"))
 }
 
