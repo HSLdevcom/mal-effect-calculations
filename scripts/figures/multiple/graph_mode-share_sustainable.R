@@ -13,61 +13,188 @@ translations <- here::here("utilities", "modes.tsv") %>%
 results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
   dplyr::select(scenario, area, starts_with("origin_share_")) %>%
   tidyr::pivot_longer(
-    cols = starts_with("origin_share_"),
+    cols = !c(scenario, area, ends_with(c("lower", "upper"))),
     names_to = "mode",
     names_prefix = "origin_share_"
     ) %>%
   dplyr::filter(mode != "car") %>%
+  dplyr::mutate(
+    lower = dplyr::case_when(
+      mode == "transit" ~ origin_share_transit_lower,
+      mode == "bike" ~ origin_share_bike_lower,
+      mode == "walk" ~ origin_share_walk_lower,
+      TRUE ~ NA_real_
+    ),
+    upper = dplyr::case_when(
+      mode == "transit" ~ origin_share_transit_upper,
+      mode == "bike" ~ origin_share_bike_upper,
+      mode == "walk" ~ origin_share_walk_upper,
+      TRUE ~ NA_real_
+    )
+  ) %>%
+  dplyr::select(scenario, area, mode, value, lower, upper) %>%
   dplyr::mutate(mode = factor(mode, levels = translations$level, labels = translations$label))
 
-results_total <- results %>%
+results_transit <- results %>%
+  dplyr::filter(mode == "Joukkoliikenne")
+
+results_bike <- results %>%
+  dplyr::filter(mode == "Pyöräily")
+
+results_walk <- results %>%
+  dplyr::filter(mode == "Kävely")
+
+results_sustainable <- results %>%
   dplyr::group_by(scenario, area) %>%
-  dplyr::summarise(value = sum(value), .groups = "drop")
+  dplyr::summarise(value = sum(value))
 
 
 # Plot --------------------------------------------------------------------
 
-ggplot(results, aes(x = scenario, y = value)) +
-  facet_grid(cols = vars(area), switch = "both", labeller = labeller(.cols = scales::label_wrap(10))) +
-  geom_col(fill = "white") +
-  geom_col(aes(fill = mode, alpha = forcats::fct_rev(scenario))) +
+ggplot(results_sustainable, aes(x = area, y = value, fill = scenario)) +
+  geom_col(position = position_dodge2()) +
+  geom_errorbar(
+    mapping = aes(ymin = lower, ymax = upper),
+    position =  position_dodge2(width = 0.9, padding = 0.66),
+    color = "#333333",
+    size = 0.35
+  ) +
   geom_text(
-    aes(label = scales::label_percent(accuracy = 1, suffix = "")(value), group = mode),
-    position = position_stack(vjust = 0.5),
+    aes(y = value / 2, label = scales::label_percent(accuracy = 1, suffix = "")(value)),
+    position = position_dodge2(width = 0.9),
     size = points2mm(8),
     color = "#333333"
   ) +
-  geom_text(data = results_total,
-            aes(label = scales::label_percent(accuracy = 1, suffix = "")(value)),
-            vjust = -0.5,
-            size = points2mm(8),
-            fontface = "bold",
-            color = "#333333") +
   scale_y_continuous(
-    labels = scales::label_percent(suffix = ""),
-    limits = c(0, 1)
+    labels = scales::label_percent(accuracy = 1, suffix = ""),
+    expand = expansion(mult = 0.05)
   ) +
   scale_x_discrete(
-    labels = NULL
+    labels = scales::label_wrap(5)
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("Henkilöauto" = "#f092cd",
-               "Joukkoliikenne" = "#00b9e4",
-               "Pyöräily" = "#fcb919",
-               "Kävely" = "#64be1e",
-               "Muu" = "#999999")
-  ) +
-  scale_alpha_discrete(
-    name = NULL,
-    range = c(0.333, 1),
-    guide = guide_legend(reverse = TRUE)
+    values = c("#00B9E4", "#55D0ED", "#AAE8F6")
   ) +
   labs(
-    title = "Kestävien kulkutapojen osuus alueelta alkavista kiertomatkoista",
+    title = "Joukkoliikenteen osuus alueelta alkavista kiertomatkoista",
     x = NULL,
     y = "%"
   ) +
   theme_mal_graph()
 
 ggsave_graph(here::here("figures", "graph_mode-share_sustainable.png"))
+
+
+# Transit -----------------------------------------------------------------
+
+ggplot(results_transit, aes(x = area, y = value, fill = scenario)) +
+  geom_col(position = position_dodge2()) +
+  geom_errorbar(
+    mapping = aes(ymin = lower, ymax = upper),
+    position =  position_dodge2(width = 0.9, padding = 0.66),
+    color = "#333333",
+    size = 0.35
+  ) +
+  geom_text(
+    aes(y = value / 2, label = scales::label_percent(accuracy = 1, suffix = "")(value)),
+    position = position_dodge2(width = 0.9),
+    size = points2mm(8),
+    color = "#333333"
+  ) +
+  scale_y_continuous(
+    labels = scales::label_percent(accuracy = 1, suffix = ""),
+    limits = c(0, 0.50),
+    expand = expansion(mult = 0.05)
+  ) +
+  scale_x_discrete(
+    labels = scales::label_wrap(5)
+  ) +
+  scale_fill_manual(
+    name = NULL,
+    values = c("#00B9E4", "#55D0ED", "#AAE8F6")
+  ) +
+  labs(
+    title = "Joukkoliikenteen osuus alueelta alkavista kiertomatkoista",
+    x = NULL,
+    y = "%"
+  ) +
+  theme_mal_graph()
+
+ggsave_graph(here::here("figures", "graph_mode-share_transit.png"))
+
+
+# Bike --------------------------------------------------------------------
+
+ggplot(results_bike, aes(x = area, y = value, fill = scenario)) +
+  geom_col(position = position_dodge2()) +
+  geom_errorbar(
+    mapping = aes(ymin = lower, ymax = upper),
+    position =  position_dodge2(width = 0.9, padding = 0.66),
+    color = "#333333",
+    size = 0.35
+  ) +
+  geom_text(
+    aes(y = value / 2, label = scales::label_percent(accuracy = 1, suffix = "")(value)),
+    position = position_dodge2(width = 0.9),
+    size = points2mm(8),
+    color = "#333333"
+  ) +
+  scale_y_continuous(
+    labels = scales::label_percent(accuracy = 1, suffix = ""),
+    limits = c(0, 0.50),
+    expand = expansion(mult = 0.05)
+  ) +
+  scale_x_discrete(
+    labels = scales::label_wrap(5)
+  ) +
+  scale_fill_manual(
+    name = NULL,
+    values = c("#FCB919", "#FDD066", "#FEE8B2")
+  ) +
+  labs(
+    title = "Pyöräilyn osuus alueelta alkavista kiertomatkoista",
+    x = NULL,
+    y = "%"
+  ) +
+  theme_mal_graph()
+
+ggsave_graph(here::here("figures", "graph_mode-share_bike.png"))
+
+
+# Walk --------------------------------------------------------------------
+
+ggplot(results_walk, aes(x = area, y = value, fill = scenario)) +
+  geom_col(position = position_dodge2()) +
+  geom_errorbar(
+    mapping = aes(ymin = lower, ymax = upper),
+    position =  position_dodge2(width = 0.9, padding = 0.66),
+    color = "#333333",
+    size = 0.35
+  ) +
+  geom_text(
+    aes(y = value / 2, label = scales::label_percent(accuracy = 1, suffix = "")(value)),
+    position = position_dodge2(width = 0.9),
+    size = points2mm(8),
+    color = "#333333"
+  ) +
+  scale_y_continuous(
+    labels = scales::label_percent(accuracy = 1, suffix = ""),
+    limits = c(0, 0.50),
+    expand = expansion(mult = 0.05)
+  ) +
+  scale_x_discrete(
+    labels = scales::label_wrap(5)
+  ) +
+  scale_fill_manual(
+    name = NULL,
+    values = c("#64BE1E", "#98D469", "#CBE9B4")
+  ) +
+  labs(
+    title = "Kävelyn osuus alueelta alkavista kiertomatkoista",
+    x = NULL,
+    y = "%"
+  ) +
+  theme_mal_graph()
+
+ggsave_graph(here::here("figures", "graph_mode-share_walk.png"))
