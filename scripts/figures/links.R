@@ -47,7 +47,8 @@ links <- links %>%
   dplyr::mutate(volume_aht = car_leisure_aht + car_work_aht + bus_aht + trailer_truck_aht + truck_aht + van_aht,
                 car_aht = car_work_aht + car_leisure_aht,
                 truck_all_aht = trailer_truck_aht + truck_aht,
-                relative_speed = car_time_pt / car_time_aht) %>%
+                relative_speed = (60 * length / data2) / car_time_aht,
+                relative_speed = dplyr::if_else(relative_speed < 0, NA_real_, relative_speed)) %>%
   # Filter for improved plotting
   dplyr::filter(area != "peripheral")
 
