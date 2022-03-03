@@ -64,6 +64,9 @@ for (scenario in sensitivity_scenario_list) {
   source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "links.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "areas.R"), encoding = "utf-8")
+  source(here::here("scripts", "figures", "vdfs.R"), encoding = "utf-8")
+  source(here::here("scripts", "figures", "emissions.R"), encoding = "utf-8")
+  source(here::here("scripts", "figures", "cargo.R"), encoding = "utf-8")
 }
 
 source(here::here("scripts", "figures", "sensitivity.R"), encoding = "utf-8")
