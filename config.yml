@@ -3,6 +3,8 @@ default:
   forecast_zonedata_path: "C:/.../Syottodata"
   housing_cost: "AsKustannukset_01062021.xlsx"
   income_data: "tulotiedot_2016_korjattu.xlsx"
+  present_scenario: "2018_agentti"
+  present_name: "2018 Nykytila"
 
 2040_ve0-2040_ve1:
   projected_scenario: "2040_ve1_agentti"
