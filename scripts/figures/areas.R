@@ -148,6 +148,7 @@ areas <- areas %>%
     origin_share_car = origin_demand_car / origin_demand_total,
     origin_share_walk = origin_demand_walk / origin_demand_total,
     origin_share_bike = origin_demand_bike / origin_demand_total,
+    origin_share_sustainable = (origin_demand_transit + origin_demand_bike + origin_demand_walk) / origin_demand_total,
   )
 
 
@@ -173,6 +174,7 @@ areas <- areas %>%
     origin_share_transit = sum(.$origin_demand_transit) / sum(.$origin_demand_total),
     origin_share_car = sum(.$origin_demand_car) / sum(.$origin_demand_total),
     origin_share_bike = sum(.$origin_demand_bike) / sum(.$origin_demand_total),
+    origin_share_sustainable = sum(.$origin_demand_transit + .$origin_demand_bike + .$origin_demand_walk) / sum(.$origin_demand_total),
     noise_area_km2 = sum(.$noise_area_km2),
     noise_population = sum(.$noise_population),
     twocenters = weighted.mean(.$twocenters, .$total_pop),

@@ -12,10 +12,15 @@ results <- readr::read_rds(here::here("results", "areas_all.rds"))
 
 ggplot(results, aes(x = area, y = sustainable_accessibility_scaled)) +
   geom_col(aes(fill = scenario), position = position_dodge2()) +
+  geom_errorbar(
+    mapping = aes(ymin = sustainable_accessibility_scaled_lower, ymax = sustainable_accessibility_scaled_upper),
+    position =  position_dodge2(width = 0.9, padding = 0.66),
+    color = "#333333",
+    size = 0.35
+  ) +
   geom_text(
-    aes(label = scales::label_number(accuracy = 1)(sustainable_accessibility_scaled)),
+    aes(y = sustainable_accessibility_scaled / 2, label = scales::label_number(accuracy = 1)(sustainable_accessibility_scaled)),
     position = position_dodge2(width = 0.9),
-    vjust = -0.5,
     size = points2mm(8),
     color = "#333333"
   ) +

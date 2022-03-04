@@ -5,47 +5,25 @@ library(tidyverse)
 
 # Data --------------------------------------------------------------------
 
-emission_statistics <- here::here("utilities", "co2_statistics.tsv") %>%
-  readr::read_tsv(col_types = "id") %>%
-  tibble::deframe()
-
 results <- readr::read_rds(here::here("results", "emissions_all.rds")) %>%
-  dplyr::add_row(
-    scenario = factor("2005"),
-    vehicle = factor("Kaikki ajoneuvotyypit"),
-    emission = emission_statistics["2005"]
-  ) %>%
-  dplyr::add_row(
-    scenario = factor("2005"),
-    vehicle = factor("total"),
-    emission = emission_statistics["2005"]
-  ) %>%
-  dplyr::mutate(vehicle = forcats::fct_rev(vehicle),
-                scenario = forcats::fct_relevel(scenario, "2005"))
-
-results_total <- results %>%
-  dplyr::filter(vehicle == "total")
-
-results <- results %>%
   dplyr::filter(vehicle != "total")
 
 
 # Plot --------------------------------------------------------------------
 
-ggplot(results, aes(x = scenario, y = emission)) +
-  geom_col(aes(fill = vehicle), position = position_stack()) +
+ggplot(results, aes(x = vehicle, y = emission, fill = scenario)) +
+  geom_col(position = position_dodge2()) +
+  geom_errorbar(
+    mapping = aes(ymin = emission_lower, ymax = emission_upper),
+    position =  position_dodge2(width = 0.9, padding = 0.66),
+    color = "#333333",
+    size = 0.35
+  ) +
   geom_text(
-    aes(color = vehicle,
-        label = scales::label_number(scale = 10^(-9), accuracy = 1)(emission), group = vehicle),
-    position = position_stack(vjust = 0.5),
+    aes(y = emission / 2, label = scales::label_number(scale = 10^(-9), accuracy = 1)(emission)),
+    position = position_dodge2(width = 0.9),
     size = points2mm(8)
   ) +
-  geom_text(data = results_total,
-            aes(label = scales::label_number(scale = 10^(-9), accuracy = 1)(emission)),
-            vjust = -0.5,
-            size = points2mm(8),
-            fontface = "bold",
-            color = "#333333") +
   scale_y_continuous(
     labels = scales::label_number(scale = 10^(-9)),
     expand = expansion(mult = 0.1)
@@ -55,24 +33,13 @@ ggplot(results, aes(x = scenario, y = emission)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#e0e0e0", "#333333", "#AAD3ED", "#007AC9", "#F7C8E6", "#f092cd")
-  ) +
-  scale_color_manual(
-    name = NULL,
-    values = c("Henkilöautot" = "#333333",
-               "Kuorma-autot" = "#ffffff",
-               "Kaikki ajoneuvotyypit" = "#333333",
-               "Pakettiautot" = NA,
-               "HSL:n linja-autoliikenne" = NA,
-               "Muu linja-autoliikenne" = NA),
-    guide = guide_none()
+    values = c("#3E8606", "#7DAD58", "#BFD7AC", "#e0e0e0")
   ) +
   labs(
-    title = "Moottoriajoneuvoliikenteen CO2-päästöt Helsingin seudulla",
+    title = "Moottoriajoneuvoliikenteen CO2-päästöt Helsingin seudulla ajoneuvotyypeittäin",
     x =  NULL,
     y = "tuhatta tonnia CO2-ekv. vuodessa"
   ) +
-  theme_mal_graph() +
-  theme(legend.position = "right")
+  theme_mal_graph()
 
 ggsave_graph(here::here("figures", "graph_co2.png"))
