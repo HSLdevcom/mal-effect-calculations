@@ -2,7 +2,6 @@
 library(here)
 library(tidyverse)
 library(sf)
-library(viridis)
 source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 
