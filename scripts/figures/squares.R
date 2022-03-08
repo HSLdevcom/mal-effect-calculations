@@ -40,7 +40,6 @@ ensi <- readr::read_rds(here::here("results", "ensi.rds"))
 uml <- readr::read_rds(here::here("results", "centers-and-stations.rds")) %>%
   dplyr::mutate(center = TRUE) %>%
   dplyr::select(center)
-# TODO: Add train and metro stations
 
 squares2 <- squares2 %>%
   sf::st_join(ensi) %>%
