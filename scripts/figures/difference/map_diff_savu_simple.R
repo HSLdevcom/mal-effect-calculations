@@ -19,30 +19,24 @@ results1 <- readr::read_rds(here::here("results", "zones_2040_ve0.rds")) %>%
 
 results <- results0 %>%
   dplyr::left_join(results1, by = "zone") %>%
-  dplyr::mutate(diff_savu_zone = (as.integer(savu_zone0) - as.integer(savu_zone1)))
+  dplyr::mutate(diff_savu_zone = (as.integer(savu_zone0) - as.integer(savu_zone1))) %>%
+  dplyr::mutate(diff_savu_zone = dplyr::case_when(
+    diff_savu_zone <= -1 ~ "Heikompi SAVU",
+    diff_savu_zone == 0 ~ "Ei muutosta",
+    diff_savu_zone >= 1 ~ "Parempi SAVU",
+    NA ~ NA_character_
+  )) %>%
+  dplyr::mutate(diff_savu_zone = factor(diff_savu_zone, levels = c("Parempi SAVU", "Ei muutosta", "Heikompi SAVU")))
 
 
 # Plot --------------------------------------------------------------------
 
-label_number_signed <- function(x) {
-  y <- scales::label_number(accuracy = 1)(x)
-  without_sign <- !grepl("-", y)
-  y[without_sign] <- paste0("+", y[without_sign])
-  return(y)
-}
-
 ggplot() +
   geom_sf(mapping = aes(fill = diff_savu_zone),
           data = results, color = NA) +
-  scale_fill_gradient2(
-    high = "#3E8606",
-    low = "#7b1154",
+  scale_fill_brewer(
+    palette = "RdGy",
     name = NULL,
-    breaks = -1:1,
-    labels = c("Heikompi SAVU", "Ei muutosta", "Parempi SAVU"),
-    limits = c(-1, 1),
-    guide = "legend",
-    oob = scales::squish
   ) +
   geom_basemap() +
   coord_sf_mal() +
