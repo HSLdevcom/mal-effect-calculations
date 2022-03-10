@@ -6,7 +6,20 @@ library(sf)
 
 # Data --------------------------------------------------------------------
 
-results <- readr::read_rds(here::here("results", "areas_all.rds"))
+results0 <- readr::read_rds(here::here("results", "areas_all.rds"))
+
+results_2017 <- results0 %>%
+  # Is identical to all scenarios
+  dplyr::select(scenario, area, tontin_teho_2017) %>%
+  dplyr::filter(scenario == scenario[1]) %>%
+  dplyr::mutate(scenario = "2017 Tilasto") %>%
+  dplyr::rename(malpakka = tontin_teho_2017)
+
+results <- results0 %>%
+  dplyr::select(scenario, area, malpakka) %>%
+  dplyr::bind_rows(results_2017) %>%
+  dplyr::mutate(scenario = factor(scenario, levels = c("2017 Tilasto", levels(results0$scenario)))) %>%
+  dplyr::arrange(scenario)
 
 
 # Plot --------------------------------------------------------------------
@@ -35,7 +48,7 @@ ggplot(results, aes(x = area, y = malpakka)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#3E8606", "#7DAD58", "#BFD7AC")
+    values = c("#e0e0e0", "#3E8606", "#7DAD58", "#BFD7AC")
   ) +
   labs(
     title = "Tonttitehokkuuspotentiaali",
