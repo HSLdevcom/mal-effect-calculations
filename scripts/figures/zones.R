@@ -11,6 +11,9 @@ zones <- readr::read_rds(here::here("results", "zones.rds"))
 land_area <- readxl::read_xlsx(here::here("data", "maapinta_ala_ja_asutut_ruudut.xlsx"),
                                sheet = "pinta_alat")
 
+tontin_teho <- readxl::read_xlsx(here::here("data", "Data_analyysiin_22102021.xlsx"),
+                               sheet = "Taul1")
+
 pop <- read_tsv_helmet(
   list.files(file.path(config::get("forecast_zonedata_path"),
                        scenario_attributes[["forecast"]]),
@@ -267,6 +270,13 @@ zones <- zones %>%
 # Calculate MALPAKKA model results
 zones <- zones %>%
   dplyr::mutate(malpakka = exp(17.67998 * log(abs(sustainable_accessibility)) + 0.59672 + (-90.97805)))
+tontin_teho <- tontin_teho %>%
+  dplyr::select(Sij2018, tontin_teho_lroik) %>%
+  dplyr::rename(zone = Sij2018,
+                tontin_teho_2017 = tontin_teho_lroik)
+zones <- zones %>%
+  dplyr::left_join(tontin_teho, by = "zone") %>%
+  dplyr::mutate(malpakka_potential = malpakka - tontin_teho_2017)
 
 # Calculate workplace densities as number of workplaces per land area (km2)
 land_area <- land_area %>%
