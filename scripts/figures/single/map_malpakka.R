@@ -12,10 +12,6 @@ results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenari
 
 # Plot --------------------------------------------------------------------
 
-breaks <- c(0, 0.1, 0.4, 1, 2, 3, 5, 6)
-limits <- range(breaks)
-breaks <- breaks[c(-1, -length(breaks))]
-
 ggplot() +
   geom_sf(mapping = aes(fill = malpakka),
           data = results, color = NA) +
@@ -23,15 +19,15 @@ ggplot() +
     palette = "YlGn",
     name = NULL,
     labels = scales::label_number(accuracy = 0.1, decimal.mark = ","),
-    breaks = breaks,
-    limits = limits,
+    breaks = c(0.3, 0.6, 1, 2, 4),
+    limits = c(0, 5),
     direction = 1,
     oob = scales::squish
   ) +
   geom_basemap() +
   coord_sf_mal() +
   annotate_map(
-    title = "MALPAKKA",
+    title = "Tonttitehokkuus",
     subtitle = sprintf("%d %s", scenario_attributes[["year"]], scenario_attributes[["name"]])
   ) +
   theme_mal_map()
