@@ -7,17 +7,24 @@ library(sf)
 # Data --------------------------------------------------------------------
 
 results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
-  dplyr::mutate(noise_population_share = noise_population / total_pop)
+  dplyr::mutate(noise_population_share = noise_population / total_pop,
+                noise_population_share_lower = noise_population_lower / total_pop,
+                noise_population_share_upper = noise_population_upper / total_pop)
 
 
 # Plot --------------------------------------------------------------------
 
 ggplot(results, aes(x = area, y = noise_population_share)) +
   geom_col(aes(fill = scenario), position = position_dodge2()) +
+  geom_errorbar(
+    mapping = aes(ymin = noise_population_share_lower, ymax = noise_population_share_upper),
+    position =  position_dodge2(width = 0.9, padding = 0.66),
+    color = "#333333",
+    size = 0.35
+  ) +
   geom_text(
-    aes(label = scales::label_percent(accuracy = 1, suffix = "")(noise_population_share)),
+    aes(y = noise_population_share / 2, label = scales::label_percent(accuracy = 1, suffix = "")(noise_population_share)),
     position = position_dodge2(width = 0.9),
-    vjust = -0.5,
     size = points2mm(8),
     color = "#333333"
   ) +
@@ -33,7 +40,7 @@ ggplot(results, aes(x = area, y = noise_population_share)) +
     values = c("#3E8606", "#7DAD58", "#BFD7AC")
   ) +
   labs(
-    title = "Meluvyöhykkeillä asuvien osuus alueen asukkaista",
+    title = "Meluvyöhykkeillä asuvien asukkaiden osuus alueen asukkaista",
     x =  NULL,
     y = "%"
   ) +

@@ -2,7 +2,6 @@
 library(here)
 library(tidyverse)
 library(sf)
-library(viridis)
 source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 
@@ -30,7 +29,7 @@ ggplot() +
   ) +
   coord_sf_mal() +
   annotate_map(
-    title = "Aamuhuipputunnin ajonopeus suhteessa päivätunnin ajonopeuteen",
+    title = "Aamuhuipputunnin ajonopeus suhteessa vapaaseen ajonopeuteen",
     subtitle = sprintf("%d %s", scenario_attributes[["year"]], scenario_attributes[["name"]])
   ) +
   theme_mal_map()

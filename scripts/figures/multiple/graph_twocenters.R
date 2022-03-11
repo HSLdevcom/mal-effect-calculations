@@ -13,15 +13,21 @@ results <- readr::read_rds(here::here("results", "areas_all.rds"))
 
 ggplot(results, aes(x = area, y = twocenters)) +
   geom_col(aes(fill = scenario), position = position_dodge2()) +
+  geom_errorbar(
+    mapping = aes(ymin = twocenters_lower, ymax = twocenters_upper),
+    position =  position_dodge2(width = 0.9, padding = 0.66),
+    color = "#333333",
+    size = 0.35
+  ) +
   geom_text(
-    aes(label = scales::label_number(accuracy = 0.1, decimal.mark = ",")(twocenters)),
+    aes(y = twocenters / 2, label = scales::label_number(accuracy = 0.1, decimal.mark = ",")(twocenters)),
     position = position_dodge2(width = 0.9),
-    vjust = -0.5,
     size = points2mm(8),
     color = "#333333"
   ) +
   scale_y_continuous(
     labels = scales::label_number(accuracy = 1),
+    limits = c(0, 50),
     expand = expansion(mult = 0.1)
   ) +
   scale_x_discrete(
