@@ -84,6 +84,10 @@ zones1 <- zones %>%
     cba_car_time_per_person = weighted.mean(cba_car_time_per_person, w = total_pop),
     cba_transit_time_per_person = weighted.mean(cba_transit_time_per_person, w = total_pop),
     workplace_accessibility_scaled = weighted.mean(workplace_accessibility_scaled, w = total_wrk),
+    malpakka = weighted.mean(malpakka, w = land_area),
+    malpakka_potential = weighted.mean(malpakka_potential, w = land_area, na.rm = TRUE),
+    tontin_teho_2017 = weighted.mean(tontin_teho_2017, w = land_area, na.rm = TRUE),
+    land_area = sum(land_area),
     total_pop = sum(total_pop),
     total_wrk = sum(total_wrk)
   )
@@ -168,6 +172,9 @@ areas <- areas %>%
     sustainable_accessibility_scaled = weighted.mean(.$sustainable_accessibility_scaled, .$total_pop),
     workplace_accessibility_scaled = weighted.mean(.$workplace_accessibility_scaled, .$total_wrk),
     workforce_accessibility = weighted.mean(.$workforce_accessibility, .$total_wrk),
+    malpakka = weighted.mean(.$malpakka, .$land_area),
+    malpakka_potential = weighted.mean(.$malpakka_potential, .$land_area),
+    tontin_teho_2017 = weighted.mean(.$tontin_teho_2017, .$land_area),
     car_density = weighted.mean(.$car_density, .$total_pop),
     goodness_share = sum(.$goodness_wrk) / sum(.$total_wrk),
     origin_share_walk = sum(.$origin_demand_walk) / sum(.$origin_demand_total),

@@ -13,23 +13,30 @@ results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenari
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_sf(mapping = aes(fill = malpakka),
-          data = results, color = NA) +
+  geom_sf(mapping = aes(fill = malpakka_potential, color = ""),
+          data = results) +
   scale_fill_fermenter(
-    palette = "YlGn",
+    palette = "YlOrBr",
     name = NULL,
     labels = scales::label_number(accuracy = 0.1, decimal.mark = ","),
     breaks = c(0.3, 0.6, 1, 2, 4),
     limits = c(0, 5),
     direction = 1,
-    oob = scales::squish
+    na.value = "#636363",
+    oob = scales::oob_squish
   ) +
+  scale_colour_manual(values = NA) +
+  guides(fill = guide_colorsteps(order = 1),
+         colour = guide_legend("Puuttuva tieto",
+                               order = 99,
+                               override.aes = list(color = "grey35",
+                                                   fill = "#636363"))) +
   geom_basemap() +
   coord_sf_mal() +
   annotate_map(
-    title = "Tonttitehokkuus",
+    title = "Tonttitehokkuuspotentiaali",
     subtitle = sprintf("%d %s", scenario_attributes[["year"]], scenario_attributes[["name"]])
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_malpakka_%s.png", scenario_attributes[["scenario"]])))
+ggsave_map(here::here("figures", sprintf("map_malpakka_potential_%s.png", scenario_attributes[["scenario"]])))
