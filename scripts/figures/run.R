@@ -43,18 +43,6 @@ for (scenario in scenario_list) {
   source(here::here("scripts", "figures", "centers.R"), encoding = "utf-8")
 }
 
-read_and_bind(scenario_list, "areas") %>%
-  readr::write_rds(here::here("results", "areas_all.rds"))
-
-read_and_bind(scenario_list, "vdfs") %>%
-  readr::write_rds(here::here("results", "vdfs_all.rds"))
-
-read_and_bind(scenario_list, "emissions") %>%
-  readr::write_rds(here::here("results", "emissions_all.rds"))
-
-read_and_bind(scenario_list, "cargo") %>%
-  readr::write_rds(here::here("results", "cargo_all.rds"))
-
 
 # Sensitivity analysis ----------------------------------------------------
 
