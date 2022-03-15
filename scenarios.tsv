@@ -7,7 +7,6 @@ scenario	year	name	forecast	results	co2	basemap	present	baseline	projected	sensi
 2040_ve0_etatyo	2040	Vertailupohja	2040_ve0_haj	2040_ve0_etatyo	2040	2040_ve0	FALSE	FALSE	FALSE	TRUE	2040_ve0
 2040_ve0_mini	2040	Vertailupohja	2040_ve0_hid	2040_ve0_mini	2040	2040_ve0	FALSE	FALSE	FALSE	TRUE	2040_ve0
 2040_ve1	2040	1. luonnos	2040_ve1	2040_ve1	2040	2040_ve1	FALSE	FALSE	TRUE	FALSE	2040_ve1
-2040_ve1_ruuhkautuva	2040	1. luonnos	2040_ve0_bulepois	2040_ve1_ruuhkautuva	2040	2040_ve1	FALSE	FALSE	FALSE	TRUE	2040_ve1
 2040_ve1_etatyo	2040	1. luonnos	2040_ve0_haj	2040_ve1_etatyo	2040	2040_ve1	FALSE	FALSE	FALSE	TRUE	2040_ve1
 2040_ve1_jklmaksi	2040	1. luonnos	2040_ve0_kes	2040_ve1_jklmaksi	2040	2040_ve1	FALSE	FALSE	FALSE	TRUE	2040_ve1
 2040_ve1_mini	2040	1. luonnos	2040_ve0_haj	2040_ve1_mini	2040	2040_ve1	FALSE	FALSE	FALSE	TRUE	2040_ve1
