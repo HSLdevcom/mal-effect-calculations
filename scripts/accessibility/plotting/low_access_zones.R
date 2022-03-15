@@ -74,7 +74,7 @@ calc_low_access <- function(df, pks, limit_pks, limit_kehys) {
         tour_access_ho < limit_pks,
         tour_access_ho < limit_kehys
       )) %>%
-    group_by(number) %>%
+    group_by(number, area) %>%
     summarise(nr_agents = n(),
               low_access = sum(low_access, na.rm = TRUE),
               .groups = "drop") %>%
@@ -100,23 +100,28 @@ zones <- zones %>%
 
 zones_centroids <- zones %>%
   st_centroid() %>%
-  filter(low_access > 30) %>%
-  rename(Asukkaat = "low_access")
+  filter(low_access > 5)
+
+zones_centroids_pks <- zones_centroids %>%
+  dplyr::filter(area %in% pks)
+zones_centroids_kehys <- zones_centroids %>%
+  dplyr::filter(area %in% kehys)
 
 ggplot() +
+  geom_sf(data = st_union(dplyr::filter(zones, area %in% kehys)), fill = "#dddddc", size = NA) +
   geom_basemap() +
   geom_sf(
-    data = zones_centroids,
-    mapping = aes(size = Asukkaat),
+    data = zones_centroids_pks,
+    mapping = aes(size = low_access),
     colour = hsl_cols("red"),
     alpha = 0.5,
     shape = 16,
     stroke = 0
   ) +
-  scale_size(range = c(0, 4)) +
+  scale_size(name = "asukasta", range = c(0, 4)) +
   coord_sf_mal() +
   annotate_map(
-    title = "Vertailuarvon alle jäävä väestö",
+    title = "Saavutettavuusköyhät autottomat asukkaat pääkaupunkiseudulla",
     subtitle = config::get("projected_name")
   ) +
   theme_mal_map()
@@ -124,6 +129,32 @@ ggplot() +
 ggsave_map(
   here("figures",
        config::get("projected_scenario"),
-       "zones_access_poor_no_car.png"
+       "zones_access_poor_no_car_pks.png"
+  )
+)
+
+ggplot() +
+  geom_sf(data = st_union(dplyr::filter(zones, area %in% pks)), fill = "#dddddc", size = NA) +
+  geom_basemap() +
+  geom_sf(
+    data = zones_centroids_kehys,
+    mapping = aes(size = low_access),
+    colour = hsl_cols("red"),
+    alpha = 0.5,
+    shape = 16,
+    stroke = 0
+  ) +
+  scale_size(name = "asukasta", range = c(0, 4)) +
+  coord_sf_mal() +
+  annotate_map(
+    title = "Saavutettavuusköyhät autottomat asukkaat kehyskunnissa",
+    subtitle = config::get("projected_name")
+  ) +
+  theme_mal_map()
+
+ggsave_map(
+  here("figures",
+       config::get("projected_scenario"),
+       "zones_access_poor_no_car_kehys.png"
   )
 )
