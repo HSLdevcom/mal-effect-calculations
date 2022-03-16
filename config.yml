@@ -9,5 +9,5 @@ default:
 2040_ve0-2040_ve1:
   projected_scenario: "2040_ve1_agentti"
   baseline_scenario: "2040_ve0_agentti"
-  projected_name: "2040 Varjo"
+  projected_name: "2040 1. luonnos"
   baseline_name: "2040 Vertailupohja"
