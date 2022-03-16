@@ -9,7 +9,7 @@ library(ggnewscale)
 # Data --------------------------------------------------------------------
 
 results <- readr::read_rds(here::here("results", "squares.rds")) %>%
-  dplyr::mutate(diff_pop = pop_diff_2020_2040_ve0) %>%
+  dplyr::mutate(diff_pop = pop_diff_2020_2040_ve1) %>%
   dplyr::filter(diff_pop >= 5) %>%
   dplyr::mutate(diff_pop = dplyr::if_else(center, diff_pop, -diff_pop))
 
@@ -62,10 +62,10 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Uusien asukkaiden sijoittuminen seudun keskuksiin ja raskaan raideliikenteen piiriin",
-    subtitle = "2040 Vertailupohja"
+    subtitle = "2040 1. luonnos"
   ) +
   theme_mal_map() +
   theme(legend.box = "horizontal",
         legend.box.just = "top")
 
-ggsave_map(here::here("figures", "map_uml_2040_ve0.png"))
+ggsave_map(here::here("figures", "map_uml_2040_ve1.png"))

@@ -7,15 +7,15 @@ library(sf)
 # Data --------------------------------------------------------------------
 
 results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
-  dplyr::filter(scenario == "2040 Vertailupohja")
+  dplyr::filter(scenario != "2018 Nykytila")
 
 
 # Plot --------------------------------------------------------------------
 
-ggplot(results, aes(x = area, y = floor_area_increase_uml_share)) +
+ggplot(results, aes(x = area, y = pop_share_center)) +
   geom_col(aes(fill = scenario), position = position_dodge2()) +
   geom_text(
-    aes(label = scales::label_percent(accuracy = 1, suffix = "")(floor_area_increase_uml_share)),
+    aes(label = scales::label_percent(accuracy = 1, suffix = "")(pop_share_center)),
     position = position_dodge2(width = 0.9),
     vjust = -0.5,
     size = points2mm(8),
@@ -31,7 +31,7 @@ ggplot(results, aes(x = area, y = floor_area_increase_uml_share)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("2018 Nykytila" = "#3E8606", "2040 Vertailupohja" = "#7DAD58", "2040 Varjo" = "#BFD7AC")
+    values = c("#7DAD58", "#BFD7AC")
   ) +
   labs(
     title = "Seudun keskuksiin ja raskaan raideliikenteen piiriin\nsijoittuvien uusien asukkaiden osuus",
