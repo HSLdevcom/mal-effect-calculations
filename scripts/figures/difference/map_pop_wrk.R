@@ -55,6 +55,84 @@ quantile_(results$wrk_density0)
 quantile_(results$wrk_density1)
 quantile_(results$wrk_density_diff)
 
+# Plot pop_density_diff ---------------------------------------------------
+
+ggplot() +
+  geom_sf(mapping = aes(fill = pop_density_diff),
+          data = results, color = NA) +
+  # geom_sf(mapping = aes(color = ''),
+  #         data = dplyr::filter(results, pop_density_diff < 0.0001), fill = "#ffffff") +
+  scale_fill_distiller(
+    palette = "Spectral",
+    name = "asukasta per km2",
+    labels = scales::label_number(accuracy = 1),
+    direction = -1,
+    limits = c(-5000, 5000),
+    oob = scales::squish
+  ) +
+  scale_color_manual(
+    values = NA
+  ) +
+  # guides(fill = guide_colorbar(order = 1),
+  #        color = guide_legend("Ei muutosta\ntai muutos on\nnegatiivinen",
+  #                             order = 100,
+  #                             override.aes = list(color = "#333333"),
+  #                             keywidth = unit(0.6, "cm"),
+  #                             keyheight = unit(0.6, "cm"))) +
+  geom_basemap() +
+  geom_sf(data = results, fill = NA, color = "#333333", size = 0.1) +
+  coord_sf_mal() +
+  annotate_map(
+    title = "Väestötiheyden absoluuttinen muutos",
+    subtitle = sprintf("%d %s \U2192 %d %s",
+                       scenarios$year[scenarios$scenario == scenario0],
+                       scenarios$name[scenarios$scenario == scenario0],
+                       scenarios$year[scenarios$scenario == scenario1],
+                       scenarios$name[scenarios$scenario == scenario1])
+  ) +
+  theme_mal_map()
+
+ggsave_map(here::here("figures", sprintf("map_diff_pop_density_%s_%s.png", scenario0, scenario1)))
+
+
+# Plot wrk_density_diff ---------------------------------------------------
+
+ggplot() +
+  geom_sf(mapping = aes(fill = wrk_density_diff),
+          data = results, color = NA) +
+  # geom_sf(mapping = aes(color = ''),
+  #         data = dplyr::filter(results, wrk_density_diff < 0.0001), fill = "#ffffff") +
+  scale_fill_distiller(
+    palette = "Spectral",
+    name = "työpaikkoja per km2",
+    labels = scales::label_number(accuracy = 1),
+    direction = -1,
+    limits = c(-5000, 5000),
+    oob = scales::squish
+  ) +
+  scale_color_manual(
+    values = NA
+  ) +
+  # guides(fill = guide_colorbar(order = 1),
+  #        color = guide_legend("Ei muutosta\ntai muutos on\nnegatiivinen",
+  #                             order = 100,
+  #                             override.aes = list(color = "#333333"),
+  #                             keywidth = unit(0.6, "cm"),
+  #                             keyheight = unit(0.6, "cm"))) +
+  geom_basemap() +
+  geom_sf(data = results, fill = NA, color = "#333333", size = 0.1) +
+  coord_sf_mal() +
+  annotate_map(
+    title = "Työpaikkatiheyden absoluuttinen muutos",
+    subtitle = sprintf("%d %s \U2192 %d %s",
+                       scenarios$year[scenarios$scenario == scenario0],
+                       scenarios$name[scenarios$scenario == scenario0],
+                       scenarios$year[scenarios$scenario == scenario1],
+                       scenarios$name[scenarios$scenario == scenario1])
+  ) +
+  theme_mal_map()
+
+ggsave_map(here::here("figures", sprintf("map_diff_wrk_density_%s_%s.png", scenario0, scenario1)))
 
 # Plot pop_density_2018 ------------------------------------------
 
@@ -114,46 +192,6 @@ ggplot() +
 ggsave_map(here::here("figures", sprintf("map_pop_density_%s.png", scenario1)))
 
 
-# Plot pop_density_diff ---------------------------------------------------
-
-ggplot() +
-  geom_sf(mapping = aes(fill = pop_density_diff),
-          data = results, color = NA) +
-  # geom_sf(mapping = aes(color = ''),
-  #         data = dplyr::filter(results, pop_density_diff < 0.0001), fill = "#ffffff") +
-  scale_fill_distiller(
-    palette = "Spectral",
-    name = "asukasta per km2",
-    labels = scales::label_number(accuracy = 1),
-    direction = -1,
-    limits = c(-5000, 5000),
-    oob = scales::squish
-  ) +
-  scale_color_manual(
-    values = NA
-  ) +
-  # guides(fill = guide_colorbar(order = 1),
-  #        color = guide_legend("Ei muutosta\ntai muutos on\nnegatiivinen",
-  #                             order = 100,
-  #                             override.aes = list(color = "#333333"),
-  #                             keywidth = unit(0.6, "cm"),
-  #                             keyheight = unit(0.6, "cm"))) +
-  geom_basemap() +
-  geom_sf(data = results, fill = NA, color = "#333333", size = 0.1) +
-  coord_sf_mal() +
-  annotate_map(
-    title = "Väestötiheyden absoluuttinen muutos",
-    subtitle = sprintf("%d %s \U2192 %d %s",
-                       scenarios$year[scenarios$scenario == scenario0],
-                       scenarios$name[scenarios$scenario == scenario0],
-                       scenarios$year[scenarios$scenario == scenario1],
-                       scenarios$name[scenarios$scenario == scenario1])
-  ) +
-  theme_mal_map()
-
-ggsave_map(here::here("figures", sprintf("map_diff_pop_density_%s_%s.png", scenario0, scenario1)))
-
-
 # Plot wrk_density_2018 ------------------------------------------
 
 ggplot() +
@@ -211,42 +249,3 @@ ggplot() +
 
 ggsave_map(here::here("figures", sprintf("map_wrk_density_%s.png", scenario1)))
 
-
-# Plot wrk_density_diff ---------------------------------------------------
-
-ggplot() +
-  geom_sf(mapping = aes(fill = wrk_density_diff),
-          data = results, color = NA) +
-  # geom_sf(mapping = aes(color = ''),
-  #         data = dplyr::filter(results, wrk_density_diff < 0.0001), fill = "#ffffff") +
-  scale_fill_distiller(
-    palette = "Spectral",
-    name = "työpaikkoja per km2",
-    labels = scales::label_number(accuracy = 1),
-    direction = -1,
-    limits = c(-5000, 5000),
-    oob = scales::squish
-  ) +
-  scale_color_manual(
-    values = NA
-  ) +
-  # guides(fill = guide_colorbar(order = 1),
-  #        color = guide_legend("Ei muutosta\ntai muutos on\nnegatiivinen",
-  #                             order = 100,
-  #                             override.aes = list(color = "#333333"),
-  #                             keywidth = unit(0.6, "cm"),
-  #                             keyheight = unit(0.6, "cm"))) +
-  geom_basemap() +
-  geom_sf(data = results, fill = NA, color = "#333333", size = 0.1) +
-  coord_sf_mal() +
-  annotate_map(
-    title = "Työpaikkatiheyden absoluuttinen muutos",
-    subtitle = sprintf("%d %s \U2192 %d %s",
-                       scenarios$year[scenarios$scenario == scenario0],
-                       scenarios$name[scenarios$scenario == scenario0],
-                       scenarios$year[scenarios$scenario == scenario1],
-                       scenarios$name[scenarios$scenario == scenario1])
-  ) +
-  theme_mal_map()
-
-ggsave_map(here::here("figures", sprintf("map_diff_wrk_density_%s_%s.png", scenario0, scenario1)))
