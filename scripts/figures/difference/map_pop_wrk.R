@@ -107,7 +107,7 @@ ggplot() +
     name = "työpaikkoja per km2",
     labels = scales::label_number(accuracy = 1),
     direction = -1,
-    limits = c(-5000, 5000),
+    limits = c(-3000, 3000),
     oob = scales::squish
   ) +
   scale_color_manual(
