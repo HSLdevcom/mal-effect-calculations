@@ -51,9 +51,9 @@ ggplot(results, aes(x = area, y = malpakka)) +
     values = c("#e0e0e0", "#3E8606", "#7DAD58", "#BFD7AC")
   ) +
   labs(
-    title = "Tonttitehokkuus",
+    title = "Kestävien kulkutapojen mahdollistama tonttitehokkuus",
     x =  NULL,
-    y = NULL
+    y = expression(e[t])
   ) +
   theme_mal_graph()
 
