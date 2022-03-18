@@ -8,7 +8,7 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 # Data --------------------------------------------------------------------
 
 scenario0 <- "2018"
-scenario1 <- "2040_ve1"
+scenario1 <- "2040_ve0"
 
 results0 <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario0))) %>%
   dplyr::select(zone, total_pop, total_wrk, land_area) %>%
@@ -125,8 +125,8 @@ ggplot() +
     palette = "Spectral",
     name = "asukasta per km2",
     labels = scales::label_number(accuracy = 1),
-    direction = 1,
-    limits = c(1, 5000),
+    direction = -1,
+    limits = c(-5000, 5000),
     oob = scales::squish
   ) +
   scale_color_manual(
@@ -223,8 +223,8 @@ ggplot() +
     palette = "Spectral",
     name = "työpaikkoja per km2",
     labels = scales::label_number(accuracy = 1),
-    direction = 1,
-    limits = c(1, 5000),
+    direction = -1,
+    limits = c(-5000, 5000),
     oob = scales::squish
   ) +
   scale_color_manual(
