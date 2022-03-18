@@ -43,6 +43,18 @@ results <- results0 %>%
     wrk_diff_rel = dplyr::if_else(is.nan(wrk_diff_rel), 0, wrk_diff_rel)
   )
 
+quantile_ <- function(x, probs = c(0, 0.01, 0.02, 0.05, 0.95, 0.98, 0.99, 1), ...) {
+  quantile(x = x, probs = probs, ...)
+}
+
+quantile_(results$pop_density0)
+quantile_(results$pop_density1)
+quantile_(results$pop_diff)
+
+quantile_(results$wrk_density0)
+quantile_(results$wrk_density1)
+quantile_(results$pop_diff)
+
 
 # Plot pop_density_2018 ------------------------------------------
 
