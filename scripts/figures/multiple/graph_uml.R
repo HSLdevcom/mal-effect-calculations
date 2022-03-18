@@ -12,10 +12,10 @@ results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
 
 # Plot --------------------------------------------------------------------
 
-ggplot(results, aes(x = area, y = pop_share_center)) +
+ggplot(results, aes(x = area, y = pop_share_center_or_station)) +
   geom_col(aes(fill = scenario), position = position_dodge2()) +
   geom_text(
-    aes(label = scales::label_percent(accuracy = 1, suffix = "")(pop_share_center)),
+    aes(label = scales::label_percent(accuracy = 1, suffix = "")(pop_share_center_or_station)),
     position = position_dodge2(width = 0.9),
     vjust = -0.5,
     size = points2mm(8),
@@ -40,4 +40,4 @@ ggplot(results, aes(x = area, y = pop_share_center)) +
   ) +
   theme_mal_graph()
 
-ggsave_graph(here::here("figures", "graph_uml.png"))
+ggsave_graph(here::here("figures", "graph_center_or_station.png"))
