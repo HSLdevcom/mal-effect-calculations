@@ -373,6 +373,16 @@ if (scenario_attributes[["projected"]]) {
 }
 
 
+# Clean data --------------------------------------------------------------
+
+zones <- zones %>%
+  dplyr::select(!c(FID_1, WSP_SIJ, WSP_ENN, SIJ2016, SIJ_MAARA, SIJ_ID, ENN2016)) %>%
+  dplyr::relocate(zone) %>%
+  dplyr::relocate(area, .after = zone) %>%
+  dplyr::relocate(KUNTANIMI, .after = area)
+
+
 # Output ------------------------------------------------------------------
 
 readr::write_rds(zones, file = here::here("results", sprintf("zones_%s.rds", scenario_attributes[["scenario"]])))
+sf::write_sf(zones, here::here("results", sprintf("zones_%s.gpkg", scenario_attributes[["scenario"]])), append = FALSE, delete_dsn = TRUE)
