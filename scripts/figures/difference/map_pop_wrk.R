@@ -49,11 +49,11 @@ quantile_ <- function(x, probs = c(0, 0.01, 0.02, 0.05, 0.95, 0.98, 0.99, 1), ..
 
 quantile_(results$pop_density0)
 quantile_(results$pop_density1)
-quantile_(results$pop_diff)
+quantile_(results$pop_density_diff)
 
 quantile_(results$wrk_density0)
 quantile_(results$wrk_density1)
-quantile_(results$pop_diff)
+quantile_(results$wrk_density_diff)
 
 
 # Plot pop_density_2018 ------------------------------------------
@@ -119,10 +119,10 @@ ggsave_map(here::here("figures", sprintf("map_pop_density_%s.png", scenario1)))
 ggplot() +
   geom_sf(mapping = aes(fill = pop_density_diff),
           data = results, color = NA) +
-  geom_sf(mapping = aes(color = ''),
-          data = dplyr::filter(results, pop_density_diff < 0.0001), fill = "#ffffff") +
+  # geom_sf(mapping = aes(color = ''),
+  #         data = dplyr::filter(results, pop_density_diff < 0.0001), fill = "#ffffff") +
   scale_fill_distiller(
-    palette = "GnBu",
+    palette = "Spectral",
     name = "asukasta per km2",
     labels = scales::label_number(accuracy = 1),
     direction = 1,
@@ -132,12 +132,12 @@ ggplot() +
   scale_color_manual(
     values = NA
   ) +
-  guides(fill = guide_colorbar(order = 1),
-         color = guide_legend("Ei muutosta\ntai muutos on\nnegatiivinen",
-                              order = 100,
-                              override.aes = list(color = "#333333"),
-                              keywidth = unit(0.6, "cm"),
-                              keyheight = unit(0.6, "cm"))) +
+  # guides(fill = guide_colorbar(order = 1),
+  #        color = guide_legend("Ei muutosta\ntai muutos on\nnegatiivinen",
+  #                             order = 100,
+  #                             override.aes = list(color = "#333333"),
+  #                             keywidth = unit(0.6, "cm"),
+  #                             keyheight = unit(0.6, "cm"))) +
   geom_basemap() +
   geom_sf(data = results, fill = NA, color = "#333333", size = 0.1) +
   coord_sf_mal() +
@@ -217,10 +217,10 @@ ggsave_map(here::here("figures", sprintf("map_wrk_density_%s.png", scenario1)))
 ggplot() +
   geom_sf(mapping = aes(fill = wrk_density_diff),
           data = results, color = NA) +
-  geom_sf(mapping = aes(color = ''),
-          data = dplyr::filter(results, wrk_density_diff < 0.0001), fill = "#ffffff") +
+  # geom_sf(mapping = aes(color = ''),
+  #         data = dplyr::filter(results, wrk_density_diff < 0.0001), fill = "#ffffff") +
   scale_fill_distiller(
-    palette = "GnBu",
+    palette = "Spectral",
     name = "työpaikkoja per km2",
     labels = scales::label_number(accuracy = 1),
     direction = 1,
@@ -230,12 +230,12 @@ ggplot() +
   scale_color_manual(
     values = NA
   ) +
-  guides(fill = guide_colorbar(order = 1),
-         color = guide_legend("Ei muutosta\ntai muutos on\nnegatiivinen",
-                              order = 100,
-                              override.aes = list(color = "#333333"),
-                              keywidth = unit(0.6, "cm"),
-                              keyheight = unit(0.6, "cm"))) +
+  # guides(fill = guide_colorbar(order = 1),
+  #        color = guide_legend("Ei muutosta\ntai muutos on\nnegatiivinen",
+  #                             order = 100,
+  #                             override.aes = list(color = "#333333"),
+  #                             keywidth = unit(0.6, "cm"),
+  #                             keyheight = unit(0.6, "cm"))) +
   geom_basemap() +
   geom_sf(data = results, fill = NA, color = "#333333", size = 0.1) +
   coord_sf_mal() +
