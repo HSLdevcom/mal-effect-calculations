@@ -36,7 +36,7 @@ areas <- links %>%
 stopifnot(nrow(areas) == nrow(links))
 links$area <- areas$area
 
-links %>% sf::write_sf(here::here("results", sprintf("links_toolbox_%s.gpkg", scenario_attributes[["scenario"]])))
+links %>% sf::write_sf(here::here("results", sprintf("links_toolbox_%s.gpkg", scenario_attributes[["scenario"]])), append = FALSE, delete_dsn = TRUE)
 
 links <- links %>%
   dplyr::filter(!(volume_delay_func %in% 99)) %>%
