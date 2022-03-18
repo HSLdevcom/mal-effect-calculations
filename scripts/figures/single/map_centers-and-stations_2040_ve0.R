@@ -68,4 +68,4 @@ ggplot() +
   theme(legend.box = "horizontal",
         legend.box.just = "top")
 
-ggsave_map(here::here("figures", "map_uml_2040_ve0.png"))
+ggsave_map(here::here("figures", "map_centers-and-stations_2040_ve0.png"))

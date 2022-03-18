@@ -40,4 +40,4 @@ ggplot(results, aes(x = area, y = pop_share_center_or_station)) +
   ) +
   theme_mal_graph()
 
-ggsave_graph(here::here("figures", "graph_center_or_station.png"))
+ggsave_graph(here::here("figures", "graph_centers-and-stations.png"))
