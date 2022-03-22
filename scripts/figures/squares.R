@@ -54,7 +54,7 @@ squares <- squares %>%
 ensi <- readr::read_rds(here::here("results", "ensi_ruudut.rds")) %>%
   sf::st_drop_geometry()
 
-centers_and_stations <- sf::read_sf("../centers_and_stations2.gpkg")
+centers_and_stations <- sf::read_sf(here::here("data", "centers_and_stations2.gpkg"))
 
 # Let us drop square polygons for a while and focus on centroids that are much easier to join into areas.
 squares_centroids <- squares %>%
