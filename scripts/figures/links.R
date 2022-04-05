@@ -44,7 +44,10 @@ links <- links %>%
   dplyr::filter(!(type %in% 70)) %>%
   # Remove rail links
   dplyr::filter(!type %in% 2:6) %>%
-  dplyr::mutate(volume_aht = car_leisure_aht + car_work_aht + bus_aht + trailer_truck_aht + truck_aht + van_aht,
+  dplyr::mutate(volume_vrk = car_leisure_vrk + car_work_vrk + bus_vrk + trailer_truck_vrk + truck_vrk + van_vrk,
+                car_vrk = car_work_vrk + car_leisure_vrk,
+                truck_all_vrk = trailer_truck_vrk + truck_vrk,
+                volume_aht = car_leisure_aht + car_work_aht + bus_aht + trailer_truck_aht + truck_aht + van_aht,
                 car_aht = car_work_aht + car_leisure_aht,
                 truck_all_aht = trailer_truck_aht + truck_aht,
                 relative_speed = (60 * length / data2) / car_time_aht,
@@ -105,6 +108,27 @@ links0 <- links %>%
 links <- links %>%
   dplyr::left_join(links0, by = "fid")
 
+buffers_vrk <- links %>%
+  sf::st_buffer(dist = -links$volume_vrk / 100,
+                endCapStyle = "FLAT",
+                singleSide = TRUE) %>%
+  # Filter for improved plotting
+  dplyr::filter(volume_vrk > 0.01)
+
+buffers_car_vrk <- links %>%
+  sf::st_buffer(dist = -links$car_vrk / 100,
+                endCapStyle = "FLAT",
+                singleSide = TRUE) %>%
+  # Filter for improved plotting
+  dplyr::filter(car_vrk > 0.01)
+
+buffers_truck_all_vrk <- links %>%
+  sf::st_buffer(dist = -links$truck_all_vrk / 8,
+                endCapStyle = "FLAT",
+                singleSide = TRUE) %>%
+  # Filter for improved plotting
+  dplyr::filter(truck_all_vrk > 0.01)
+
 buffers <- links %>%
   sf::st_buffer(dist = -links$volume_aht / 5,
                 endCapStyle = "FLAT",
@@ -130,6 +154,9 @@ buffers_truck_all <- links %>%
 # Output ------------------------------------------------------------------
 
 readr::write_rds(links, file = here::here("results", sprintf("links_%s.rds", scenario_attributes[["scenario"]])))
+readr::write_rds(buffers_vrk, file = here::here("results", sprintf("buffers-vrk_%s.rds", scenario_attributes[["scenario"]])))
+readr::write_rds(buffers_car_vrk, file = here::here("results", sprintf("buffers-car-vrk_%s.rds", scenario_attributes[["scenario"]])))
+readr::write_rds(buffers_truck_all_vrk, file = here::here("results", sprintf("buffers-truck_all-vrk_%s.rds", scenario_attributes[["scenario"]])))
 readr::write_rds(buffers, file = here::here("results", sprintf("buffers_%s.rds", scenario_attributes[["scenario"]])))
 readr::write_rds(buffers_car, file = here::here("results", sprintf("buffers-car_%s.rds", scenario_attributes[["scenario"]])))
 readr::write_rds(buffers_truck_all, file = here::here("results", sprintf("buffers-truck_all_%s.rds", scenario_attributes[["scenario"]])))
