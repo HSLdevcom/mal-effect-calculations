@@ -8,10 +8,10 @@ library(tidyverse)
 centers <- readr::read_tsv(here::here("data", "centers.tsv"), col_types = "icll") %>%
   dplyr::filter(center)
 
-results0 <- readr::read_rds(here::here("results", "centers_2018.rds")) %>%
+results0 <- readr::read_rds(here::here("results", "centers_2040_ve0.rds")) %>%
   dplyr::filter(origin %in% centers$label & destination %in% centers$label)
 
-results1 <- readr::read_rds(here::here("results", "centers_2040_ve0.rds")) %>%
+results1 <- readr::read_rds(here::here("results", "centers_2040_ve1.rds")) %>%
   dplyr::filter(origin %in% centers$label & destination %in% centers$label)
 
 results <- results0 %>%
@@ -30,7 +30,7 @@ ggplot(data = results) +
                    guide = guide_axis(angle = 90)) +
   scale_fill_fermenter(
     name = "%",
-    breaks = seq(-0.3+0.1, 0.3-0.1, 0.1),
+    breaks = seq(-0.175, 0.175, 0.05),
     limits = c(-0.3, 0.3),
     type = "div",
     palette = "PiYG",
@@ -38,8 +38,8 @@ ggplot(data = results) +
     labels = scales::percent_format(accuracy = 1, suffix = " %")
   ) +
   labs(
-    title = "Joukkoliikenteen ja henkilöauton matka-aikojen suhteen suhteellinen muutos",
-    subtitle = "2018 Nykytila \U2192 2040 Vertailupohja",
+    title = "Joukkoliikenteen ja henkilöauton matka-aikojen suhteen\nsuhteellinen muutos",
+    subtitle = "2040 Vertailupohja \U2192 2040 1. luonnos",
     x = "Määräpaikka",
     y = "Lähtöpaikka"
   ) +
@@ -48,4 +48,4 @@ ggplot(data = results) +
   theme(legend.position = "right",
         panel.grid.major.y = element_blank())
 
-ggsave_graph(here::here("figures", "graph_ttime-ratio_aht_2018_2040_ve0.png"))
+ggsave_graph(here::here("figures", "graph_diff_ttime-ratio_aht_2040_ve0_2040_ve1.png"))

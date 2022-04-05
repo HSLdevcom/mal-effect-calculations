@@ -8,10 +8,10 @@ library(tidyverse)
 centers <- readr::read_tsv(here::here("data", "centers.tsv"), col_types = "icll") %>%
   dplyr::filter(hub)
 
-results0 <- readr::read_rds(here::here("results", "centers_2018.rds")) %>%
+results0 <- readr::read_rds(here::here("results", "centers_2040_ve0.rds")) %>%
   dplyr::filter(origin %in% centers$label & destination %in% centers$label)
 
-results1 <- readr::read_rds(here::here("results", "centers_2040_ve0.rds")) %>%
+results1 <- readr::read_rds(here::here("results", "centers_2040_ve1.rds")) %>%
   dplyr::filter(origin %in% centers$label & destination %in% centers$label)
 
 results <- results0 %>%
@@ -32,13 +32,13 @@ ggplot(data = results) +
     name = "%",
     palette = "PiYG",
     direction = -1,
-    breaks = seq(-0.3, 0.3, 0.1),
+    breaks = seq(-0.07, 0.07, 0.02),
     limits = c(-0.4, 0.4),
     labels = scales::percent_format(accuracy = 1, suffix = " %")
   ) +
   labs(
-    title = "Henkilöautoliikenteen matka-ajann\nsuhteellinen muutos aamuhuipputuntina",
-    subtitle = "2018 Nykytila \U2192 2040 Vertailupohja",
+    title = "Henkilöautoliikenteen matka-ajan\nsuhteellinen muutos aamuhuipputuntina",
+    subtitle = "2040 Vertailupohja \U2192 2040 1. luonnos",
     x = "Määräpaikka",
     y = "Lähtöpaikka"
   ) +
@@ -47,4 +47,4 @@ ggplot(data = results) +
   theme(legend.position = "right",
         panel.grid.major.y = element_blank())
 
-ggsave_graph(here::here("figures", "graph_diff_rel_car-work_aht_2018_2040_ve0.png"))
+ggsave_graph(here::here("figures", "graph_diff_rel_car-work_aht_2040_ve0_2040_ve1.png"))
