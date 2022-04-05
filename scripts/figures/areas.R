@@ -77,6 +77,7 @@ zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario_
 zones1 <- zones %>%
   dplyr::group_by(area) %>%
   dplyr::summarise(
+    accessibility_scaled = weighted.mean(accessibility_scaled, total_pop, na.rm = TRUE),
     sustainable_accessibility_scaled = weighted.mean(sustainable_accessibility_scaled, total_pop),
     twocenters = weighted.mean(ttime_twocenters_normal_all, w = total_pop),
     cba_car_time = sum(cba_car_work_time + cba_car_leisure_time),
@@ -182,6 +183,7 @@ areas <- areas %>%
     vehicle_kms_car = sum(.$vehicle_kms_car),
     vehicle_kms_van = sum(.$vehicle_kms_van),
     vehicle_kms_truck_all = sum(.$vehicle_kms_truck_all),
+    accessibility_scaled = weighted.mean(.$accessibility_scaled, .$total_pop, na.rm=TRUE),
     sustainable_accessibility_scaled = weighted.mean(.$sustainable_accessibility_scaled, .$total_pop),
     workplace_accessibility_scaled = weighted.mean(.$workplace_accessibility_scaled, .$total_wrk),
     workforce_accessibility = weighted.mean(.$workforce_accessibility, .$total_wrk),
