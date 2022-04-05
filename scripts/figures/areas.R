@@ -113,6 +113,19 @@ links <- readr::read_rds(here::here("results", sprintf("links_%s.rds", scenario_
                    .groups = "drop")
 
 
+# Calculate noise population ----------------------------------------------
+
+if (scenario_attributes[["root"]] == "2040_ve1") {
+  noise_population_reduction <- readr::read_tsv(
+    here::here("utilities", sprintf("noise_population_reduction_%s.tsv",
+                                    scenario_attributes[["root"]])))
+  noise <- noise %>%
+  dplyr::left_join(noise_population_reduction, by = "area") %>%
+  dplyr::mutate(noise_population = noise_population - reduction) %>%
+  dplyr::select(!reduction)
+}
+
+
 # Join data ---------------------------------------------------------------
 
 # Rename columns to avoid name collisions
