@@ -35,7 +35,7 @@ matrices <- demand_aht %>%
   dplyr::left_join(ttimes_aht, by = c("origin", "destination"), suffix = c("_demand", "_time")) %>%
   dplyr::filter(origin %in% c(helsinki_region, terminals) | destination %in% c(helsinki_region, terminals)) %>%
   # Remove disallowed links from analysis
-  dplyr::filter(across(-c(origin, destination), ~ !(.x > 1000)))
+  dplyr::filter(if_all(-c(origin, destination), ~ .x < 1000))
 
 matrices <- matrices %>%
   dplyr::mutate(group = dplyr::case_when(
