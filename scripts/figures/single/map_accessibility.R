@@ -14,8 +14,11 @@ results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenari
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_sf(mapping = aes(fill = accessibility_scaled, color = ""),
-          data = results) +
+  # Hack to get NA values to legend in ggplot2 v3.3.5
+  geom_sf(mapping = aes(color = ""),
+          data = head(results, n = 1)) +
+  geom_sf(mapping = aes(fill = accessibility_scaled),
+          data = results, color = NA) +
   scale_fill_viridis(
     option = "magma",
     labels = scales::label_number(accuracy = 1),
