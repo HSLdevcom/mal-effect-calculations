@@ -26,10 +26,13 @@ read_tsv_helmet <- function(..., first_col_name, comment = "#") {
     readr::read_tsv(..., comment = comment) %>%
       dplyr::rename({{first_col_name}} := `...1`) %>%
       dplyr::rename_with(~ gsub("-", "_", .x, fixed = TRUE))
-  }, warning = function(w) {
-    # Helmet results never include first column name
-    if (conditionMessage(w) == "Missing column names filled in: 'X1' [1]") {
-      invokeRestart("muffleWarning")
+  }, message = function(w) {
+    # Helmet results never include first column name so if the message is only
+    # about the first column, we suppress it. Message is usually:
+    # New names:
+    # * `` -> ...1
+    if (grepl("\\* `` -> \\.\\.\\.1$", conditionMessage(w), perl = TRUE)) {
+      invokeRestart("muffleMessage")
     }
   })
 }
