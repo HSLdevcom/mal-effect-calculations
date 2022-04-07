@@ -24,7 +24,7 @@ read_and_bind <- function(scenario_list, prefix, suffix = "rds") {
 read_tsv_helmet <- function(..., first_col_name, comment = "#") {
   withCallingHandlers({
     readr::read_tsv(..., comment = comment) %>%
-      dplyr::rename({{first_col_name}} := X1) %>%
+      dplyr::rename({{first_col_name}} := `...1`) %>%
       dplyr::rename_with(~ gsub("-", "_", .x, fixed = TRUE))
   }, warning = function(w) {
     # Helmet results never include first column name
