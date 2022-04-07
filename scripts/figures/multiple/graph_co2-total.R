@@ -41,10 +41,10 @@ ggplot(results, aes(x = scenario, y = emission, fill = scenario)) +
   ) +
   scale_y_continuous(
     labels = scales::label_number(scale = 10^(-9)),
-    expand = expansion(mult = 0.1)
+    expand = expansion(mult = 0.05)
   ) +
   scale_x_discrete(
-    labels = scales::label_wrap(5)
+    labels = sub(" ", "\n", levels(results$scenario))
   ) +
   scale_fill_manual(
     name = NULL,

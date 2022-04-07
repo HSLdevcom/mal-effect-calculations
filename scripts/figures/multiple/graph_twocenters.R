@@ -38,7 +38,7 @@ ggplot(results, aes(x = area, y = twocenters)) +
     values = c("#3E8606", "#7DAD58", "#BFD7AC")
   ) +
   labs(
-    title = "Kahden keskuksen matka-aikasaavutettavuus kaikilla kulkutavoilla",
+    title = "Kahden keskuksen matka-aikasaavutettavuus",
     x =  NULL,
     y = "indeksi"
   ) +

@@ -77,6 +77,7 @@ zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario_
 zones1 <- zones %>%
   dplyr::group_by(area) %>%
   dplyr::summarise(
+    accessibility_scaled = weighted.mean(accessibility_scaled, total_pop, na.rm = TRUE),
     sustainable_accessibility_scaled = weighted.mean(sustainable_accessibility_scaled, total_pop),
     twocenters = weighted.mean(ttime_twocenters_normal_all, w = total_pop),
     cba_car_time = sum(cba_car_work_time + cba_car_leisure_time),
@@ -101,40 +102,6 @@ zones2 <- zones %>%
   dplyr::filter(savu_goodness == "SAVU hyvä")
 
 
-# Read and aggregate square data ------------------------------------------
-
-if (!scenario_attributes[["present"]]) {
-  squares <- readr::read_rds(here::here("results", "squares.rds")) %>%
-    sf::st_drop_geometry()
-
-  squares1 <- squares %>%
-    dplyr::group_by(area, ensi) %>%
-    dplyr::summarise(
-      pop_increase_2020 = sum(pop_increase_2020_2040_ve0),
-      .groups = "drop_last"
-    ) %>%
-    dplyr::mutate(
-      pop_increase_ensi_share = pop_increase_2020 / sum(pop_increase_2020),
-      pop_increase_2020 = sum(pop_increase_2020)
-    ) %>%
-    dplyr::filter(ensi) %>%
-    dplyr::select(-ensi)
-
-  squares2 <- squares %>%
-    dplyr::group_by(area, center) %>%
-    dplyr::summarise(
-      floor_area_increase_2021 = sum(floor_area_increase_2021_2040_ve0),
-      .groups = "drop_last"
-    ) %>%
-    dplyr::mutate(
-      floor_area_increase_uml_share = floor_area_increase_2021 / sum(floor_area_increase_2021),
-      floor_area_increase_2021 = sum(floor_area_increase_2021)
-    ) %>%
-    dplyr::filter(center) %>%
-    dplyr::select(-center)
-}
-
-
 # Read and aggregate link data --------------------------------------------
 
 links <- readr::read_rds(here::here("results", sprintf("links_%s.rds", scenario_attributes[["scenario"]]))) %>%
@@ -145,6 +112,19 @@ links <- readr::read_rds(here::here("results", sprintf("links_%s.rds", scenario_
                    weighted_delay_transit = sum(weighted_delay_transit),
                    weighted_delay_all = sum(weighted_delay_all),
                    .groups = "drop")
+
+
+# Calculate noise population ----------------------------------------------
+
+if (scenario_attributes[["root"]] == "2040_ve1") {
+  noise_population_reduction <- readr::read_tsv(
+    here::here("utilities", sprintf("noise_population_reduction_%s.tsv",
+                                    scenario_attributes[["root"]])))
+  noise <- noise %>%
+  dplyr::left_join(noise_population_reduction, by = "area") %>%
+  dplyr::mutate(noise_population = noise_population - reduction) %>%
+  dplyr::select(!reduction)
+}
 
 
 # Join data ---------------------------------------------------------------
@@ -168,20 +148,6 @@ areas <- data.frame(area = unique(zones$area)) %>%
   dplyr::left_join(origin_demand, by = "area") %>%
   dplyr::left_join(car_density, by = "area") %>%
   dplyr::left_join(noise, by = "area")
-
-if (!scenario_attributes[["present"]]) {
-  areas <- areas %>%
-    dplyr::left_join(squares1, by = "area") %>%
-    dplyr::left_join(squares2, by = "area")
-} else {
-  areas <- areas %>%
-    dplyr::mutate(
-      pop_increase_ensi_share = 0.0,
-      pop_increase_2020 = 0.0,
-      floor_area_increase_uml_share = 0.0,
-      floor_area_increase_2021 = 0.0
-    )
-}
 
 
 # Impact assessment columns  ----------------------------------------------
@@ -217,6 +183,7 @@ areas <- areas %>%
     vehicle_kms_car = sum(.$vehicle_kms_car),
     vehicle_kms_van = sum(.$vehicle_kms_van),
     vehicle_kms_truck_all = sum(.$vehicle_kms_truck_all),
+    accessibility_scaled = weighted.mean(.$accessibility_scaled, .$total_pop, na.rm=TRUE),
     sustainable_accessibility_scaled = weighted.mean(.$sustainable_accessibility_scaled, .$total_pop),
     workplace_accessibility_scaled = weighted.mean(.$workplace_accessibility_scaled, .$total_wrk),
     workforce_accessibility = weighted.mean(.$workforce_accessibility, .$total_wrk),
@@ -239,9 +206,16 @@ areas <- areas %>%
     cba_transit_time_per_person = weighted.mean(.$cba_transit_time_per_person, .$total_pop),
     total_pop = sum(.$total_pop),
     total_wrk = sum(.$total_wrk),
-    pop_increase_ensi_share = weighted.mean(.$pop_increase_ensi_share, w = .$pop_increase_2020),
-    floor_area_increase_uml_share = weighted.mean(.$floor_area_increase_uml_share, w = .$floor_area_increase_2021)
   )
+
+
+# Join square areas --------------------------------------------------------
+
+if (!scenario_attributes[["present"]] & !scenario_attributes[["sensitivity"]]) {
+  squares <- readr::read_rds(here::here("results", sprintf("squares_areas_%s.rds", scenario_attributes[["scenario"]]))) %>%
+    dplyr::select(!scenario)
+  areas <- areas %>% dplyr::left_join(squares, by = "area")
+}
 
 
 # Translate data ----------------------------------------------------------

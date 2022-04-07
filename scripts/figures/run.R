@@ -2,7 +2,7 @@
 library(here)
 library(tidyverse)
 
-options(warn=1)
+options(warn=1, scipen = 1000000)
 Sys.setenv(R_CONFIG_ACTIVE = "default")
 
 
@@ -18,6 +18,7 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 source(here::here("scripts", "utils.R"), encoding = "utf-8")
 source(here::here("scripts", "basemap", "ensi.R"), encoding = "utf-8")
 source(here::here("scripts", "basemap", "centers-and-stations.R"), encoding = "utf-8")
+source(here::here("scripts", "figures", "squares.R"), encoding = "utf-8")
 
 
 # Plot common figures -----------------------------------------------------

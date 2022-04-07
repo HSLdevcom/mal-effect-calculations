@@ -17,7 +17,7 @@ ggplot() +
           data = results, color = NA) +
   scale_fill_fermenter(
     palette = "YlGn",
-    name = NULL,
+    name = expression(e[t]),
     labels = scales::label_number(accuracy = 0.1, decimal.mark = ","),
     breaks = c(0.3, 0.6, 1, 2, 4),
     limits = c(0, 5),
@@ -27,7 +27,7 @@ ggplot() +
   geom_basemap() +
   coord_sf_mal() +
   annotate_map(
-    title = "Tonttitehokkuus",
+    title = "Kestävien kulkutapojen mahdollistama tonttitehokkuus",
     subtitle = sprintf("%d %s", scenario_attributes[["year"]], scenario_attributes[["name"]])
   ) +
   theme_mal_map()

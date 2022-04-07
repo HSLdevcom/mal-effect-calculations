@@ -159,6 +159,9 @@ pop <- pop %>%
   dplyr::rename(total_pop = total)
 wrk <- wrk %>%
   dplyr::rename(total_wrk = total)
+accessibility <- accessibility %>%
+  dplyr::rename(accessibility = all) %>%
+  dplyr::select(zone, accessibility)
 sustainable_accessibility <- sustainable_accessibility %>%
   dplyr::rename(sustainable_accessibility = all) %>%
   dplyr::select(zone, sustainable_accessibility)
@@ -183,6 +186,7 @@ zones <- zones %>%
   dplyr::left_join(wrk, by = "zone") %>%
   dplyr::left_join(prk, by = "zone") %>%
   dplyr::left_join(savu, by = "zone") %>%
+  dplyr::left_join(accessibility, by = "zone") %>%
   dplyr::left_join(sustainable_accessibility, by = "zone") %>%
   dplyr::left_join(workplace_accessibility, by = "zone") %>%
   dplyr::left_join(car_density, by = "zone") %>%
@@ -257,6 +261,11 @@ if (scenario_attributes[["present"]]) {
 }
 zones$sustainable_accessibility_scaled = scale_to_range(
   zones$sustainable_accessibility, xmin = xrange[1], xmax = xrange[2], a = 0, b = 100)
+
+# Change sign and scale from 0 to 100 using 2018 ranges
+zones <- zones %>%
+  dplyr::mutate(accessibility = -accessibility)
+zones$accessibility_scaled = scale_accessibility(zones)
 
 zones <- zones %>%
   dplyr::mutate(
@@ -373,6 +382,16 @@ if (scenario_attributes[["projected"]]) {
 }
 
 
+# Clean data --------------------------------------------------------------
+
+zones <- zones %>%
+  dplyr::select(!c(FID_1, WSP_SIJ, WSP_ENN, SIJ2016, SIJ_MAARA, SIJ_ID, ENN2016)) %>%
+  dplyr::relocate(zone) %>%
+  dplyr::relocate(area, .after = zone) %>%
+  dplyr::relocate(KUNTANIMI, .after = area)
+
+
 # Output ------------------------------------------------------------------
 
 readr::write_rds(zones, file = here::here("results", sprintf("zones_%s.rds", scenario_attributes[["scenario"]])))
+sf::write_sf(zones, here::here("results", sprintf("zones_%s.gpkg", scenario_attributes[["scenario"]])), append = FALSE, delete_dsn = TRUE)

@@ -20,8 +20,9 @@ plot_twocenters <- function(data, fill, title) {
             data = data, color = NA) +
     scale_fill_viridis_d(
       option="plasma",
-      name = "indeksi",
-      direction = -1
+      name = "Luokka",
+      direction = -1,
+      labels = c("1 (paras)", "2", "3", "4", "5")
     ) +
     geom_basemap() +
     coord_sf_mal() +
@@ -40,5 +41,5 @@ plot_twocenters(results, bins_twocenters_bike, title="Kahden keskuksen matka-aik
 ggsave_map(here::here("figures", sprintf("map_twocenters_bike_%s.png", scenario_attributes[["scenario"]])))
 plot_twocenters(results, bins_twocenters_walk, title="Kahden keskuksen matka-aikasaavutettavuus kävellen")
 ggsave_map(here::here("figures", sprintf("map_twocenters_walk_%s.png", scenario_attributes[["scenario"]])))
-plot_twocenters(results, bins_twocenters_all, title="Kahden keskuksen matka-aikasaavutettavuus kaikilla kulkutavoilla")
+plot_twocenters(results, bins_twocenters_all, title="Kahden keskuksen matka-aikasaavutettavuus")
 ggsave_map(here::here("figures", sprintf("map_twocenters_all_%s.png", scenario_attributes[["scenario"]])))

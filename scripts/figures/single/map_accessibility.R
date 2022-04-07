@@ -14,22 +14,29 @@ results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenari
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_sf(mapping = aes(fill = sustainable_accessibility_scaled),
-          data = results, color = NA) +
+  geom_sf(mapping = aes(fill = accessibility_scaled, color = ""),
+          data = results) +
   scale_fill_viridis(
     option = "magma",
-    name = "indeksi",
     labels = scales::label_number(accuracy = 1),
     limits = c(0, 100),
     direction = -1,
+    na.value = "#ffffff",
     oob = scales::squish
   ) +
+  scale_colour_manual(values = NA) +
+  guides(fill = guide_colorbar("indeksi",
+                               order = 1),
+         colour = guide_legend("Liian\nvähän\nasukkaita",
+                               order = 99,
+                               override.aes = list(color = "grey35",
+                                                   fill = "#ffffff"))) +
   geom_basemap() +
   coord_sf_mal() +
   annotate_map(
-    title = "Saavutettavuus kestävillä kulkutavoilla asukkaiden näkökulmasta",
+    title = "Saavutettavuus asukkaiden näkökulmasta",
     subtitle = sprintf("%d %s", scenario_attributes[["year"]], scenario_attributes[["name"]])
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_sustainable-accessibility_%s.png", scenario_attributes[["scenario"]])))
+ggsave_map(here::here("figures", sprintf("map_accessibility_%s.png", scenario_attributes[["scenario"]])))

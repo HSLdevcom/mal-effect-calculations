@@ -3,14 +3,15 @@ library(here)
 library(tidyverse)
 library(sf)
 source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
+library(ggnewscale)
 
 
 # Data --------------------------------------------------------------------
 
 results <- readr::read_rds(here::here("results", "squares.rds")) %>%
-  dplyr::mutate(diff_pop = pop_increase_2020_2040_ve0) %>%
+  dplyr::mutate(diff_pop = pop_diff_2020_2040_ve0) %>%
   dplyr::filter(diff_pop >= 5) %>%
-  dplyr::mutate(diff_pop = dplyr::if_else(center, diff_pop, -diff_pop))
+  dplyr::mutate(diff_pop = dplyr::if_else(center_or_station_2040_ve0, diff_pop, -diff_pop))
 
 
 # Plot --------------------------------------------------------------------
@@ -67,4 +68,4 @@ ggplot() +
   theme(legend.box = "horizontal",
         legend.box.just = "top")
 
-ggsave_map(here::here("figures", "map_uml_2040_ve0.png"))
+ggsave_map(here::here("figures", "map_centers-and-stations_2040_ve0.png"))

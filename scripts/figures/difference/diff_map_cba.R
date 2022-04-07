@@ -28,8 +28,8 @@ ggplot() +
   geom_basemap() +
   coord_sf_mal() +
   annotate_map(
-    title = "Joukkoliikenteen matka-aikasäästö asukasta kohden",
-    subtitle = "2040 Vertailupohja \U2192 2040 Varjo"
+    title = "Joukkoliikenteen matka-aikamuutos asukasta kohden",
+    subtitle = "2040 Vertailupohja \U2192 2040 1. luonnos"
   ) +
   theme_mal_map()
 
@@ -53,8 +53,8 @@ ggplot() +
   geom_basemap() +
   coord_sf_mal() +
   annotate_map(
-    title = "Henkilöauton matka-aikasäästö asukasta kohden",
-    subtitle = "2040 Vertailupohja \U2192 2040 Varjo"
+    title = "Henkilöauton matka-aikamuutos asukasta kohden",
+    subtitle = "2040 Vertailupohja \U2192 2040 1. luonnos"
   ) +
   theme_mal_map()
 
@@ -77,8 +77,8 @@ ggplot() +
   geom_basemap() +
   coord_sf_mal() +
   annotate_map(
-    title = "Joukkoliikenteen ja henkilöauton yhteenlaskettu matka-aikasäästö asukasta kohden",
-    subtitle = "2040 Vertailupohja \U2192 2040 Varjo"
+    title = "Joukkoliikenteen ja henkilöauton yhteenlaskettu matka-aikamuutos asukasta kohden",
+    subtitle = "2040 Vertailupohja \U2192 2040 1. luonnos"
   ) +
   theme_mal_map()
 
@@ -103,7 +103,7 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Tulot joukkoliikenteestä asukasta kohden",
-    subtitle = "2040 Vertailupohja \U2192 2040 Varjo"
+    subtitle = "2040 Vertailupohja \U2192 2040 1. luonnos"
   ) +
   theme_mal_map()
 

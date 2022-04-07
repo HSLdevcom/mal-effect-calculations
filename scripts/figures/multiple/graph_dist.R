@@ -5,28 +5,28 @@ library(tidyverse)
 
 # Data --------------------------------------------------------------------
 
-results <- readr::read_rds(here::here("results", "areas_all.rds"))
+results <- readr::read_rds(here::here("results", "emissions_all.rds")) %>%
+  dplyr::filter(vehicle != "total")
 
 
 # Plot --------------------------------------------------------------------
 
-ggplot(results, aes(x = area, y = sustainable_accessibility_scaled)) +
-  geom_col(aes(fill = scenario), position = position_dodge2()) +
+ggplot(results, aes(x = vehicle, y = dist, fill = scenario)) +
+  geom_col(position = position_dodge2()) +
   geom_errorbar(
-    mapping = aes(ymin = sustainable_accessibility_scaled_lower, ymax = sustainable_accessibility_scaled_upper),
+    mapping = aes(ymin = dist_lower, ymax = dist_upper),
     position =  position_dodge2(width = 0.9, padding = 0.66),
     color = "#333333",
     size = 0.35
   ) +
   geom_text(
-    aes(y = sustainable_accessibility_scaled / 2, label = scales::label_number(accuracy = 1)(sustainable_accessibility_scaled)),
+    aes(y = dist / 2, label = scales::label_number(accuracy = 0.1, scale = 10^(-6), decimal.mark = ",")(dist)),
     position = position_dodge2(width = 0.9),
     size = points2mm(8),
     color = "#333333"
   ) +
   scale_y_continuous(
-    labels = scales::label_number(),
-    limits = c(0, 100),
+    labels = scales::label_number(scale = 10^(-6)),
     expand = expansion(mult = 0.1)
   ) +
   scale_x_discrete(
@@ -37,10 +37,10 @@ ggplot(results, aes(x = area, y = sustainable_accessibility_scaled)) +
     values = c("#3E8606", "#7DAD58", "#BFD7AC")
   ) +
   labs(
-    title = "Saavutettavuus kestävillä kulkutavoilla asukkaiden näkökulmasta",
-    x = NULL,
-    y = "indeksi"
+    title = "Moottoriajoneuvoliikenteen suorite Helsingin seudulla",
+    x =  NULL,
+    y = "milj. ajon.km arkivuorokaudessa"
   ) +
   theme_mal_graph()
 
-ggsave_graph(here::here("figures", "graph_sustainable-accessibility.png"))
+ggsave_graph(here::here("figures", "graph_dist.png"))

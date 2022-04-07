@@ -50,12 +50,39 @@ verbose_source <- function(file, ...) {
   invisible(source(file, ...))
 }
 
-scale_to_range <- function(x, xmin = min(x), xmax = max(x), a, b) {
+scale_to_range <- function(x, xmin = min(x, na.rm = TRUE), xmax = max(x, na.rm = TRUE), a, b) {
   # Scales vector x linearly to range [a, b] so that xmin = a and xmax = b.
   # Usually, xmin and xmax are min(x) and max(x) but they can be other values
   # too.
   return((b - a) * (x - xmin) / (xmax - xmin) + a)
 }
+
+
+scale_accessibility <- function(.data) {
+  # Scaling to 0-100
+  a <- 0
+  b <- 100
+  # If we are on baseline scenario, calculate range of the variable. Otherwise
+  # read it from the result folder.
+  .data <- .data %>%
+    sf::st_drop_geometry() %>%
+    # Dropping outlier areas with little population
+    dplyr::mutate(accessibility = dplyr::if_else(total_pop > 15, accessibility, NA_real_))
+  if (scenario_attributes[["present"]]) {
+    xrange <- range(.data[["accessibility"]], na.rm = TRUE)
+    readr::write_rds(xrange, file = here::here("results", "accessibility_range.rds"))
+  } else {
+    message("accessibility: read ranges...")
+    xrange <- readr::read_rds(here::here("results", "accessibility_range.rds"))
+  }
+  # Normalise variable.
+  accessibility = scale_to_range(.data[["accessibility"]],
+                                 xmin = xrange[1],
+                                 xmax = xrange[2],
+                                 a = a,
+                                 b = b)
+}
+
 
 
 # Functions to calculate accessibility to two centers ---------------------
