@@ -13,8 +13,11 @@ results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenari
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_sf(mapping = aes(fill = malpakka_potential, color = ""),
-          data = results) +
+  # Hack to get NA values to legend in ggplot2 v3.3.5
+  geom_sf(mapping = aes(color = ""),
+          data = head(results, n = 1)) +
+  geom_sf(mapping = aes(fill = malpakka_potential),
+          data = results, color = NA) +
   scale_fill_fermenter(
     palette = "YlOrBr",
     name = NULL,

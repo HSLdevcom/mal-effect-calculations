@@ -39,8 +39,11 @@ limits <- range(breaks) + c(-0.0001, 0.0001)
 breaks <- breaks[c(-1, -length(breaks))]
 
 ggplot() +
-  geom_sf(mapping = aes(fill = diff_accessibility_scaled, color = ""),
-          data = results) +
+  # Hack to get NA values to legend in ggplot2 v3.3.5
+  geom_sf(mapping = aes(color = ""),
+          data = head(results, n = 1)) +
+  geom_sf(mapping = aes(fill = diff_accessibility_scaled),
+          data = results, color = NA) +
   scale_fill_stepsn(
     breaks = breaks,
     labels = scales::label_number(accuracy = 0.01, decimal.mark = ","),
