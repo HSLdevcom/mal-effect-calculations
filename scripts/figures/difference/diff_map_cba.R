@@ -64,7 +64,7 @@ ggsave_map(here::here("figures", sprintf("map_cba_car-time_tour_%s.png", scenari
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_sf(mapping = aes(fill = cba_transit_time_per_tour + cba_car_time_per_tour),
+  geom_sf(mapping = aes(fill = cba_car_transit_time_per_tour),
           data = results, color = NA) +
   scale_fill_distiller(
     palette = "PRGn",
@@ -77,7 +77,7 @@ ggplot() +
   geom_basemap() +
   coord_sf_mal() +
   annotate_map(
-    title = "Joukkoliikenteen ja henkilöauton yhteenlaskettu matka-aikamuutos kiertomatkaa kohden",
+    title = "Joukkoliikenteen ja henkilöauton matka-aikamuutos kiertomatkaa kohden",
     subtitle = "2040 Vertailupohja \U2192 2040 1. luonnos"
   ) +
   theme_mal_map()

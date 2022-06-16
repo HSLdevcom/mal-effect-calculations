@@ -376,7 +376,9 @@ if (scenario_attributes[["projected"]]) {
   # Calculate travel time changes with CBA data
   zones <- zones %>%
     dplyr::mutate(cba_car_time_per_tour = (cba_car_work_time + cba_car_leisure_time) / demand_car,
-                  cba_transit_time_per_tour = (cba_transit_work_time + cba_transit_leisure_time) / demand_transit)
+                  cba_transit_time_per_tour = (cba_transit_work_time + cba_transit_leisure_time) / demand_transit,
+                  cba_car_transit_time_per_tour = (cba_car_work_time + cba_car_leisure_time +
+                                                     cba_transit_work_time + cba_transit_leisure_time) / (demand_car + demand_transit))
 } else {
   zones <- zones %>%
     dplyr::mutate(cba_car_work_time = 0,
@@ -384,7 +386,8 @@ if (scenario_attributes[["projected"]]) {
                   cba_transit_work_time = 0,
                   cba_transit_leisure_time = 0,
                   cba_car_time_per_tour = 0,
-                  cba_transit_time_per_tour = 0)
+                  cba_transit_time_per_tour = 0,
+                  cba_car_transit_time_per_tour = 0)
 }
 
 
