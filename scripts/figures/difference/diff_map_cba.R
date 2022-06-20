@@ -14,7 +14,7 @@ results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenari
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_sf(mapping = aes(fill = cba_transit_time_per_person),
+  geom_sf(mapping = aes(fill = cba_transit_time_per_tour),
           data = results, color = NA) +
   scale_fill_fermenter(
     palette = "PRGn",
@@ -28,18 +28,18 @@ ggplot() +
   geom_basemap() +
   coord_sf_mal() +
   annotate_map(
-    title = "Joukkoliikenteen matka-aikamuutos asukasta kohden",
+    title = "Joukkoliikenteen matka-aikamuutos kiertomatkaa kohden",
     subtitle = "2040 Vertailupohja \U2192 2040 1. luonnos"
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_cba_transit-time_%s.png", scenario_attributes[["scenario"]])))
+ggsave_map(here::here("figures", sprintf("map_cba_transit-time_tour_%s.png", scenario_attributes[["scenario"]])))
 
 
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_sf(mapping = aes(fill = cba_car_time_per_person),
+  geom_sf(mapping = aes(fill = cba_car_time_per_tour),
           data = results, color = NA) +
   scale_fill_fermenter(
     palette = "PRGn",
@@ -53,18 +53,18 @@ ggplot() +
   geom_basemap() +
   coord_sf_mal() +
   annotate_map(
-    title = "Henkilöauton matka-aikamuutos asukasta kohden",
+    title = "Henkilöauton matka-aikamuutos kiertomatkaa kohden",
     subtitle = "2040 Vertailupohja \U2192 2040 1. luonnos"
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_cba_car-time_%s.png", scenario_attributes[["scenario"]])))
+ggsave_map(here::here("figures", sprintf("map_cba_car-time_tour_%s.png", scenario_attributes[["scenario"]])))
 
 
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_sf(mapping = aes(fill = cba_transit_time_per_person + cba_car_time_per_person),
+  geom_sf(mapping = aes(fill = cba_car_transit_time_per_tour),
           data = results, color = NA) +
   scale_fill_distiller(
     palette = "PRGn",
@@ -77,18 +77,18 @@ ggplot() +
   geom_basemap() +
   coord_sf_mal() +
   annotate_map(
-    title = "Joukkoliikenteen ja henkilöauton yhteenlaskettu matka-aikamuutos asukasta kohden",
+    title = "Joukkoliikenteen ja henkilöauton matka-aikamuutos kiertomatkaa kohden",
     subtitle = "2040 Vertailupohja \U2192 2040 1. luonnos"
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_cba_car-transit-time_%s.png", scenario_attributes[["scenario"]])))
+ggsave_map(here::here("figures", sprintf("map_cba_car-transit-time_tour_%s.png", scenario_attributes[["scenario"]])))
 
 
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_sf(mapping = aes(fill = cba_transit_revenue / total_pop),
+  geom_sf(mapping = aes(fill = cba_transit_revenue / demand_transit),
           data = results, color = NA) +
   scale_fill_fermenter(
     palette = "RdBu",
@@ -102,9 +102,9 @@ ggplot() +
   geom_basemap() +
   coord_sf_mal() +
   annotate_map(
-    title = "Tulot joukkoliikenteestä asukasta kohden",
+    title = "Tulot joukkoliikenteestä kiertomatkaa kohden",
     subtitle = "2040 Vertailupohja \U2192 2040 1. luonnos"
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_cba_revenue_transit_%s.png", scenario_attributes[["scenario"]])))
+ggsave_map(here::here("figures", sprintf("map_cba_revenue_transit_tour_%s.png", scenario_attributes[["scenario"]])))

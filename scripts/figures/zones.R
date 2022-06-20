@@ -173,6 +173,11 @@ origins_shares <- origins_shares %>%
                 mode_share_transit = transit,
                 mode_share_bike = bike,
                 mode_share_walk = walk)
+origins_demand <- origins_demand %>%
+  dplyr::rename(demand_car = car,
+                demand_transit = transit,
+                demand_bike = bike,
+                demand_walk = walk)
 if (scenario_attributes[["projected"]]) {
   cba <- cba %>%
   dplyr::rename_with(~ sprintf("cba_%s", .x), -zone)
@@ -190,7 +195,8 @@ zones <- zones %>%
   dplyr::left_join(sustainable_accessibility, by = "zone") %>%
   dplyr::left_join(workplace_accessibility, by = "zone") %>%
   dplyr::left_join(car_density, by = "zone") %>%
-  dplyr::left_join(origins_shares, by = "zone")
+  dplyr::left_join(origins_shares, by = "zone") %>%
+  dplyr::left_join(origins_demand, by = "zone")
 
 if (scenario_attributes[["projected"]]) {
   zones <- zones %>%
@@ -369,16 +375,19 @@ zones <- zones %>%
 if (scenario_attributes[["projected"]]) {
   # Calculate travel time changes with CBA data
   zones <- zones %>%
-    dplyr::mutate(cba_car_time_per_person = (cba_car_work_time + cba_car_leisure_time) / total_pop,
-                  cba_transit_time_per_person = (cba_transit_work_time + cba_transit_leisure_time) / total_pop)
+    dplyr::mutate(cba_car_time_per_tour = (cba_car_work_time + cba_car_leisure_time) / demand_car,
+                  cba_transit_time_per_tour = (cba_transit_work_time + cba_transit_leisure_time) / demand_transit,
+                  cba_car_transit_time_per_tour = (cba_car_work_time + cba_car_leisure_time +
+                                                     cba_transit_work_time + cba_transit_leisure_time) / (demand_car + demand_transit))
 } else {
   zones <- zones %>%
     dplyr::mutate(cba_car_work_time = 0,
                   cba_car_leisure_time = 0,
                   cba_transit_work_time = 0,
                   cba_transit_leisure_time = 0,
-                  cba_car_time_per_person = 0,
-                  cba_transit_time_per_person = 0)
+                  cba_car_time_per_tour = 0,
+                  cba_transit_time_per_tour = 0,
+                  cba_car_transit_time_per_tour = 0)
 }
 
 
