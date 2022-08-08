@@ -30,7 +30,7 @@ source(here::here("scripts", "figures", "map_hubs.R"), encoding = "utf-8")
 
 # Prepare data ------------------------------------------------------------
 
-scenario_list <- c("2018", "2040_ve0", "2040_ve1")
+scenario_list <- c("2018", "2040_ve0u", "2040_ve1u", "2040_ve2")
 
 for (scenario in scenario_list) {
   scenario_attributes <- set_scenario(scenario)
