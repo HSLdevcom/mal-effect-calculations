@@ -4,6 +4,7 @@ library(tidyverse)
 
 scenarios <- readr::read_tsv(
   here::here("scenarios.tsv"),
+  comment = "#",
   col_types = list(
     year = readr::col_integer(),
     co2 = readr::col_integer(),
@@ -21,3 +22,4 @@ stopifnot(sum(scenarios$baseline) == 1)
 stopifnot(sum(scenarios$projected) >= 1)
 stopifnot(all(rowSums(dplyr::select(scenarios, present, baseline, projected, sensitivity)) == 1))
 stopifnot(all(scenarios$root %in% scenarios$scenario))
+

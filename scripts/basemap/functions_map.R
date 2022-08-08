@@ -127,6 +127,7 @@ theme_mal_map <- function() {
   list(
     theme_void(),
     theme(
+      plot.background = element_rect(fill = "#FFFFFF"),
       text = element_text(family = "sans", colour = "#333333", size = 10),
       plot.title = element_text(colour = "#3E8606"),
       legend.position = c(0.00, 0.90),
@@ -144,6 +145,7 @@ theme_mal_graph <- function() {
   list(
     theme_minimal(),
     theme(
+      plot.background = element_rect(fill = "#FFFFFF"),
       text = element_text(family = "sans", colour = "#333333", size = 10),
       plot.title = element_text(colour = "#3E8606", size = 10),
       legend.position = "bottom",
