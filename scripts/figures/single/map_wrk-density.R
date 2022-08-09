@@ -9,7 +9,7 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 # Data --------------------------------------------------------------------
 
 results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario_attributes[["scenario"]]))) %>%
-  dplyr::mutate(wrk_density = wrk / land_area)
+  dplyr::mutate(wrk_density = total_wrk / land_area)
 
 
 # Plot ------------------------------------------
