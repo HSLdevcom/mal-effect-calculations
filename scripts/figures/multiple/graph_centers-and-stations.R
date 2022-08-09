@@ -31,7 +31,7 @@ ggplot(results, aes(x = area, y = pop_share_center_or_station)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = mal_fill[-1]
+    values = mal_greens_fill[-1]
   ) +
   labs(
     title = "Seudun keskuksiin ja raskaan raideliikenteen piiriin\nsijoittuvien uusien asukkaiden osuus",

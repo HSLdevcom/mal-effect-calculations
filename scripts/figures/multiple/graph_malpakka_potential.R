@@ -38,7 +38,7 @@ ggplot(results, aes(x = area, y = malpakka_potential)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = mal_fill
+    values = mal_greens_fill
   ) +
   scale_color_manual(
     guide = "none",

@@ -37,7 +37,7 @@ ggplot(results, aes(x = area, y = car_density, fill = scenario)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = mal_fill
+    values = mal_greens_fill
   ) +
   scale_color_manual(
     guide = "none",

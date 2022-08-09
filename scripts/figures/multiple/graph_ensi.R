@@ -31,7 +31,7 @@ ggplot(results, aes(x = area, y = pop_share_ensi)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = mal_fill[-1]
+    values = mal_greens_fill[-1]
   ) +
   labs(
     title = "Uusien asukkaiden kohdistuminen\nensisijaisesti kehitettäville vyöhykkeille",

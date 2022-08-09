@@ -51,7 +51,7 @@ ggplot(results, aes(x = area, y = malpakka)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#e0e0e0", mal_fill)
+    values = c("#e0e0e0", mal_greens_fill)
   ) +
   scale_color_manual(
     guide = "none",
