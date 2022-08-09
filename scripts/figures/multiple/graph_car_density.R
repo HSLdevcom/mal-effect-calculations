@@ -20,10 +20,13 @@ ggplot(results, aes(x = area, y = car_density, fill = scenario)) +
     size = 0.35
   ) +
   geom_text(
-    aes(y = car_density / 2, label = scales::label_number(accuracy = 1)(car_density)),
+    aes(
+      y = car_density / 2,
+      label = scales::label_number(accuracy = 1)(car_density),
+      color = scenario
+    ),
     position = position_dodge2(width = 0.9),
-    size = points2mm(8),
-    color = "#333333"
+    size = points2mm(8)
   ) +
   scale_y_continuous(
     labels = scales::label_number(),
@@ -34,7 +37,11 @@ ggplot(results, aes(x = area, y = car_density, fill = scenario)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#3E8606", "#7DAD58", "#BFD7AC")
+    values = mal_fill
+  ) +
+  scale_color_manual(
+    guide = "none",
+    values = mal_color
   ) +
   labs(
     title = "Henkilöautotiheys",

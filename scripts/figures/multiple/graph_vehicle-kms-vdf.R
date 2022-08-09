@@ -19,10 +19,13 @@ ggplot(results, aes(x = vdf, y = share)) +
     size = 0.35
   ) +
   geom_text(
-    aes(y = share / 2, label = scales::label_percent(accuracy = 1, suffix = "", decimal.mark = ",")(share)),
+    aes(
+      y = share / 2,
+      label = scales::label_percent(accuracy = 1, suffix = "", decimal.mark = ",")(share),
+      color = scenario
+    ),
     position = position_dodge2(width = 0.9),
-    size = points2mm(8),
-    color = "#333333"
+    size = points2mm(8)
   ) +
   scale_y_continuous(
     labels = scales::label_percent(accuracy = 1, suffix = ""),
@@ -33,7 +36,11 @@ ggplot(results, aes(x = vdf, y = share)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#007AC9", "#54A5DA", "#AAD3ED")
+    values = hsl_blues_fill
+  ) +
+  scale_color_manual(
+    guide = "none",
+    values = mal_color
   ) +
   labs(
     title = "Moottoriajoneuvoliikenteen kilometrisuorite väylätyypeittäin",

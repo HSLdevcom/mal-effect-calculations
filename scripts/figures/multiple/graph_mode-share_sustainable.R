@@ -63,10 +63,13 @@ ggplot(results_sustainable, aes(x = area, y = value, fill = scenario)) +
     size = 0.35
   ) +
   geom_text(
-    aes(y = value / 2, label = scales::label_percent(accuracy = 1, suffix = "")(value)),
+    aes(
+      y = value / 2,
+      label = scales::label_percent(accuracy = 1, suffix = "")(value),
+      color = scenario
+    ),
     position = position_dodge2(width = 0.9),
-    size = points2mm(8),
-    color = "#333333"
+    size = points2mm(8)
   ) +
   scale_y_continuous(
     labels = scales::label_percent(accuracy = 1, suffix = ""),
@@ -78,7 +81,11 @@ ggplot(results_sustainable, aes(x = area, y = value, fill = scenario)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#007AC9", "#55A6DB", "#AAD3ED")
+    values = hsl_blues_fill
+  ) +
+  scale_color_manual(
+    guide = "none",
+    values = mal_color
   ) +
   labs(
     title = "Kestävien kulkutapojen osuus alueelta alkavista kiertomatkoista",
@@ -116,7 +123,7 @@ ggplot(results_transit, aes(x = area, y = value, fill = scenario)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#00B9E4", "#55D0ED", "#AAE8F6")
+    values = hsl_teals_fill
   ) +
   labs(
     title = "Joukkoliikenteen osuus alueelta alkavista kiertomatkoista",
@@ -154,7 +161,7 @@ ggplot(results_bike, aes(x = area, y = value, fill = scenario)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#FCB919", "#FDD066", "#FEE8B2")
+    values = hsl_yellows_fill
   ) +
   labs(
     title = "Pyöräilyn osuus alueelta alkavista kiertomatkoista",
@@ -192,7 +199,7 @@ ggplot(results_walk, aes(x = area, y = value, fill = scenario)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#64BE1E", "#98D469", "#CBE9B4")
+    values = hsl_greens_fill
   ) +
   labs(
     title = "Kävelyn osuus alueelta alkavista kiertomatkoista",

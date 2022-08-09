@@ -20,10 +20,14 @@ ggplot(results, aes(x = area, y = weighted_delay_all, fill = scenario)) +
     size = 0.35
   ) +
   geom_text(
-    aes(y = weighted_delay_all / 2, label = scales::label_number(accuracy = 1, scale = 0.001)(weighted_delay_all), group = area),
+    aes(
+      y = weighted_delay_all / 2,
+      label = scales::label_number(accuracy = 1, scale = 0.001)(weighted_delay_all),
+      group = area,
+      color = scenario
+    ),
     position = position_dodge2(width = 0.9),
-    size = points2mm(8),
-    color = "#333333"
+    size = points2mm(8)
   ) +
   scale_y_continuous(
     labels = scales::label_number(accuracy = 1, scale = 0.001),
@@ -34,7 +38,11 @@ ggplot(results, aes(x = area, y = weighted_delay_all, fill = scenario)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#3E8606", "#7DAD58", "#BFD7AC")
+    values = mal_fill
+  ) +
+  scale_color_manual(
+    guide = "none",
+    values = mal_color
   ) +
   labs(
     title = "Tieliikenteen ruuhkautuvuussuorite",

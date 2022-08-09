@@ -19,10 +19,13 @@ ggplot(results, aes(x = area, y = workforce_accessibility)) +
     size = 0.35
   ) +
   geom_text(
-    aes(y = workforce_accessibility / 2, label = scales::label_number(accuracy = 1, scale = 0.001, big.mark = "")(workforce_accessibility)),
+    aes(
+      y = workforce_accessibility / 2,
+      label = scales::label_number(accuracy = 1, scale = 0.001, big.mark = "")(workforce_accessibility),
+      color = scenario
+    ),
     position = position_dodge2(width = 0.9),
-    size = points2mm(8),
-    color = "#333333"
+    size = points2mm(8)
   ) +
   scale_y_continuous(
     labels = scales::label_number(scale = 0.001),
@@ -33,7 +36,11 @@ ggplot(results, aes(x = area, y = workforce_accessibility)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#3E8606", "#7DAD58", "#BFD7AC")
+    values = mal_fill
+  ) +
+  scale_color_manual(
+    guide = "none",
+    values = mal_color
   ) +
   labs(
     title = "Työvoimasaavutettavuus",

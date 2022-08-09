@@ -41,10 +41,13 @@ ggplot(results, aes(x = mode, y = value)) +
     size = 0.35
   ) +
   geom_text(
-    aes(y = value / 2, label = scales::label_number(accuracy = 1, scale = 0.001)(value)),
+    aes(
+      y = value / 2,
+      label = scales::label_number(accuracy = 1, scale = 0.001)(value),
+      color = scenario
+    ),
     position = position_dodge2(width = 0.9),
-    size = points2mm(8),
-    color = "#333333"
+    size = points2mm(8)
   ) +
   scale_y_continuous(
     labels = scales::label_number(accuracy = 1, scale = 0.001),
@@ -55,7 +58,11 @@ ggplot(results, aes(x = mode, y = value)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#007AC9", "#54A5DA", "#AAD3ED")
+    values = hsl_blues_fill
+  ) +
+  scale_color_manual(
+    guide = "none",
+    values = mal_color
   ) +
   labs(
     title = "Tieliikenteen ruuhkautuvuussuorite kulkutavoittain",
