@@ -31,7 +31,7 @@ ggplot(results, aes(x = area, y = vehicle_kms_car, fill = scenario)) +
   ) +
   scale_y_continuous(
     labels = scales::label_number(scale = 0.000001),
-    expand = expansion(mult = 0.1),
+    expand = expansion(mult = c(0.025, 0.1)),
     limits = c(0, 45000000)
   ) +
   scale_x_discrete(

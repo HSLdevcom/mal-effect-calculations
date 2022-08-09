@@ -61,4 +61,4 @@ ggplot(results, aes(x = scenario, y = emission, fill = scenario)) +
   ) +
   theme_mal_graph()
 
-ggsave_graph(here::here("figures", "graph_co2-total.png"))
+ggsave_graph(here::here("figures", "graph_co2-total.png"), width = 150, height = 84)

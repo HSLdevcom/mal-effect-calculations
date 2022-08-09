@@ -29,7 +29,7 @@ ggplot(results, aes(x = vdf, y = share)) +
   ) +
   scale_y_continuous(
     labels = scales::label_percent(accuracy = 1, suffix = ""),
-    expand = expansion(mult = 0.1)
+    expand = expansion(mult = c(0.025, 0.1))
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(20)

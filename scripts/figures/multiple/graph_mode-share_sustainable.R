@@ -74,7 +74,7 @@ ggplot(results_sustainable, aes(x = area, y = value, fill = scenario)) +
   scale_y_continuous(
     labels = scales::label_percent(accuracy = 1, suffix = ""),
     limits = c(0, 1),
-    expand = expansion(mult = 0.05)
+    expand = expansion(mult = c(0.025, 0.1))
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)
@@ -116,7 +116,7 @@ ggplot(results_transit, aes(x = area, y = value, fill = scenario)) +
   scale_y_continuous(
     labels = scales::label_percent(accuracy = 1, suffix = ""),
     limits = c(0, 0.50),
-    expand = expansion(mult = 0.05)
+    expand = expansion(mult = c(0.025, 0.1))
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)
@@ -132,7 +132,7 @@ ggplot(results_transit, aes(x = area, y = value, fill = scenario)) +
   ) +
   theme_mal_graph()
 
-ggsave_graph(here::here("figures", "graph_mode-share_transit.png"))
+ggsave_graph(here::here("figures", "graph_mode-share_transit.png"), width = 150, height = 84)
 
 
 # Bike --------------------------------------------------------------------
@@ -154,7 +154,7 @@ ggplot(results_bike, aes(x = area, y = value, fill = scenario)) +
   scale_y_continuous(
     labels = scales::label_percent(accuracy = 1, suffix = ""),
     limits = c(0, 0.50),
-    expand = expansion(mult = 0.05)
+    expand = expansion(mult = c(0.025, 0.1))
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)
@@ -170,7 +170,7 @@ ggplot(results_bike, aes(x = area, y = value, fill = scenario)) +
   ) +
   theme_mal_graph()
 
-ggsave_graph(here::here("figures", "graph_mode-share_bike.png"))
+ggsave_graph(here::here("figures", "graph_mode-share_bike.png"), width = 150, height = 84)
 
 
 # Walk --------------------------------------------------------------------
@@ -192,7 +192,7 @@ ggplot(results_walk, aes(x = area, y = value, fill = scenario)) +
   scale_y_continuous(
     labels = scales::label_percent(accuracy = 1, suffix = ""),
     limits = c(0, 0.50),
-    expand = expansion(mult = 0.05)
+    expand = expansion(mult = c(0.025, 0.1))
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)
@@ -208,4 +208,4 @@ ggplot(results_walk, aes(x = area, y = value, fill = scenario)) +
   ) +
   theme_mal_graph()
 
-ggsave_graph(here::here("figures", "graph_mode-share_walk.png"))
+ggsave_graph(here::here("figures", "graph_mode-share_walk.png"), width = 150, height = 84)

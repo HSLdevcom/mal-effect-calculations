@@ -24,7 +24,7 @@ ggplot(results, aes(x = area, y = pop_share_center_or_station)) +
   scale_y_continuous(
     labels = scales::label_percent(accuracy = 1, suffix = ""),
     limits = c(0, 1),
-    expand = expansion(mult = 0.1)
+    expand = expansion(mult = c(0.025, 0.1))
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)

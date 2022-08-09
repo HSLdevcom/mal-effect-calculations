@@ -32,7 +32,7 @@ ggplot(results, aes(x = scenario, y = total_wrk)) +
             color = "#333333") +
   scale_y_continuous(
     labels = scales::label_number(),
-    expand = expansion(mult = 0.1)
+    expand = expansion(mult = c(0.025, 0.1))
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)

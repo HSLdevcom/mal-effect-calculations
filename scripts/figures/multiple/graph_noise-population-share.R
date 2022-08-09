@@ -53,4 +53,4 @@ ggplot(results, aes(x = area, y = noise_population_share)) +
   ) +
   theme_mal_graph()
 
-ggsave_graph(here::here("figures", "graph_noise-population-share.png"))
+ggsave_graph(here::here("figures", "graph_noise-population-share.png"), width = 150, height = 84)

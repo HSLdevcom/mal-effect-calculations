@@ -30,7 +30,7 @@ ggplot(results, aes(x = area, y = accessibility_scaled)) +
   scale_y_continuous(
     labels = scales::label_number(),
     limits = c(0, 100),
-    expand = expansion(mult = 0.1)
+    expand = expansion(mult = c(0.025, 0.1))
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)
