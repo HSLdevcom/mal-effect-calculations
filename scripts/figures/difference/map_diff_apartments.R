@@ -12,12 +12,12 @@ scenario1 <- "2040_ve0u"
 
 results0 <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario0))) %>%
   dplyr::select(zone, detach) %>%
-  dplyr::rename(apartments0 = 1 - detach)
+  dplyr::mutate(apartments0 = 1 - detach)
 
 results1 <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario1))) %>%
   sf::st_drop_geometry() %>%
   dplyr::select(zone, detach) %>%
-  dplyr::rename(apartments1 = 1 - detach)
+  dplyr::mutate(apartments1 = 1 - detach)
 
 results <- results0 %>%
   dplyr::left_join(results1, by = "zone") %>%
