@@ -45,7 +45,7 @@ ggplot() +
     palette = "Spectral",
     name = "%-yks.",
     labels = scales::label_percent(accuracy = 1, suffix = ""),
-    direction = 1,
+    direction = -1,
     limits = c(-0.75, 0.75),
     oob = scales::squish
   ) +

@@ -21,7 +21,7 @@ ggplot() +
     name = "%",
     labels = scales::label_percent(accuracy = 1, suffix = " %"),
     limits = c(0, 1),
-    direction = -1,
+    direction = 1,
     oob = scales::squish
   ) +
   scale_color_manual(
@@ -36,4 +36,4 @@ ggplot() +
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_apartments_%s.png", scenario0)))
+ggsave_map(here::here("figures", sprintf("map_apartments_%s.png", scenario_attributes[["scenario"]])))
