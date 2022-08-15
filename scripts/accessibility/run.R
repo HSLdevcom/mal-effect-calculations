@@ -28,6 +28,8 @@ source(here("scripts", "accessibility", "colors.R"),
        encoding = "utf-8")
 source(here("scripts", "accessibility", "themes.R"),
        encoding = "utf-8")
+source(here("scripts", "basemap", "functions_map.R"),
+       encoding = "utf-8")
 
 # Plot results ----
 
