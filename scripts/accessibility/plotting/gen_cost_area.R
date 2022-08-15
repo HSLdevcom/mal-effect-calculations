@@ -73,53 +73,63 @@ results <- areas %>%
     type %in% "askust_kalib_hlo" ~ "Asumisen kustannus",
     type %in% "muut_asmenot" ~ "Asuntolainan lyhennykset",
     type %in% "cost" ~ "Liikkumisen suora kustannus",
-    type %in% "time_cost" ~ "Liikkumisen aikakustannus"))
+    type %in% "time_cost" ~ "Liikkumisen aikakustannus")) %>%
+  mutate(type = factor(type,
+                       levels = c("Liikkumisen aikakustannus",
+                                  "Liikkumisen suora kustannus",
+                                  "Asumisen kustannus",
+                                  "Asuntolainan lyhennykset")))
 
-plot_cols <- c(
-  hsl_pal("blues")(2), hsl_pal("greens")(2)
-)
-
-results %>%
-  ggplot(aes(
-    x = scenario,
-    y = cost,
-    fill = type,
-    label = round(cost, -1)
-  )) +
-  geom_bar(
-    stat = "identity",
-    position = "stack",
-    color = "white",
-    width = 0.8
+ggplot(results, aes(x = scenario, y = cost)) +
+  facet_grid(cols = vars(area), switch = "both", labeller = labeller(.cols = scales::label_wrap(10))) +
+  geom_col(fill = "white") +
+  geom_col(aes(fill = type, alpha = forcats::fct_rev(scenario))) +
+  geom_text(
+    aes(label = scales::label_number(accuracy = 1)(cost), group = type),
+    position = position_stack(vjust = 0.5),
+    size = points2mm(8),
+    color = "#333333"
   ) +
-  geom_text(size = 2, position = position_stack(vjust = 0.5)) +
-  facet_wrap(~ area, nrow = 1) +
-  scale_fill_manual(values = plot_cols) +
-  theme_wide +
-  geom_abline(slope = 0) +
+  # geom_text(data = results_total,
+  #           aes(label = scales::label_percent(accuracy = 1, suffix = "")(cost)),
+  #           vjust = -0.5,
+  #           size = points2mm(8),
+  #           fontface = "bold",
+  #           color = "#333333") +
+  scale_y_continuous(
+    labels = scales::label_number(accuracy = 10),
+    expand = expansion(mult = c(0.025, 0.1))
+  ) +
+  scale_x_discrete(
+    labels = NULL
+  ) +
+  scale_fill_manual(
+    name = NULL,
+    values = c("Asumisen kustannus" = "#BEE4F8",
+               "Asuntolainan lyhennykset" = "#007AC9",
+               "Liikkumisen suora kustannus" = "#64BE1E",
+               "Liikkumisen aikakustannus" = "#D0E6BE"),
+    guide = guide_legend(order = 1)
+  ) +
+  scale_alpha_discrete(
+    name = NULL,
+    range = c(0.333, 1),
+    guide = guide_legend(order = 2, reverse = TRUE)
+  ) +
   labs(
-    fill = NULL,
-    y = "eur / asukas / kk",
+    title = "Liikkumisen ja asumisen keskimääräiset kustannukset",
     x = NULL,
-    title = "Liikkumisen ja asumisen keskimääräiset kustannukset"
-    )
+    y = "eur / asukas / kk"
+  ) +
+  theme_mal_graph()
 
-ggsave(
-  here(
-    "figures",
-    config::get("projected_scenario"),
-    "gen_cost_housing_transport_areas.png"
-    ),
-  width = dimensions_wide[1],
-  height = dimensions_wide[2],
-  units = "cm"
-)
+ggsave_graph(here::here("figures",
+                        config::get("projected_scenario"),
+                        "graph_gen_cost_housing_transport_areas.png"),
+             width = 234,
+             height = 107)
 
 # Direct cost plot ----
-
-plot_cols <- c(
-  hsl_pal("blues")(2), hsl_cols("green")
-)
 
 results <- areas %>%
   gather("type", "cost",
@@ -127,41 +137,56 @@ results <- areas %>%
   mutate(type = case_when(
     type %in% "askust_kalib_hlo" ~ "Asumisen kustannus",
     type %in% "muut_asmenot" ~ "Asuntolainan lyhennykset",
-    type %in% "cost" ~ "Liikkumisen suora kustannus"))
+    type %in% "cost" ~ "Liikkumisen suora kustannus")) %>%
+  mutate(type = factor(type,
+                       levels = c("Liikkumisen suora kustannus",
+                                  "Asumisen kustannus",
+                                  "Asuntolainan lyhennykset")))
 
-results %>%
-  ggplot(aes(
-    x = scenario,
-    y = cost,
-    fill = type,
-    label = round(cost, -1)
-  )) +
-  geom_bar(
-    stat = "identity",
-    position = "stack",
-    color = "white",
-    width = 0.8
+ggplot(results, aes(x = scenario, y = cost)) +
+  facet_grid(cols = vars(area), switch = "both", labeller = labeller(.cols = scales::label_wrap(10))) +
+  geom_col(fill = "white") +
+  geom_col(aes(fill = type, alpha = forcats::fct_rev(scenario))) +
+  geom_text(
+    aes(label = scales::label_number(accuracy = 1)(cost), group = type),
+    position = position_stack(vjust = 0.5),
+    size = points2mm(8),
+    color = "#333333"
   ) +
-  geom_text(size = 2, position = position_stack(vjust = 0.5)) +
-  facet_wrap(~ area, nrow = 1) +
-  scale_fill_manual(values = plot_cols) +
-  theme_wide +
-  geom_abline(slope = 0) +
+  # geom_text(data = results_total,
+  #           aes(label = scales::label_percent(accuracy = 1, suffix = "")(cost)),
+  #           vjust = -0.5,
+  #           size = points2mm(8),
+  #           fontface = "bold",
+  #           color = "#333333") +
+  scale_y_continuous(
+    labels = scales::label_number(accuracy = 10),
+    expand = expansion(mult = c(0.025, 0.1))
+  ) +
+  scale_x_discrete(
+    labels = NULL
+  ) +
+  scale_fill_manual(
+    name = NULL,
+    values = c("Asumisen kustannus" = "#BEE4F8",
+               "Asuntolainan lyhennykset" = "#007AC9",
+               "Liikkumisen suora kustannus" = "#64BE1E"),
+    guide = guide_legend(order = 1)
+  ) +
+  scale_alpha_discrete(
+    name = NULL,
+    range = c(0.333, 1),
+    guide = guide_legend(order = 2, reverse = TRUE)
+  ) +
   labs(
-    fill = NULL,
-    y = "eur / asukas / kk",
+    title = "Liikkumisen ja asumisen keskimääräiset kustannukset",
     x = NULL,
-    title =  "Liikkumisen ja asumisen keskimääräiset kustannukset"
-    )
+    y = "eur / asukas / kk"
+  ) +
+  theme_mal_graph()
 
-ggsave(
-  here(
-    "figures",
-    config::get("projected_scenario"),
-    "cost_housing_transport_areas.png"
-  ),
-  width = dimensions_wide[1],
-  height = dimensions_wide[2],
-  units = "cm"
-)
-
+ggsave_graph(here::here("figures",
+                        config::get("projected_scenario"),
+                        "graph_cost_housing_transport_areas.png"),
+             width = 234,
+             height = 107)
