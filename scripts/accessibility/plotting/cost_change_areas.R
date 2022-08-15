@@ -43,33 +43,29 @@ max_value <- max(agent_sums$cost_dif, na.rm = TRUE)
 
 agent_sums %>%
   ggplot(aes(x = area, y = cost_dif)) +
-  geom_bar(
-    stat = "identity",
-    position = "dodge",
-    color = "white",
-    fill = hsl_cols("blue"),
-    width = 0.8
+  geom_col(
+    fill = "#3E8606"
   ) +
-  ylim(-max_value, max_value) +
-  theme_fig +
   geom_abline(slope = 0) +
+  scale_y_continuous(
+    labels = scales::label_number(accuracy = 1),
+    expand = expansion(mult = c(0.025, 0.1))
+  ) +
+  scale_x_discrete(
+    labels = scales::label_wrap(5)
+  ) +
   labs(
-    y = "kustannus (eur / asukas / kk)",
+    y = "euroa asukasta kohden kuukaudessa",
     x = NULL,
-    title = paste0(
-      "Muutos asukkaan matkojen kustannuksissa: ",
-      config::get("projected_name"),
-      " - ",
-      config::get("baseline_name")),
-    subtitle = "Kaikki matkaryhmät"
-  )
+    title = "Muutos asukkaan matkojen suorissa kustannuksissa",
+    subtitle = paste0(config::get("baseline_name"), " \U2192 ",  config::get("projected_name"))
+  ) +
+  theme_mal_graph()
 
-ggsave(
+ggsave_graph(
   here("figures",
        config::get("projected_scenario"),
-       "cost_change_areas.png"
+       "graph_diff_cost_areas.png"
   ),
-  width = dimensions_fig[1],
-  height = dimensions_fig[2],
-  units = "cm"
+  width = 150, height = 84
 )
