@@ -60,10 +60,12 @@ ggplot() +
           data = zones, color = NA) +
   scale_fill_steps(
     name = "eur / asukas / kk",
-    n.breaks = 6,
+    limits = c(0, 400),
+    breaks = seq(100, 300, 100),
     high = hsl_cols("blue"),
     low = hsl_cols("white"),
-    na.value = hsl_cols("lightgray")
+    na.value = hsl_cols("lightgray"),
+    oob = scales::squish
   ) +
   geom_basemap() +
   coord_sf_mal() +
@@ -77,7 +79,7 @@ ggsave_map(
   here(
     "figures",
     config::get("projected_scenario"),
-    "cost_transport.png"
+    paste0("cost_transport_", config::get("present_scenario") ,".png")
   )
 )
 
@@ -104,7 +106,7 @@ ggsave_map(
   here(
     "figures",
     config::get("projected_scenario"),
-    "cost_housing.png"
+    paste0("cost_housing_", config::get("present_scenario") ,".png")
   )
 )
 
@@ -114,10 +116,12 @@ ggplot() +
           data = zones, color = NA) +
   scale_fill_steps(
     name = "eur / asukas / kk",
-    n.breaks = 6,
+    limits = c(400, 1000),
+    breaks = seq(500, 900, 100),
     high = hsl_cols("red"),
     low = hsl_cols("white"),
-    na.value = hsl_cols("lightgray")
+    na.value = hsl_cols("lightgray"),
+    oob = scales::squish
   ) +
   geom_basemap() +
   coord_sf_mal() +
@@ -131,7 +135,7 @@ ggsave_map(
   here(
     "figures",
     config::get("projected_scenario"),
-    "cost_housing_transport.png"
+    paste0("cost_housing_transport_", config::get("present_scenario") ,".png")
   )
 )
 
@@ -158,7 +162,7 @@ ggsave_map(
   here(
     "figures",
     config::get("projected_scenario"),
-    "median_income.png"
+    paste0("median_income_", config::get("present_scenario") ,".png")
   )
 )
 
@@ -168,11 +172,13 @@ ggplot() +
           data = zones, color = NA) +
   scale_fill_steps(
     name = "%",
-    labels = scales::percent,
-    breaks = seq(0.20, 0.50, 0.05),
+    labels = scales::label_percent(accuracy = 1, suffix = ""),
+    limits = c(0.2, 0.5),
+    breaks = seq(0.25, 0.45, 0.05),
     high = hsl_cols("red"),
     low = hsl_cols("white"),
-    na.value = hsl_cols("lightgray")
+    na.value = hsl_cols("lightgray"),
+    oob = scales::squish
   ) +
   geom_basemap() +
   coord_sf_mal() +
@@ -186,6 +192,6 @@ ggsave_map(
   here(
     "figures",
     config::get("projected_scenario"),
-    "cost_income.png"
+    paste0("cost_income_", config::get("present_scenario") ,".png")
   )
 )
