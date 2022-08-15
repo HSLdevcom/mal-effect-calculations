@@ -26,19 +26,19 @@ zones <- zones %>%
 
 # Calc cost per month ----
 
-agents <- agents %>%
+agents_1 <- agents_1 %>%
   mutate(cost = cost * 30)
 
 # Summarise by area ----
 
-zones_agents <- agents %>%
+zones_agents <- agents_1 %>%
   group_mean("number", c("cost", "income"))
 
 zones <- zones %>%
   left_join(zones_agents,
             by = c("zone" = "number"),
             suffix = c("","1")
-            ) %>%
+  ) %>%
   left_join(housing_cost,
             by = c("zone" = "sij2019"),
             suffix = c("","1")) %>%
@@ -71,7 +71,7 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Liikkumisen suorat kustannukset (eur)",
-    subtitle = config::get("present_name")
+    subtitle = config::get("projected_name")
   ) +
   theme_mal_map()
 
@@ -79,34 +79,7 @@ ggsave_map(
   here(
     "figures",
     config::get("projected_scenario"),
-    paste0("cost_transport_", config::get("present_scenario") ,".png")
-  )
-)
-
-# housing costs
-ggplot() +
-  geom_sf(mapping = aes(fill = asmenot_kalib_hlo),
-          data = zones, color = NA) +
-  scale_fill_steps(
-    name = "eur / asukas / kk",
-    n.breaks = 6,
-    high = hsl_cols("red"),
-    low = hsl_cols("white"),
-    na.value = hsl_cols("lightgray")
-  ) +
-  geom_basemap() +
-  coord_sf_mal() +
-  annotate_map(
-    title = "Asumisen menot (eur)",
-    subtitle = config::get("present_name")
-  ) +
-  theme_mal_map()
-
-ggsave_map(
-  here(
-    "figures",
-    config::get("projected_scenario"),
-    paste0("cost_housing_", config::get("present_scenario") ,".png")
+    paste0("cost_transport_", config::get("projected_scenario") ,".png")
   )
 )
 
@@ -127,7 +100,7 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Liikkumisen ja asumisen suorat menot (eur)",
-    subtitle = config::get("present_name")
+    subtitle = config::get("projected_name")
   ) +
   theme_mal_map()
 
@@ -135,34 +108,7 @@ ggsave_map(
   here(
     "figures",
     config::get("projected_scenario"),
-    paste0("cost_housing_transport_", config::get("present_scenario") ,".png")
-  )
-)
-
-# income ----
-ggplot() +
-  geom_sf(mapping = aes(fill = hr_mtu),
-          data = zones, color = NA) +
-  scale_fill_steps(
-    name = "eur / asukas / kk",
-    n.breaks = 6,
-    high = hsl_cols("green"),
-    low = hsl_cols("white"),
-    na.value = hsl_cols("lightgray")
-  ) +
-  geom_basemap() +
-  coord_sf_mal() +
-  annotate_map(
-    title = "Mediaanitulot (eur)",
-    subtitle = config::get("present_name")
-  ) +
-  theme_mal_map()
-
-ggsave_map(
-  here(
-    "figures",
-    config::get("projected_scenario"),
-    paste0("median_income_", config::get("present_scenario") ,".png")
+    paste0("cost_housing_transport_", config::get("projected_scenario") ,".png")
   )
 )
 
@@ -184,7 +130,7 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Osuus tuloista liikkumiseen ja asumiseen",
-    subtitle = config::get("present_name")
+    subtitle = config::get("projected_name")
   ) +
   theme_mal_map()
 
@@ -192,6 +138,6 @@ ggsave_map(
   here(
     "figures",
     config::get("projected_scenario"),
-    paste0("cost_income_", config::get("present_scenario") ,".png")
+    paste0("cost_income_", config::get("projected_scenario") ,".png")
   )
 )
