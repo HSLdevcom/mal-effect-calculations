@@ -65,4 +65,4 @@ ggplot() +
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_diff_apartments_%s_%s.png", scenario0, scenario1)))
+ggsave_map(here::here("figures", sprintf("map_diff_apartments_%s-%s.png", scenario0, scenario1)))

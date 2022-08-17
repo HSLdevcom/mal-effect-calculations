@@ -7,11 +7,14 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-results0 <- readr::read_rds(here::here("results", "zones_2018.rds")) %>%
+scenario0 <- "2018"
+scenario1 <- "2040_ve0u"
+
+results0 <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario0))) %>%
   dplyr::select(zone, ttime_twocenters_normal_all) %>%
   dplyr::rename(ttime_twocenters_normal_all0 = ttime_twocenters_normal_all)
 
-results1 <- readr::read_rds(here::here("results", "zones_2040_ve0.rds")) %>%
+results1 <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario1))) %>%
   sf::st_drop_geometry() %>%
   dplyr::select(zone, ttime_twocenters_normal_all) %>%
   dplyr::rename(ttime_twocenters_normal_all1 = ttime_twocenters_normal_all)
@@ -40,8 +43,12 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Kahden keskuksen matka-aikasaavutettavuuden muutos kaikilla kulkutavoilla",
-    subtitle = "2018 Nykytila \U2192 2040 Vertailupohja"
+    subtitle = sprintf("%d %s \U2192 %d %s",
+                       scenarios$year[scenarios$scenario == scenario0],
+                       scenarios$name[scenarios$scenario == scenario0],
+                       scenarios$year[scenarios$scenario == scenario1],
+                       scenarios$name[scenarios$scenario == scenario1])
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", "map_diff_twocenters_all_2020-2040_ve0.png"))
+ggsave_map(here::here("figures", sprintf("map_diff_twocenters_all_%s-%s.png", scenario0, scenario1)))

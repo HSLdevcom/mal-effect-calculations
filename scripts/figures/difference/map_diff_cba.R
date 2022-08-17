@@ -8,7 +8,10 @@ source(here::here("scripts", "utils.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario_attributes[["scenario"]])))
+scenario0 <- "2040_ve0u"
+scenario1 <- "2040_ve2"
+
+results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario1)))
 
 
 # Plot --------------------------------------------------------------------
@@ -29,11 +32,15 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Joukkoliikenteen matka-aikamuutos kiertomatkaa kohden",
-    subtitle = "2040 Vertailupohja \U2192 2040 1. luonnos"
+    subtitle = sprintf("%d %s \U2192 %d %s",
+                       scenarios$year[scenarios$scenario == scenario0],
+                       scenarios$name[scenarios$scenario == scenario0],
+                       scenarios$year[scenarios$scenario == scenario1],
+                       scenarios$name[scenarios$scenario == scenario1])
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_cba_transit-time_tour_%s.png", scenario_attributes[["scenario"]])))
+ggsave_map(here::here("figures", sprintf("map_cba_transit-time_tour_%s.png", scenario1)))
 
 
 # Plot --------------------------------------------------------------------
@@ -54,11 +61,15 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Henkilöauton matka-aikamuutos kiertomatkaa kohden",
-    subtitle = "2040 Vertailupohja \U2192 2040 1. luonnos"
+    subtitle = sprintf("%d %s \U2192 %d %s",
+                       scenarios$year[scenarios$scenario == scenario0],
+                       scenarios$name[scenarios$scenario == scenario0],
+                       scenarios$year[scenarios$scenario == scenario1],
+                       scenarios$name[scenarios$scenario == scenario1])
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_cba_car-time_tour_%s.png", scenario_attributes[["scenario"]])))
+ggsave_map(here::here("figures", sprintf("map_cba_car-time_tour_%s.png", scenario1)))
 
 
 # Plot --------------------------------------------------------------------
@@ -78,11 +89,15 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Joukkoliikenteen ja henkilöauton matka-aikamuutos kiertomatkaa kohden",
-    subtitle = "2040 Vertailupohja \U2192 2040 1. luonnos"
+    subtitle = sprintf("%d %s \U2192 %d %s",
+                       scenarios$year[scenarios$scenario == scenario0],
+                       scenarios$name[scenarios$scenario == scenario0],
+                       scenarios$year[scenarios$scenario == scenario1],
+                       scenarios$name[scenarios$scenario == scenario1])
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_cba_car-transit-time_tour_%s.png", scenario_attributes[["scenario"]])))
+ggsave_map(here::here("figures", sprintf("map_cba_car-transit-time_tour_%s.png", scenario1)))
 
 
 # Plot --------------------------------------------------------------------
@@ -103,8 +118,12 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Tulot joukkoliikenteestä kiertomatkaa kohden",
-    subtitle = "2040 Vertailupohja \U2192 2040 1. luonnos"
+    subtitle = sprintf("%d %s \U2192 %d %s",
+                       scenarios$year[scenarios$scenario == scenario0],
+                       scenarios$name[scenarios$scenario == scenario0],
+                       scenarios$year[scenarios$scenario == scenario1],
+                       scenarios$name[scenarios$scenario == scenario1])
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", sprintf("map_cba_revenue_transit_tour_%s.png", scenario_attributes[["scenario"]])))
+ggsave_map(here::here("figures", sprintf("map_cba_revenue_transit_tour_%s.png", scenario1)))
