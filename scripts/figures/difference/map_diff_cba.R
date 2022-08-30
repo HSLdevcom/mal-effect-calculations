@@ -77,11 +77,12 @@ ggsave_map(here::here("figures", sprintf("map_cba_car-time_tour_%s.png", scenari
 ggplot() +
   geom_sf(mapping = aes(fill = cba_car_transit_time_per_tour),
           data = results, color = NA) +
-  scale_fill_distiller(
+  scale_fill_fermenter(
     palette = "PRGn",
     direction = -1,
     name = "minuuttia",
-    limits = c(-15, 15),
+    breaks = c(-5, -3, -1, 1, 3, 5),
+    limits = c(-7, 7),
     labels = scales::label_number(accuracy = 1),
     oob = scales::oob_squish_any
   ) +
