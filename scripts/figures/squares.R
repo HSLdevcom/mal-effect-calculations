@@ -2,8 +2,8 @@
 library(here)
 library(tidyverse)
 
-squares <- here::here("data", "MAL2023_asukkaat_Ve0Ve1Ve2_20220808",
-                          "MAL2023_asukkaat_Ve0Ve1Ve2_20220808.shp") %>%
+squares <- here::here("data", "MAL2023_asukkaat_Ve0Ve1Ve2_20220829",
+                          "MAL2023_asukkaat_Ve0Ve1Ve2_20220829_region.shp") %>%
   sf::read_sf() %>%
   sf::st_transform(3879) %>%
   dplyr::select(xyind, asuk20YKR, asuk20YKR, asuk40Ve0, asuk40Ve1, asuk40Ve2, asyht_22_3) %>%
