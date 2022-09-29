@@ -51,4 +51,4 @@ ggplot(results, aes(x = area, y = vehicle_kms_total, fill = scenario)) +
   ) +
   theme_mal_graph()
 
-ggsave_graph(here::here("figures", "graph_vehicle_kms.png"), , width = 150, height = 84)
+ggsave_graph(here::here("figures", "graph_vehicle_kms.png"))
