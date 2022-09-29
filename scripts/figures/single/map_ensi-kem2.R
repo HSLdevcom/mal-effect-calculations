@@ -37,7 +37,7 @@ ggplot() +
     direction = 1,
     name = "asuntoa",
     labels = scales::label_number(accuracy = 1),
-    breaks = c(-250, -100, -25, -5, 5, 25, 100, 250),
+    breaks = c(-150, -50, -25, -5, 5, 25, 50, 150),
     limits = c(-500, 500),
     oob = scales::squish,
     guide = guide_none()
