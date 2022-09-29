@@ -50,4 +50,4 @@ ggplot(results, aes(x = vehicle, y = dist, fill = scenario)) +
   ) +
   theme_mal_graph()
 
-ggsave_graph(here::here("figures", "graph_dist.png"))
+ggsave_graph(here::here("figures", "graph_dist.png"), width = 150, height = 84)
