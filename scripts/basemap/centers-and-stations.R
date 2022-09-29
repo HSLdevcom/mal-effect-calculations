@@ -30,7 +30,7 @@ ggplot() +
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", "map_centers-and-stations_2040_ve1.png"))
+ggsave_map(here::here("figures", "map_basemap_centers-and-stations_2040_ve1.png"))
 
 ggplot() +
   geom_sf(mapping = aes(fill = center),
@@ -46,4 +46,4 @@ ggplot() +
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", "map_centers-and-stations_2040_ve2.png"))
+ggsave_map(here::here("figures", "map_basemap_centers-and-stations_2040_ve2.png"))
