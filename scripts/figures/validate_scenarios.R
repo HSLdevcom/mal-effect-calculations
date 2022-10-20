@@ -7,7 +7,7 @@ scenarios <- readr::read_tsv(
   comment = "#",
   col_types = list(
     year = readr::col_integer(),
-    co2 = readr::col_integer(),
+    co2 = readr::col_character(),
     present = readr::col_logical(),
     baseline = readr::col_logical(),
     projected = readr::col_logical(),

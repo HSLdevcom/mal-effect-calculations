@@ -20,3 +20,10 @@ bus_hsl	2020	645
 bus_other	2020	763
 truck_all	2020	950
 other	2020	80
+car	2040MAL	50
+van	2040MAL	51
+bus_all	2040MAL	310
+bus_hsl	2040MAL	0
+bus_other	2040MAL	500
+truck_all	2040MAL	515
+other	2040MAL	80

@@ -41,7 +41,7 @@ kms <- readr::read_rds(here::here("results", sprintf("areas_%s.rds", scenario_at
   dplyr::bind_rows(transit_kms)
 
 co2 <- here::here("utilities", "co2.tsv") %>%
-  readr::read_tsv(col_types = "cid") %>%
+  readr::read_tsv(col_types = "ccd") %>%
   dplyr::filter(year == scenario_attributes[["co2"]]) %>%
   dplyr::select(vehicle, co2)
 
