@@ -48,6 +48,20 @@ read_helmet_omx <- function(path) {
   return(omx_matrix)
 }
 
+write_helmet_omx <- function(omx_matrix, path) {
+  zone_numbers <- unique(omx_matrix$origin)
+  omx_matrix %>%
+    dplyr::mutate(origin = match(origin, zone_numbers),
+                  destination = match(destination, zone_numbers)) %>%
+    omxr::write_all_omx(file = path)
+  omxr::write_lookup(path,
+                     lookup_v = zone_numbers,
+                     name = "zone_number",
+                     lookup_dim = NULL,
+                     replace = TRUE)
+  return(invisible())
+}
+
 verbose_source <- function(file, ...) {
   message(sprintf("Running analysis in %s...", basename(file)))
   invisible(source(file, ...))
