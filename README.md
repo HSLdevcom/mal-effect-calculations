@@ -42,7 +42,7 @@ packages are already loaded, use command `renv::restore()`.
 
 R version is set in
 [`renv.lock`](https://github.com/HSLdevcom/mal-effect-calculations/blob/main/renv.lock)
-and is currently `4.0.4`. This is not changed by `renv`, so you might want to
+and is currently `4.1.1`. This is not changed by `renv`, so you might want to
 check R/RStudio Global Options.
 
 Further instructions about using `renv` during development and collaboration
