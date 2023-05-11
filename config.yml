@@ -11,3 +11,9 @@ default:
   baseline_scenario: "2040_ve0_agentti"
   projected_name: "2040 1. luonnos"
   baseline_name: "2040 Vertailupohja"
+
+2040_ve0-2040_ve2:
+  projected_scenario: "2040_ve2_agentti"
+  baseline_scenario: "2040_ve0_agentti"
+  projected_name: "2040 Luonnos"
+  baseline_name: "2040 Vertailupohja"

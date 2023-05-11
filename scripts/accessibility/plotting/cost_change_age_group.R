@@ -42,35 +42,34 @@ agent_sums <- agent_sums %>%
 max_value <- max(agent_sums$cost_dif, na.rm = TRUE)
 
 agent_sums %>%
-  ggplot(aes(x = age_group, y = cost_dif)) +
-  geom_bar(
-    stat = "identity",
-    position = "dodge",
-    color = "white",
-    fill = hsl_cols("blue"),
-    width = 0.8
+  ggplot() +
+  geom_col(
+    aes(x = area, y = cost_dif, fill = age_group),
+    position = position_dodge2(),
   ) +
-  ylim(-max_value, max_value) +
-  facet_wrap( ~ area, nrow = 1) +
-  theme_wide +
+  scale_y_continuous(
+    labels = scales::label_number(decimal.mark = ",")
+  ) +
+  scale_x_discrete(
+    labels = scales::label_wrap(5)
+  ) +
+  scale_fill_brewer(
+    palette = "Set2",
+    name = NULL
+  ) +
   geom_abline(slope = 0) +
   labs(
     y = "kustannus (eur / asukas / kk)",
     x = NULL,
-    title = paste0(
-      "Muutos asukkaan matkojen kustannuksissa: ",
-      config::get("projected_name"),
-      " - ",
-      config::get("baseline_name")),
-    subtitle = "Kaikki matkaryhmät"
-  )
+    title = "Muutos asukkaan matkojen kustannuksissa",
+    subtitle = sprintf("%s \U2192 %s", config::get("baseline_name"), config::get("projected_name"))
+  ) +
+  theme_mal_graph()
 
-ggsave(
+ggsave_graph(
   here("figures",
        config::get("projected_scenario"),
-       "cost_change_age_group.png"
+       "graph_diff_cost_age_group.png"
   ),
-  width = dimensions_wide[1],
-  height = dimensions_wide[2],
-  units = "cm"
+  width = 150, height = 84
 )

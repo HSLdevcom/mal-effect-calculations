@@ -64,6 +64,7 @@ zones <- zones %>%
 
 breaks <- c(100, 75, 50, 25, 10)
 breaks <- sort(c(breaks, -breaks))
+breaks <- seq(-45, 45, 10)
 
 # transport costs
 
@@ -72,12 +73,13 @@ ggplot() +
           data = zones, color = NA) +
   scale_fill_steps2(
     name = "eur / asukas / kk",
-    limits = c(-100, 100),
+    limits = c(-55, 55),
     breaks = breaks,
     high = hsl_cols("red"),
     mid = hsl_cols("white"),
     low = hsl_cols("blue"),
-    na.value = hsl_cols("lightgray")
+    na.value = hsl_cols("lightgray"),
+    oob = scales::squish
   ) +
   geom_basemap() +
   coord_sf_mal() +

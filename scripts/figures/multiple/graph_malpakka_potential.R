@@ -20,22 +20,29 @@ ggplot(results, aes(x = area, y = malpakka_potential)) +
     size = 0.35
   ) +
   geom_text(
-    aes(y = malpakka_potential / 2, label = scales::label_number(accuracy = 0.1, decimal.mark = ",")(malpakka_potential)),
+    aes(
+      y = malpakka_potential / 2,
+      label = scales::label_number(accuracy = 0.1, decimal.mark = ",")(malpakka_potential),
+      color = scenario
+    ),
     position = position_dodge2(width = 0.9),
-    size = points2mm(8),
-    color = "#333333"
+    size = points2mm(8)
   ) +
   scale_y_continuous(
     labels = scales::label_number(accuracy = 1),
     limits = c(0, 5),
-    expand = expansion(mult = 0.1)
+    expand = expansion(mult = c(0.025, 0.1))
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#3E8606", "#7DAD58", "#BFD7AC")
+    values = mal_greens_fill
+  ) +
+  scale_color_manual(
+    guide = "none",
+    values = mal_color
   ) +
   labs(
     title = "Tonttitehokkuuspotentiaali",

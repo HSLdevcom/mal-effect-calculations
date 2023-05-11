@@ -35,7 +35,7 @@ ggplot(results, aes(x = scenario, y = emission, fill = scenario)) +
     size = 0.35
   ) +
   geom_text(
-    aes(y = emission / 2, label = label),
+    aes(y = emission / 2, label = label, color = scenario),
     position = position_dodge2(width = 0.9),
     size = points2mm(8)
   ) +
@@ -47,8 +47,12 @@ ggplot(results, aes(x = scenario, y = emission, fill = scenario)) +
     labels = sub(" ", "\n", levels(results$scenario))
   ) +
   scale_fill_manual(
-    name = NULL,
-    values = c("#e0e0e0", "#3E8606", "#7DAD58", "#BFD7AC")
+    guide = "none",
+    values = c("#e0e0e0", mal_greens_fill)
+  ) +
+  scale_color_manual(
+    guide = "none",
+    values = c("#333333", mal_color)
   ) +
   labs(
     title = "Moottoriajoneuvoliikenteen CO2-päästöt Helsingin seudulla",
@@ -57,4 +61,4 @@ ggplot(results, aes(x = scenario, y = emission, fill = scenario)) +
   ) +
   theme_mal_graph()
 
-ggsave_graph(here::here("figures", "graph_co2-total.png"))
+ggsave_graph(here::here("figures", "graph_co2-total.png"), width = 150, height = 84)

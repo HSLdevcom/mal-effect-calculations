@@ -6,16 +6,20 @@ library(sf)
 
 # Data --------------------------------------------------------------------
 
-results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
-  dplyr::filter(scenario != "2018 Nykytila")
+translations <- here::here("utilities", "areas.tsv") %>%
+  readr::read_tsv(col_types = "cc")
 
+results <- readr::read_rds(here::here("results", "squares_areas_ensi_apartments.rds")) %>%
+  dplyr::mutate(area = factor(area, levels = translations$level, labels = translations$label)) %>%
+  dplyr::arrange(area) %>%
+  dplyr::mutate(scenario = "2040 2. luonnos")
 
 # Plot --------------------------------------------------------------------
 
-ggplot(results, aes(x = area, y = pop_share_ensi)) +
-  geom_col(aes(fill = scenario), position = position_dodge2()) +
+ggplot(results, aes(x = area, y = apartment_share_ensi)) +
+  geom_col(position = position_dodge2(), fill = "#3E8606") +
   geom_text(
-    aes(label = scales::label_percent(accuracy = 1, suffix = "")(pop_share_ensi)),
+    aes(label = scales::label_percent(accuracy = 1, suffix = "")(apartment_share_ensi)),
     position = position_dodge2(width = 0.9),
     vjust = -0.5,
     size = points2mm(8),
@@ -24,17 +28,13 @@ ggplot(results, aes(x = area, y = pop_share_ensi)) +
   scale_y_continuous(
     labels = scales::label_percent(accuracy = 1, suffix = ""),
     limits = c(0, 1),
-    expand = expansion(mult = 0.1)
+    expand = expansion(mult = c(0.025, 0.1))
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)
   ) +
-  scale_fill_manual(
-    name = NULL,
-    values = c("#7DAD58", "#BFD7AC")
-  ) +
   labs(
-    title = "Uusien asukkaiden kohdistuminen\nensisijaisesti kehitettäville vyöhykkeille",
+    title = "Ennustettu asuntotuotannon kohdistuminen ensisijaisille vyöhykkeille",
     x =  NULL,
     y = "%"
   ) +

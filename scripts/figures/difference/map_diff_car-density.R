@@ -7,12 +7,14 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-results0 <- readr::read_rds(here::here("results", "zones_2018.rds")) %>%
+scenario0 <- "2018"
+scenario1 <- "2040_ve0"
+
+results0 <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario0))) %>%
   dplyr::select(zone, car_density) %>%
   dplyr::rename(car_density0 = car_density)
 
-
-results1 <- readr::read_rds(here::here("results", "zones_2040_ve0.rds")) %>%
+results1 <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario1))) %>%
   sf::st_drop_geometry() %>%
   dplyr::select(zone, car_density) %>%
   dplyr::rename(car_density1 = car_density)
@@ -53,8 +55,12 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Muutos henkilöautotiheydessä",
-    subtitle = "2018 Nykytila \U2192 2040 Vertailupohja"
+    subtitle = sprintf("%d %s \U2192 %d %s",
+                       scenarios$year[scenarios$scenario == scenario0],
+                       scenarios$name[scenarios$scenario == scenario0],
+                       scenarios$year[scenarios$scenario == scenario1],
+                       scenarios$name[scenarios$scenario == scenario1])
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", "map_diff_car-density_2020-2040_ve0.png"))
+ggsave_map(here::here("figures", sprintf("map_diff_car-density_%s-%s.png", scenario0, scenario1)))

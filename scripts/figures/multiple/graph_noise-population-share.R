@@ -23,10 +23,13 @@ ggplot(results, aes(x = area, y = noise_population_share)) +
     size = 0.35
   ) +
   geom_text(
-    aes(y = noise_population_share / 2, label = scales::label_percent(accuracy = 1, suffix = "")(noise_population_share)),
+    aes(
+      y = noise_population_share / 2,
+      label = scales::label_percent(accuracy = 1, suffix = "")(noise_population_share),
+      color = scenario
+    ),
     position = position_dodge2(width = 0.9),
-    size = points2mm(8),
-    color = "#333333"
+    size = points2mm(8)
   ) +
   scale_y_continuous(
     labels = scales::label_percent(suffix = ""),
@@ -37,7 +40,11 @@ ggplot(results, aes(x = area, y = noise_population_share)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#3E8606", "#7DAD58", "#BFD7AC")
+    values = mal_greens_fill
+  ) +
+  scale_color_manual(
+    guide = "none",
+    values = mal_color
   ) +
   labs(
     title = "Meluvyöhykkeillä asuvien asukkaiden osuus alueen asukkaista",
@@ -46,4 +53,4 @@ ggplot(results, aes(x = area, y = noise_population_share)) +
   ) +
   theme_mal_graph()
 
-ggsave_graph(here::here("figures", "graph_noise-population-share.png"))
+ggsave_graph(here::here("figures", "graph_noise-population-share.png"), width = 150, height = 84)

@@ -34,10 +34,11 @@ results <- results %>%
     year = dplyr::case_when(
       scenario == "2005" ~ 2005L,
       scenario == "2018 Nykytila" ~ 2018L,
-      scenario == "2040 Vertailupohja" ~ 2040L,
+      scenario == "2040 Luonnos" ~ 2040L,
       TRUE ~ NA_integer_
     )
-  )
+  ) %>%
+  dplyr::filter(scenario %in% c("2005", "2018 Nykytila", "2040 Luonnos"))
 
 results_total <- results %>%
   dplyr::filter(vehicle == "total") %>%
@@ -98,7 +99,8 @@ ggplot(results, aes(x = year, y = emission)) +
   ) +
   scale_x_continuous(
     breaks = seq(from = 2000, to = 2050, by = 1),
-    labels = function(x) { dplyr::if_else(x %in% c(2005, 2018, 2030, 2040, 2045), dplyr::if_else(x %in% 2040, "2040\nVertailu-\npohja", as.character(x)), "") },
+    labels = function(x) { dplyr::if_else(x %in% c(2005, 2018, 2030, 2040, 2045),
+                                          dplyr::if_else(x %in% 2040, "2040\nLuonnos", as.character(x)), "") },
     limits = c(2000, 2050),
     expand = expansion(0, 0)
   ) +

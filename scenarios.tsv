@@ -1,18 +1,13 @@
 scenario	year	name	forecast	results	co2	basemap	present	baseline	projected	sensitivity	root
 2018	2018	Nykytila	2018	2018	2018	2018	TRUE	FALSE	FALSE	FALSE	2018
-2040_ve0u	2040	Vertailupohja	2040_ve0u	2040_ve0u	2040	2040_ve0	FALSE	TRUE	FALSE	FALSE	2040_ve0u
-2040_ve0_ruuhkautuva	2040	Vertailupohja	2040_ve0_bulepois	2040_ve0_ruuhkautuva	2040	2040_ve0	FALSE	FALSE	FALSE	TRUE	2040_ve0u
-2040_ve0_tieruuhka	2040	Vertailupohja	2040_ve0_haj	2040_ve0_tieruuhka	2040	2040_ve0	FALSE	FALSE	FALSE	TRUE	2040_ve0u
-2040_ve0_jklmaksi	2040	Vertailupohja	2040_ve0_kes	2040_ve0_jklmaksi	2040	2040_ve0	FALSE	FALSE	FALSE	TRUE	2040_ve0u
-2040_ve0_etatyo	2040	Vertailupohja	2040_ve0_haj	2040_ve0_etatyo	2040	2040_ve0	FALSE	FALSE	FALSE	TRUE	2040_ve0u
-2040_ve0_mini	2040	Vertailupohja	2040_ve0_hid	2040_ve0_mini	2040	2040_ve0	FALSE	FALSE	FALSE	TRUE	2040_ve0u
-2040_ve1u	2040	1. luonnos	2040_ve1u	2040_ve1u	2040	2040_ve1	FALSE	FALSE	TRUE	FALSE	2040_ve1u
-2040_ve1_etatyo	2040	1. luonnos	2040_ve0_haj	2040_ve1_etatyo	2040	2040_ve1	FALSE	FALSE	FALSE	TRUE	2040_ve1u
-2040_ve1_jklmaksi	2040	1. luonnos	2040_ve0_kes	2040_ve1_jklmaksi	2040	2040_ve1	FALSE	FALSE	FALSE	TRUE	2040_ve1u
-2040_ve1_mini	2040	1. luonnos	2040_ve0_haj	2040_ve1_mini	2040	2040_ve1	FALSE	FALSE	FALSE	TRUE	2040_ve1u
-2040_ve1_tieruuhka	2040	1. luonnos	2040_ve0_hid	2040_ve1_tieruuhka	2040	2040_ve1	FALSE	FALSE	FALSE	TRUE	2040_ve1u
-2040_ve2	2040	2. luonnos	2040_ve2	2040_ve2	2040	2040_ve1	FALSE	FALSE	TRUE	FALSE	2040_ve2
-2040_ve2_etatyo	2040	2. luonnos	2040_ve0_haj	2040_ve2_etatyo	2040	2040_ve1	FALSE	FALSE	FALSE	TRUE	2040_ve2
-2040_ve2_jklmaksi	2040	2. luonnos	2040_ve0_kes	2040_ve2_jklmaksi	2040	2040_ve1	FALSE	FALSE	FALSE	TRUE	2040_ve2
-2040_ve2_mini	2040	2. luonnos	2040_ve0_haj	2040_ve2_mini	2040	2040_ve1	FALSE	FALSE	FALSE	TRUE	2040_ve2
-2040_ve2_tieruuhka	2040	2. luonnos	2040_ve0_hid	2040_ve2_tieruuhka	2040	2040_ve1	FALSE	FALSE	FALSE	TRUE	2040_ve2
+2040_ve0	2040	Vertailupohja	2040_ve0	2040_ve0	2040	2040_ve0	FALSE	TRUE	FALSE	FALSE	2040_ve0
+2040_ve0_ruuhkautuva	2040	Vertailupohja	2040_ve0_bulepois	2040_ve0_ruuhkautuva	2040	2040_ve0	FALSE	FALSE	FALSE	TRUE	2040_ve0
+2040_ve0_tieruuhka	2040	Vertailupohja	2040_ve0_haj	2040_ve0_tieruuhka	2040	2040_ve0	FALSE	FALSE	FALSE	TRUE	2040_ve0
+2040_ve0_jklmaksi	2040	Vertailupohja	2040_ve0_kes	2040_ve0_jklmaksi	2040	2040_ve0	FALSE	FALSE	FALSE	TRUE	2040_ve0
+2040_ve0_etatyo	2040	Vertailupohja	2040_ve0_haj	2040_ve0_etatyo	2040	2040_ve0	FALSE	FALSE	FALSE	TRUE	2040_ve0
+2040_ve0_mini	2040	Vertailupohja	2040_ve0_hid	2040_ve0_mini	2040	2040_ve0	FALSE	FALSE	FALSE	TRUE	2040_ve0
+2040_ve2	2040	Luonnos	2040_ve2	2040_ve2	2040MAL	2040_ve1	FALSE	FALSE	TRUE	FALSE	2040_ve2
+2040_ve2_etatyo	2040	Luonnos	2040_ve0_haj	2040_ve2_etatyo	2040MAL	2040_ve1	FALSE	FALSE	FALSE	TRUE	2040_ve2
+2040_ve2_jklmaksi	2040	Luonnos	2040_ve0_kes	2040_ve2_jklmaksi	2040MAL	2040_ve1	FALSE	FALSE	FALSE	TRUE	2040_ve2
+2040_ve2_mini	2040	Luonnos	2040_ve0_hid	2040_ve2_mini	2040MAL	2040_ve1	FALSE	FALSE	FALSE	TRUE	2040_ve2
+2040_ve2_tieruuhka	2040	Luonnos	2040_ve0_haj	2040_ve2_tieruuhka	2040MAL	2040_ve1	FALSE	FALSE	FALSE	TRUE	2040_ve2

@@ -111,5 +111,6 @@ ggsave_graph(
   here("figures",
        config::get("projected_scenario"),
        "access_gap_age_group_areas.png"
-       )
+       ),
+  width = 150, height = 84
 )

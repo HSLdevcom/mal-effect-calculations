@@ -20,14 +20,18 @@ ggplot(results, aes(x = area, y = vehicle_kms_car, fill = scenario)) +
     size = 0.35
   ) +
   geom_text(
-    aes(y = vehicle_kms_car / 2, label = scales::label_number(scale = 0.000001, accuracy = 0.1, decimal.mark = ",")(vehicle_kms_car), group = area),
+    aes(
+      y = vehicle_kms_car / 2,
+      label = scales::label_number(scale = 0.000001, accuracy = 0.1, decimal.mark = ",")(vehicle_kms_car),
+      group = area,
+      color = scenario
+    ),
     position = position_dodge2(width = 0.9),
-    size = points2mm(8),
-    color = "#333333"
+    size = points2mm(8)
   ) +
   scale_y_continuous(
     labels = scales::label_number(scale = 0.000001),
-    expand = expansion(mult = 0.1),
+    expand = expansion(mult = c(0.025, 0.1)),
     limits = c(0, 45000000)
   ) +
   scale_x_discrete(
@@ -35,7 +39,11 @@ ggplot(results, aes(x = area, y = vehicle_kms_car, fill = scenario)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#3E8606", "#7DAD58", "#BFD7AC")
+    values = mal_greens_fill
+  ) +
+  scale_color_manual(
+    guide = "none",
+    values = mal_color
   ) +
   labs(
     title = "Henkilöautoliikenteen liikennesuorite Helsingin seudulla",

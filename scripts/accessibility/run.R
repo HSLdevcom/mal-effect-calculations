@@ -6,7 +6,7 @@ options(scipen = 999)
 
 # Set envinronment for config file ----
 
-Sys.setenv(R_CONFIG_ACTIVE = "2040_ve0-2040_ve1")
+Sys.setenv(R_CONFIG_ACTIVE = "2040_ve0-2040_ve2")
 
 # Create output folder ----
 
@@ -27,6 +27,8 @@ source(here("scripts", "accessibility", "tidy_cost_data.R"),
 source(here("scripts", "accessibility", "colors.R"),
        encoding = "utf-8")
 source(here("scripts", "accessibility", "themes.R"),
+       encoding = "utf-8")
+source(here("scripts", "basemap", "functions_map.R"),
        encoding = "utf-8")
 
 # Plot results ----

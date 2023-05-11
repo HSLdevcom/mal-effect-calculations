@@ -7,12 +7,14 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-results0 <- readr::read_rds(here::here("results", "zones_2040_ve0.rds")) %>%
+scenario0 <- "2040_ve0"
+scenario1 <- "2040_ve2"
+
+results0 <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario0))) %>%
   dplyr::select(zone, malpakka) %>%
   dplyr::rename(malpakka0 = malpakka)
 
-
-results1 <- readr::read_rds(here::here("results", "zones_2040_ve1.rds")) %>%
+results1 <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario1))) %>%
   sf::st_drop_geometry() %>%
   dplyr::select(zone, malpakka) %>%
   dplyr::rename(malpakka1 = malpakka)
@@ -40,8 +42,12 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Muutos kestävien kulkutapojen mahdollistamassa tonttitehokkuudessa",
-    subtitle = "2040 Vertailupohja \U2192 2040 1. luonnos"
+    subtitle = sprintf("%d %s \U2192 %d %s",
+                       scenarios$year[scenarios$scenario == scenario0],
+                       scenarios$name[scenarios$scenario == scenario0],
+                       scenarios$year[scenarios$scenario == scenario1],
+                       scenarios$name[scenarios$scenario == scenario1])
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", "map_diff_malpakka_2040_ve0-2040_ve1.png"))
+ggsave_map(here::here("figures", sprintf("map_diff_malpakka2_%s-%s.png", scenario0, scenario1)))

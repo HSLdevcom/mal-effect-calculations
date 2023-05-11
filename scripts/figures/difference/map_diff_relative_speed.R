@@ -7,12 +7,15 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-results0 <- readr::read_rds(here::here("results", "links_2040_ve0.rds")) %>%
+scenario0 <- "2040_ve0"
+scenario1 <- "2040_ve2"
+
+results0 <- readr::read_rds(here::here("results", sprintf("links_%s.rds", scenario0))) %>%
   dplyr::select(relative_speed) %>%
   dplyr::mutate(wkt = sf::st_as_text(geometry)) %>%
   sf::st_drop_geometry()
 
-results1 <- readr::read_rds(here::here("results", "links_2040_ve1.rds")) %>%
+results1 <- readr::read_rds(here::here("results", sprintf("links_%s.rds", scenario1))) %>%
   dplyr::select(relative_speed, volume_aht) %>%
   dplyr::mutate(wkt = sf::st_as_text(geometry)) %>%
   sf::st_drop_geometry()
@@ -64,8 +67,12 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Muutos aamuhuipputunnin ajonopeuden suhteessa vapaaseen ajonopeteen",
-    subtitle = "2040 Vertailupohja \U2192 2040 1. luonnos"
+    subtitle = sprintf("%d %s \U2192 %d %s",
+                       scenarios$year[scenarios$scenario == scenario0],
+                       scenarios$name[scenarios$scenario == scenario0],
+                       scenarios$year[scenarios$scenario == scenario1],
+                       scenarios$name[scenarios$scenario == scenario1])
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", "map_diff_relative-speed_2040_ve0-2040_ve1.png"))
+ggsave_map(here::here("figures", sprintf("map_diff_relative-speed_%s-%s.png", scenario0, scenario1)))

@@ -3,6 +3,14 @@ library(here)
 library(tidyverse)
 library(sf)
 
+# 2018, 2040 ve0, ve1, ve2
+mal_greens_fill <- c("#CEE0C0", "#9EC282", "#6EA444", "#3E8606")
+mal_color <- c("#333333", "#333333", "#333333", "#FFFFFF")
+hsl_blues_fill <- c("#BFDDF1", "#7FBCE3", "#3F9BD6", "#007AC9")
+hsl_greens_fill <- c("#D8EEC6", "#B1DE8E", "#8ACE56", "#64BE1E")
+hsl_teals_fill <- c("#BFEDF8", "#7FDCF1", "#3FCAEA", "#00B9E4")
+hsl_yellows_fill <- c("#FEEDC5", "#FDDC8C", "#FCCA52", "#FCB919")
+
 region <- readr::read_rds(here::here("results", "region.rds"))
 bonus_region <- readr::read_rds(here::here("results", "bonus_region.rds"))
 metro <- readr::read_rds(here::here("results", "metro.rds"))
@@ -127,7 +135,7 @@ theme_mal_map <- function() {
   list(
     theme_void(),
     theme(
-      plot.background = element_rect(fill = "#FFFFFF"),
+      plot.background = element_rect(fill = "#FFFFFF", color = "#FFFFFF"),
       text = element_text(family = "sans", colour = "#333333", size = 10),
       plot.title = element_text(colour = "#3E8606"),
       legend.position = c(0.00, 0.90),
@@ -145,7 +153,7 @@ theme_mal_graph <- function() {
   list(
     theme_minimal(),
     theme(
-      plot.background = element_rect(fill = "#FFFFFF"),
+      plot.background = element_rect(fill = "#FFFFFF", color = "#FFFFFF"),
       text = element_text(family = "sans", colour = "#333333", size = 10),
       plot.title = element_text(colour = "#3E8606", size = 10),
       legend.position = "bottom",
@@ -177,8 +185,8 @@ ggsave_map <- function(filename,
 }
 
 ggsave_graph <- function(filename,
-                         width = 148,
-                         height = 84,
+                         width = 155,
+                         height = 71,
                          units = "mm",
                          dpi = 600, ...) {
   ggsave(filename = filename,

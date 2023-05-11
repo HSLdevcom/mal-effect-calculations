@@ -32,7 +32,7 @@ ggplot(results, aes(x = scenario, y = noise_area_km2)) +
             color = "#333333") +
   scale_y_continuous(
     labels = scales::label_number(),
-    expand = expansion(mult = 0.1)
+    expand = expansion(mult = c(0.025, 0.1))
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)
@@ -49,4 +49,4 @@ ggplot(results, aes(x = scenario, y = noise_area_km2)) +
   theme_mal_graph() +
   theme(legend.position = "right")
 
-ggsave_graph(here::here("figures", "graph_noise-area-km2.png"))
+ggsave_graph(here::here("figures", "graph_noise-area-km2.png"), width = 150, height = 84)
