@@ -9,7 +9,8 @@ Learn more about the MAL Plan here on
 1. Collect input data:
     - Forecast data and model results from
       [`helmet-model-system`](https://hsldevcom.github.io/helmet-ui/)
-    - Spatial data for some of the assessments and visualisations
+    - Spatial data for some of the assessments and visualisations (from HSL
+      Teams files)
 1. Clone this repository.
 1. In RStudio, select `File > Open Project... > mal-effect-calculations.Rproj`.
 1. Set correct paths in `config.yml` file. 
