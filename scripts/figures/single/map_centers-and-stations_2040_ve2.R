@@ -62,7 +62,7 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Uusien asukkaiden sijoittuminen seudun keskuksiin ja raskaan raideliikenteen piiriin",
-    subtitle = "2040 2. luonnos"
+    subtitle = "2040 Luonnos"
   ) +
   theme_mal_map() +
   theme(legend.box = "horizontal",
