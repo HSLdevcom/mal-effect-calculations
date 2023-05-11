@@ -64,19 +64,19 @@ if (scenario_attributes[["present"]]) {
 emissions <- emissions %>%
   dplyr::mutate(emission = correction * emission)
 
-if (scenario_attributes[["root"]] == "2040_ve2") {
-  message("Decrease emissions because of speed limits...")
-  emissions_before <- sum(emissions$emission)
-  # reduction <- 21408224692 / emissions_before
-  reduction <- 11333179365 / emissions_before
-  emissions$emission <- (1 - reduction) * emissions$emission
-  emissions_after <- sum(emissions$emission)
-  emissions_difference <- emissions_before - emissions_after
-  emissions_difference_percent <- emissions_difference / emissions_before
-  message(sprintf("Emissions decreased %s thousand tons of CO2-ekv. per year (%s)",
-                  scales::number(emissions_difference, accuracy = 0.001, scale = 10^-9),
-                  scales::percent(emissions_difference_percent, accuracy = 0.01)))
-}
+# if (scenario_attributes[["root"]] == "2040_ve2") {
+#   message("Decrease emissions because of speed limits...")
+#   emissions_before <- sum(emissions$emission)
+#   # reduction <- 21408224692 / emissions_before
+#   reduction <- 11333179365 / emissions_before
+#   emissions$emission <- (1 - reduction) * emissions$emission
+#   emissions_after <- sum(emissions$emission)
+#   emissions_difference <- emissions_before - emissions_after
+#   emissions_difference_percent <- emissions_difference / emissions_before
+#   message(sprintf("Emissions decreased %s thousand tons of CO2-ekv. per year (%s)",
+#                   scales::number(emissions_difference, accuracy = 0.001, scale = 10^-9),
+#                   scales::percent(emissions_difference_percent, accuracy = 0.01)))
+# }
 
 emissions <- emissions %>%
   dplyr::add_row(
