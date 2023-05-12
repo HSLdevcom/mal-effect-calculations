@@ -1,6 +1,8 @@
 # -*- coding: utf-8-unix -*-
 library(here)
 library(tidyverse)
+library(BiocManager)
+library(omxr)
 
 
 set_scenario <- function(scenario) {
