@@ -59,7 +59,7 @@ ggplot() +
     values = NA
   ) +
   geom_basemap() +
-  geom_sf(data = results, fill = NA, color = "#333333", size = 0.1) +
+  geom_sf(data = results, fill = NA, color = "#333333", linewidth = 0.1) +
   coord_sf_mal() +
   annotate_map(
     title = "Työpaikkatiheyden absoluuttinen muutos",

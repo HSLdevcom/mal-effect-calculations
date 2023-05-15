@@ -17,7 +17,7 @@ ggplot(results, aes(x = area, y = malpakka_potential)) +
     mapping = aes(ymin = malpakka_potential_lower, ymax = malpakka_potential_upper),
     position =  position_dodge2(width = 0.9, padding = 0.66),
     color = "#333333",
-    size = 0.35
+    linewidth = 0.35
   ) +
   geom_text(
     aes(

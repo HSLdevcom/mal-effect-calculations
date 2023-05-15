@@ -20,7 +20,7 @@ ggplot(results, aes(x = area, y = noise_population_share)) +
     mapping = aes(ymin = noise_population_share_lower, ymax = noise_population_share_upper),
     position =  position_dodge2(width = 0.9, padding = 0.66),
     color = "#333333",
-    size = 0.35
+    linewidth = 0.35
   ) +
   geom_text(
     aes(

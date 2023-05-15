@@ -17,7 +17,7 @@ ggplot(results, aes(x = group, y = cost)) +
     mapping = aes(ymin = cost_lower, ymax = cost_upper),
     position =  position_dodge2(width = 0.9, padding = 0.66),
     color = "#333333",
-    size = 0.35
+    linewidth = 0.35
   ) +
   geom_text(
     aes(

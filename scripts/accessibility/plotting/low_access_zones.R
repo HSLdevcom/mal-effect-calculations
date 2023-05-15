@@ -108,7 +108,7 @@ zones_centroids_kehys <- zones_centroids %>%
   dplyr::filter(area %in% kehys)
 
 ggplot() +
-  geom_sf(data = st_union(dplyr::filter(zones, area %in% kehys)), fill = "#dddddc", size = NA) +
+  geom_sf(data = st_union(dplyr::filter(zones, area %in% kehys)), fill = "#dddddc", linewidth = NA) +
   geom_basemap() +
   geom_sf(
     data = zones_centroids_pks,
@@ -134,7 +134,7 @@ ggsave_map(
 )
 
 ggplot() +
-  geom_sf(data = st_union(dplyr::filter(zones, area %in% pks)), fill = "#dddddc", size = NA) +
+  geom_sf(data = st_union(dplyr::filter(zones, area %in% pks)), fill = "#dddddc", linewidth = NA) +
   geom_basemap() +
   geom_sf(
     data = zones_centroids_kehys,
