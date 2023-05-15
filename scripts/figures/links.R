@@ -30,7 +30,7 @@ areas <- links %>%
   sf::st_join(zones, join = sf::st_nearest_feature) %>%
   dplyr::select(area) %>%
   # Links outside region have area = "peripheral"
-  dplyr::mutate(area = dplyr::if_else(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE), area, "peripheral")) %>%
+  dplyr::mutate(area = dplyr::if_else(matrix_col_to_vector(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE)), area, "peripheral")) %>%
   sf::st_drop_geometry()
 
 stopifnot(nrow(areas) == nrow(links))

@@ -41,7 +41,7 @@ buffers <- results %>%
                 endCapStyle = "FLAT",
                 singleSide = TRUE) %>%
   # Filter for improved plotting
-  dplyr::filter(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE)) %>%
+  dplyr::filter(matrix_col_to_vector(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE))) %>%
   dplyr::filter(abs(volume_aht) > 0.01) %>%
   dplyr::filter(in0 & in1) %>%
   dplyr::arrange(abs(diff_relative_speed))

@@ -10,7 +10,7 @@ centers <- here::here("data", "Uusimaa-kaava-2050_Pisteet.gpkg") %>%
   sf::read_sf() %>%
   sf::st_transform(3879) %>%
   dplyr::filter(grepl("^Keskustatoimintojen alue", kuvaus)) %>%
-  dplyr::filter(sf::st_intersects(., sf::st_combine(zones), sparse = FALSE)) %>%
+  dplyr::filter(matrix_col_to_vector(sf::st_intersects(., sf::st_combine(zones), sparse = FALSE))) %>%
   sf::st_join(zones, join = st_within)
 
 centers <- centers %>%

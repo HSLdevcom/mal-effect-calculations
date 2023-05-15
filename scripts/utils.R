@@ -165,3 +165,8 @@ twocenters <- function(.data, mode) {
   return(list(ttime_twocenters_normal = ttime_twocenters_normal,
               bins_twocenters = bins))
 }
+
+matrix_col_to_vector <- function(x) {
+  stopifnot(ncol(inside_zones) == 1)
+  return(c(x))
+}
