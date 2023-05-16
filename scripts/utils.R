@@ -167,6 +167,6 @@ twocenters <- function(.data, mode) {
 }
 
 matrix_col_to_vector <- function(x) {
-  stopifnot(ncol(inside_zones) == 1)
+  stopifnot(ncol(x) == 1)
   return(c(x))
 }
