@@ -31,7 +31,7 @@ ggplot() +
           data = results, color = NA) +
   geom_basemap() +
   geom_sf(mapping = aes(),
-          data = ensi, color = "#333333", fill = NA) +
+          data = ensi, color = "#333333", fill = NA, linewidth = 0.4) +
   scale_fill_fermenter(
     palette = "PiYG",
     direction = 1,
