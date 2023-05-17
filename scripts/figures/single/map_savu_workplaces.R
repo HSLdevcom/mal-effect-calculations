@@ -17,14 +17,15 @@ ggplot() +
           data = results, color = NA) +
   scale_fill_manual(
     name = "Saavutettavuus",
-    values = c("#4d9221", "#c51b7d")
+    values = c("#4d9221", "#c51b7d"),
+    guide = guide_legend(order = 2)
   ) +
   scale_alpha_continuous(
     name = "työpaikkoja per km2",
     range = c(0, 1),
     breaks = c(0, 1000, 2000, 3000, 4000),
     limits = c(0, 4000),
-    guide = guide_legend(override.aes = list(fill = "#646464"))) +
+    guide = guide_legend(override.aes = list(fill = "#646464"), order = 1)) +
   geom_basemap() +
   coord_sf_mal() +
   annotate_map(
