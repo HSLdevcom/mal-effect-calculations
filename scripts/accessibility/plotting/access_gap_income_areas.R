@@ -108,7 +108,7 @@ gap %>%
        x = NULL,
        title = "Saavutettavuuden ero alueen keskiarvoon\nkotiperäisillä työmatkoilla tuloluokittain") +
   theme_mal_graph() +
-  theme(strip.background = element_rect(fill = NA, colour = "grey40", size = 0.5),
+  theme(strip.background = element_rect(fill = NA, colour = "grey40", linewidth = 0.5),
         panel.spacing.x = unit(1, unit = "mm"),
         legend.margin = margin(0, 0, 0, 0),
         legend.title = element_text(face = "bold"))

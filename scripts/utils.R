@@ -1,6 +1,8 @@
 # -*- coding: utf-8-unix -*-
 library(here)
 library(tidyverse)
+library(BiocManager)
+library(omxr)
 
 
 set_scenario <- function(scenario) {
@@ -162,4 +164,9 @@ twocenters <- function(.data, mode) {
                         breaks = breaks)
   return(list(ttime_twocenters_normal = ttime_twocenters_normal,
               bins_twocenters = bins))
+}
+
+matrix_col_to_vector <- function(x) {
+  stopifnot(ncol(x) == 1)
+  return(c(x))
 }

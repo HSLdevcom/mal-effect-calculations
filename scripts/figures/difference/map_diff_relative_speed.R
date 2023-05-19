@@ -41,7 +41,7 @@ buffers <- results %>%
                 endCapStyle = "FLAT",
                 singleSide = TRUE) %>%
   # Filter for improved plotting
-  dplyr::filter(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE)) %>%
+  dplyr::filter(matrix_col_to_vector(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE))) %>%
   dplyr::filter(abs(volume_aht) > 0.01) %>%
   dplyr::filter(in0 & in1) %>%
   dplyr::arrange(abs(diff_relative_speed))
@@ -50,7 +50,7 @@ buffers <- results %>%
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_sf(data = region, color = "#000000", fill = "#21292D", size = 0.46) +
+  geom_sf(data = region, color = "#000000", fill = "#21292D", linewidth = 0.46) +
   geom_basemap(show_roads = FALSE) +
   geom_sf(mapping = aes(fill = diff_relative_speed),
           data = buffers, color = NA) +

@@ -60,7 +60,7 @@ ggplot(results_sustainable, aes(x = area, y = value, fill = scenario)) +
     mapping = aes(ymin = lower, ymax = upper),
     position =  position_dodge2(width = 0.9, padding = 0.66),
     color = "#333333",
-    size = 0.35
+    linewidth = 0.35
   ) +
   geom_text(
     aes(
@@ -105,7 +105,7 @@ ggplot(results_transit, aes(x = area, y = value, fill = scenario)) +
     mapping = aes(ymin = lower, ymax = upper),
     position =  position_dodge2(width = 0.9, padding = 0.66),
     color = "#333333",
-    size = 0.35
+    linewidth = 0.35
   ) +
   geom_text(
     aes(y = value / 2, label = scales::label_percent(accuracy = 1, suffix = "")(value)),
@@ -143,7 +143,7 @@ ggplot(results_bike, aes(x = area, y = value, fill = scenario)) +
     mapping = aes(ymin = lower, ymax = upper),
     position =  position_dodge2(width = 0.9, padding = 0.66),
     color = "#333333",
-    size = 0.35
+    linewidth = 0.35
   ) +
   geom_text(
     aes(y = value / 2, label = scales::label_percent(accuracy = 1, suffix = "")(value)),
@@ -181,7 +181,7 @@ ggplot(results_walk, aes(x = area, y = value, fill = scenario)) +
     mapping = aes(ymin = lower, ymax = upper),
     position =  position_dodge2(width = 0.9, padding = 0.66),
     color = "#333333",
-    size = 0.35
+    linewidth = 0.35
   ) +
   geom_text(
     aes(y = value / 2, label = scales::label_percent(accuracy = 1, suffix = "")(value)),

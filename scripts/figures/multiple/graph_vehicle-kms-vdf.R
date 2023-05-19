@@ -16,7 +16,7 @@ ggplot(results, aes(x = vdf, y = share)) +
     mapping = aes(ymin = share_lower, ymax = share_upper),
     position =  position_dodge2(width = 0.9, padding = 0.66),
     color = "#333333",
-    size = 0.35
+    linewidth = 0.35
   ) +
   geom_text(
     aes(

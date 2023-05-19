@@ -32,7 +32,7 @@ ggplot(results, aes(x = scenario, y = emission, fill = scenario)) +
     mapping = aes(ymin = emission_lower, ymax = emission_upper),
     color = "#333333",
     width = 0.35,
-    size = 0.35
+    linewidth = 0.35
   ) +
   geom_text(
     aes(y = emission / 2, label = label, color = scenario),

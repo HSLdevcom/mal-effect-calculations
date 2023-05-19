@@ -30,7 +30,7 @@ areas <- links %>%
   sf::st_join(zones, join = sf::st_nearest_feature) %>%
   dplyr::select(area) %>%
   # Links outside region have area = "peripheral"
-  dplyr::mutate(area = dplyr::if_else(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE), area, "peripheral")) %>%
+  dplyr::mutate(area = dplyr::if_else(matrix_col_to_vector(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE)), area, "peripheral")) %>%
   sf::st_drop_geometry()
 
 stopifnot(nrow(areas) == nrow(links))
@@ -98,7 +98,7 @@ links0 <- links %>%
   ) %>%
   dplyr::group_by(fid, mode) %>%
   dplyr::summarise(delay = sum(delay), .groups = "drop") %>%
-  tidyr::pivot_wider(fid, names_from = "mode", values_from = "delay") %>%
+  tidyr::pivot_wider(id_cols = fid, names_from = "mode", values_from = "delay") %>%
   dplyr::mutate(weighted_delay_car_all = car_leisure + car_work + van,
                 weighted_delay_truck_all = 5 * (trailer_truck + truck),
                 weighted_delay_transit =  transit_leisure + transit_work,

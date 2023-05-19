@@ -115,7 +115,8 @@ links <- readr::read_rds(here::here("results", sprintf("links_%s.rds", scenario_
 if (scenario_attributes[["root"]] %in% c("2040_ve1u", "2040_ve2")) {
   noise_population_reduction <- readr::read_tsv(
     here::here("utilities", sprintf("noise_population_reduction_%s.tsv",
-                                    scenario_attributes[["root"]])))
+                                    scenario_attributes[["root"]])),
+    col_types = "ci")
   noise <- noise %>%
   dplyr::left_join(noise_population_reduction, by = "area") %>%
   dplyr::mutate(noise_population = noise_population - reduction) %>%

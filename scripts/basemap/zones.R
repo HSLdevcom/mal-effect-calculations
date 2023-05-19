@@ -6,6 +6,7 @@ library(sf)
 zones <- here::here("data", "aluejaot_2019_SHP", "sijoittelualueet2019.shp") %>%
   sf::read_sf(options = "ENCODING=UTF-8") %>%
   sf::st_set_crs(3879) %>%
+  sf::st_zm(drop = TRUE) %>%
   dplyr::mutate(KUNTANIMI = dplyr::case_when(
     KUNTANIMI == "HÃ¤meenlinna" ~ "Hämeenlinna",
     KUNTANIMI == "HausjÃƒÆ’Ã‚Â¤rvi" ~ "Hausjärvi",

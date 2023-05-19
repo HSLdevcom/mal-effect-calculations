@@ -38,7 +38,7 @@ ggplot(results, aes(x = mode, y = value)) +
     mapping = aes(ymin = lower, ymax = upper),
     position =  position_dodge2(width = 0.9, padding = 0.66),
     color = "#333333",
-    size = 0.35
+    linewidth = 0.35
   ) +
   geom_text(
     aes(

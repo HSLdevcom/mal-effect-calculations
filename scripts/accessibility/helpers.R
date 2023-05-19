@@ -31,7 +31,7 @@ add_factors <- function(df, colname, factors) {
   df %>%
     dplyr::mutate(
       !!colname := forcats::as_factor(!!sym(colname)),
-      !!colname := forcats::fct_relevel(!!sym(colname), !!!factors)
+      !!colname := forcats::fct_relevel(!!sym(colname), !!!unname(factors))
     )
 }
 
