@@ -48,7 +48,7 @@ agent_sums %>%
   ) +
   geom_abline(slope = 0) +
   scale_y_continuous(
-    labels = scales::label_number(accuracy = 1),
+    labels = scales::label_number(decimal.mark = ",", accuracy = 0.01),
     expand = expansion(mult = c(0.025, 0.1))
   ) +
   scale_x_discrete(

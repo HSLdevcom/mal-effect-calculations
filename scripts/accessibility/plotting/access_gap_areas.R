@@ -92,6 +92,9 @@ gap %>%
     color = "white",
     width = 0.8
   ) +
+  scale_y_continuous(
+    labels = scales::label_number(decimal.mark = ",", accuracy = 0.01)
+  ) +
   scale_fill_manual(values = hsl_pal("blues")(3)) +
   theme_fig +
   geom_abline(slope = 0) +
@@ -99,7 +102,8 @@ gap %>%
        y = "eur / kiertomatka",
        x = NULL,
        title = "Saavutettavuusero suhteessa seudun keskiarvoon",
-       subtitle = "Kotiperäiset työmatkat")
+       subtitle = "Kotiperäiset työmatkat") +
+  theme(plot.background = element_rect(fill = "#FFFFFF", color = "#FFFFFF"))
 
 ggsave(
   here("figures",
