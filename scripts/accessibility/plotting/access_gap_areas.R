@@ -92,6 +92,9 @@ gap %>%
     color = "white",
     width = 0.8
   ) +
+  scale_y_continuous(
+    labels = scales::label_number(decimal.mark = ",", accuracy = 0.01)
+  ) +
   scale_fill_manual(values = hsl_pal("blues")(3)) +
   theme_fig +
   geom_abline(slope = 0) +

@@ -57,7 +57,7 @@ agent_sums %>%
     position = position_dodge2(),
   ) +
   scale_y_continuous(
-    labels = scales::label_number(decimal.mark = ",")
+    labels = scales::label_number(decimal.mark = ",", accuracy = 0.01)
   ) +
   scale_x_discrete(
     labels = scales::label_wrap(5)

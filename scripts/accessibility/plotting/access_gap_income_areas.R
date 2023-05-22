@@ -87,7 +87,7 @@ gap %>%
   geom_col(fill = "white", position = position_dodge2()) +
   geom_col(aes(fill = income_group, alpha = scenario), position = position_dodge2()) +
   scale_y_continuous(
-    labels = scales::label_number(decimal.mark = ",")
+    labels = scales::label_number(decimal.mark = ",", accuracy = 0.01)
   ) +
   scale_x_discrete(
     labels = NULL
