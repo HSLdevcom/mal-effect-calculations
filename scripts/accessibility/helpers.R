@@ -1,5 +1,8 @@
 library(tidyverse)
 library(here)
+library(data.table)
+library(dtplyr)
+library(dplyr, warn.conflicts = FALSE)
 
 # Read files wrapper for agent data ----
 read_helmet_files <- function(scenario, table) {
@@ -46,16 +49,20 @@ translate_vars <- function(df, colname, factors) {
 # Group and summarise with mean or sum ----
 group_mean <- function(df, group_var, res_var){
   df <- df %>%
+    lazy_dt() %>%
     group_by(!!!syms(group_var)) %>%
     summarise(across(all_of(res_var), mean, na.rm = TRUE)) %>%
-    ungroup()
+    ungroup() %>%
+    as_tibble()
 }
 
 group_sum <- function(df, group_var, res_var){
   df <- df %>%
+    lazy_dt() %>%
     group_by(!!!syms(group_var)) %>%
     summarise(across(all_of(res_var), sum, na.rm = TRUE)) %>%
-    ungroup()
+    ungroup() %>%
+    as_tibble()
 }
 
 # Filter outliers ----
@@ -70,25 +77,31 @@ filter_outliers <- function(df, var){
 # Join tour data to agents ----
 join_tours <- function(agents, tours, res_var){
   tours <- tours %>%
+    lazy_dt() %>%
     group_by(person_id) %>%
     summarise(across(all_of(res_var), sum, na.rm = TRUE),
               nr_tours = n())
 
   agents %>%
-    left_join(tours, by = c("id" = "person_id"))
+    lazy_dt() %>%
+    left_join(tours, by = c("id" = "person_id")) %>%
+    as_tibble()
 }
 
 # Join tour data to agents with spesific purpose ----
 join_purpose_tours <- function(agents, tours, res_var, purpose){
   tours <- tours %>%
+    lazy_dt() %>%
     filter(purpose_name %in% purpose) %>%
     group_by(person_id) %>%
     summarise(across(all_of(res_var), sum, na.rm = TRUE),
               nr_tours = n())
 
   agents %>%
+    lazy_dt() %>%
     left_join(tours,
               by = c("id" = "person_id"),
               suffix = c("", paste0("_", purpose))
-    )
+    ) %>%
+    as_tibble()
 }
