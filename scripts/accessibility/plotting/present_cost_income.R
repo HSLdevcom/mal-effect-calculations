@@ -101,7 +101,8 @@ results %>%
         "Liikkumisen ja asumisen suorat kustannukset: ",
         config::get("present_name")
       )
-  )
+  ) +
+  theme(plot.background = element_rect(fill = "#FFFFFF", color = "#FFFFFF"))
 
 ggsave(
   here(

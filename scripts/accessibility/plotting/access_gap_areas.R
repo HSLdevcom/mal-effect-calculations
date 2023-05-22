@@ -99,7 +99,8 @@ gap %>%
        y = "eur / kiertomatka",
        x = NULL,
        title = "Saavutettavuusero suhteessa seudun keskiarvoon",
-       subtitle = "Kotiperäiset työmatkat")
+       subtitle = "Kotiperäiset työmatkat") +
+  theme(plot.background = element_rect(fill = "#FFFFFF", color = "#FFFFFF"))
 
 ggsave(
   here("figures",

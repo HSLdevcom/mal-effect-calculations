@@ -161,7 +161,8 @@ plot_agents_and_shares <- function(area2) {
     nrow = 1
   )
 
-  plot_grid(prow, legend_b, ncol = 1, rel_heights = c(1, .1))
+  plot_grid(prow, legend_b, ncol = 1, rel_heights = c(1, .1)) +
+    theme(plot.background = element_rect(fill = "#FFFFFF", color = "#FFFFFF"))
 }
 
 plot_agents_and_shares("Pääkaupunkiseutu")
