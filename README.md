@@ -6,16 +6,19 @@ Learn more about the MAL Plan here on
 
 ## Usage
 
+Please note that you need to have access to various HSL Teams groups to get all
+input data you need.
+
+1. Clone this repository.
+1. In RStudio, select `File > Open Project... > mal-effect-calculations.Rproj`.
+1. Run `renv::restore()`. Now, you are using packages listed in `renv.lock`.
+1. Create `\data`, `\figures`, and `\results` folders.
 1. Collect input data:
     - Forecast data and model results from
       [`helmet-model-system`](https://hsldevcom.github.io/helmet-ui/)
     - Spatial data for some of the assessments and visualisations (please
       review `Helmet-ja-mittariajot\LUEMINUT.txt` in MAL Teams)
-1. Clone this repository.
-1. In RStudio, select `File > Open Project... > mal-effect-calculations.Rproj`.
-1. Set correct paths in `config.yml` file. 
-1. Run `renv::restore()`. Now, you are using packages listed in `renv.lock`.
-1. Create `\data`, `\figures`, and `\results` folders.
+1. Set correct paths in `config.yml` file.
 1. To assess normal model runs, run `scripts/figures/run.R`.
 1. To assess agent model runs, run `scripts/accessibility/run.R`.
 
