@@ -1469,7 +1469,7 @@
     },
     "sf": {
       "Package": "sf",
-      "Version": "1.0-12",
+      "Version": "1.0-13",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -1488,7 +1488,7 @@
         "units",
         "utils"
       ],
-      "Hash": "5b41b4f0bd22b38661d82205a87deb4b"
+      "Hash": "8fb4839843abc03528ff9f86424d6acd"
     },
     "stringi": {
       "Package": "stringi",
