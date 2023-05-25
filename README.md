@@ -15,7 +15,7 @@ Learn more about the MAL Plan here on
 1. In RStudio, select `File > Open Project... > mal-effect-calculations.Rproj`.
 1. Set correct paths in `config.yml` file. 
 1. Run `renv::restore()`. Now, you are using packages listed in `renv.lock`.
-1. Create `\data` and `\figures` folders.
+1. Create `\data`, `\figures`, and `\results` folders.
 1. To assess normal model runs, run `scripts/figures/run.R`.
 1. To assess agent model runs, run `scripts/accessibility/run.R`.
 
