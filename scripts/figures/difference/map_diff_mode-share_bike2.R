@@ -8,7 +8,7 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 # Data --------------------------------------------------------------------
 
 scenario0 <- "2040_ve0"
-scenario1 <- "2040_ve2"
+scenario1 <- "2040_suunnitelma"
 
 message(sprintf("Difference: %s -> %s", scenario0, scenario1))
 
