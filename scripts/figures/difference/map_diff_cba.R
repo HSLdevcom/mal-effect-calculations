@@ -9,7 +9,7 @@ source(here::here("scripts", "utils.R"), encoding = "utf-8")
 # Data --------------------------------------------------------------------
 
 scenario0 <- "2040_ve0"
-scenario1 <- "2040_ve2"
+scenario1 <- "2040_suunnitelma"
 
 results <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario1)))
 

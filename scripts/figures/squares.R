@@ -20,12 +20,14 @@ squares <- squares %>%
   dplyr::mutate(
     pop_diff_2020_2040_ve0 = asuk40ve0 - asuk20,
     # pop_diff_2020_2040_ve1 = asuk40ve1 - asuk20,
-    pop_diff_2020_2040_ve2 = asuk40ve2 - asuk20
+    pop_diff_2020_2040_ve2 = asuk40ve2 - asuk20,
+    pop_diff_2020_2040_suunnitelma = pop_diff_2020_2040_ve2
   ) %>%
   dplyr::mutate(
     pop_increase_2020_2040_ve0 = pmax(pop_diff_2020_2040_ve0, 0.0),
     # pop_increase_2020_2040_ve1 = pmax(pop_diff_2020_2040_ve1, 0.0),
-    pop_increase_2020_2040_ve2 = pmax(pop_diff_2020_2040_ve2, 0.0)
+    pop_increase_2020_2040_ve2 = pmax(pop_diff_2020_2040_ve2, 0.0),
+    pop_increase_2020_2040_suunnitelma = pop_increase_2020_2040_ve2
   )
 
 
@@ -47,11 +49,13 @@ squares_centroids <- squares %>%
                          station_2018 = FALSE,
                          station_2040_ve0 = FALSE,
                          # station_2040_ve1 = FALSE,
-                         station_2040_ve2 = FALSE)) %>%
+                         station_2040_ve2 = FALSE,
+                         station_2040_suunnitelma = FALSE)) %>%
   dplyr::mutate(center_or_station_2018 = center | station_2018,
                 center_or_station_2040_ve0 = center | station_2040_ve0,
                 # center_or_station_2040_ve1 = center | station_2040_ve1,
-                center_or_station_2040_ve2 = center | station_2040_ve2) %>%
+                center_or_station_2040_ve2 = center | station_2040_ve2,
+                center_or_station_2040_suunnitelma = center | station_2040_suunnitelma) %>%
   sf::st_join(zones, join = sf::st_nearest_feature) %>%
   dplyr::mutate(
     area = dplyr::case_when(
@@ -84,15 +88,18 @@ calc_areas <- function(squares, group) {
       pop_diff_2020_ve0 = sum(pop_diff_2020_2040_ve0),
       # pop_diff_2020_ve1 = sum(pop_diff_2020_2040_ve1),
       pop_diff_2020_ve2 = sum(pop_diff_2020_2040_ve2),
+      pop_diff_2020_suunnitelma = sum(pop_diff_2020_2040_suunnitelma),
       .groups = "drop_last"
     ) %>%
     dplyr::mutate(
       value_ve0 = pop_diff_2020_ve0 / sum(pop_diff_2020_ve0),
       # value_ve1 = pop_diff_2020_ve1 / sum(pop_diff_2020_ve1),
       value_ve2 = pop_diff_2020_ve2 / sum(pop_diff_2020_ve2),
+      value_suunnitelma = pop_diff_2020_suunnitelma / sum(pop_diff_2020_suunnitelma),
       pop_diff_2020_ve0 = sum(pop_diff_2020_ve0),
       # pop_diff_2020_ve1 = sum(pop_diff_2020_ve1),
       pop_diff_2020_ve2 = sum(pop_diff_2020_ve2),
+      pop_diff_2020_suunnitelma = sum(pop_diff_2020_suunnitelma),
     ) %>%
     dplyr::filter({{ group }}) %>%
     dplyr::select(!{{group}})
@@ -104,15 +111,18 @@ calc_areas <- function(squares, group) {
       pop_diff_2020_ve0 = sum(pop_diff_2020_2040_ve0),
       # pop_diff_2020_ve1 = sum(pop_diff_2020_2040_ve1),
       pop_diff_2020_ve2 = sum(pop_diff_2020_2040_ve2),
+      pop_diff_2020_suunnitelma = sum(pop_diff_2020_2040_suunnitelma),
       .groups = "drop_last"
     ) %>%
     dplyr::mutate(
       value_ve0 = pop_diff_2020_ve0 / sum(pop_diff_2020_ve0),
       # value_ve1 = pop_diff_2020_ve1 / sum(pop_diff_2020_ve1),
       value_ve2 = pop_diff_2020_ve2 / sum(pop_diff_2020_ve2),
+      value_suunnitelma = pop_diff_2020_suunnitelma / sum(pop_diff_2020_suunnitelma),
       pop_diff_2020_ve0 = sum(pop_diff_2020_ve0),
       # pop_diff_2020_ve1 = sum(pop_diff_2020_ve1),
       pop_diff_2020_ve2 = sum(pop_diff_2020_ve2),
+      pop_diff_2020_suunnitelma = sum(pop_diff_2020_suunnitelma),
     ) %>%
     dplyr::filter({{ group }}) %>%
     dplyr::select(!{{group}}) %>%
@@ -134,6 +144,9 @@ stations_2040_ve0 <- calc_areas(squares, station_2040_ve0)
 centers_or_stations_2040_ve2 <- calc_areas(squares, center_or_station_2040_ve2)
 stations_2040_ve2 <- calc_areas(squares, station_2040_ve2)
 
+centers_or_stations_2040_suunnitelma <- calc_areas(squares, center_or_station_2040_suunnitelma)
+stations_2040_suunnitelma <- calc_areas(squares, station_2040_suunnitelma)
+
 
 
 
@@ -154,6 +167,12 @@ ensi_ve2 <- ensi %>%
   dplyr::select(area, dplyr::ends_with("ve2")) %>%
   dplyr::rename_with(~ gsub("_ve2", "", .x)) %>%
   dplyr::mutate(scenario = "2040_ve2") %>%
+  dplyr::rename(pop_share_ensi = value)
+
+ensi_suunnitelma <- ensi %>%
+  dplyr::select(area, dplyr::ends_with("suunnitelma")) %>%
+  dplyr::rename_with(~ gsub("_suunnitelma", "", .x)) %>%
+  dplyr::mutate(scenario = "2040_suunnitelma") %>%
   dplyr::rename(pop_share_ensi = value)
 
 
@@ -184,6 +203,13 @@ centers_ve2 <- centers %>%
   dplyr::rename(pop_share_center = value) %>%
   dplyr::select(!pop_diff_2020)
 
+centers_suunnitelma <- centers %>%
+  dplyr::select(area, dplyr::ends_with("suunnitelma")) %>%
+  dplyr::rename_with(~ gsub("_suunnitelma", "", .x)) %>%
+  dplyr::mutate(scenario = "2040_suunnitelma") %>%
+  dplyr::rename(pop_share_center = value) %>%
+  dplyr::select(!pop_diff_2020)
+
 
 
 
@@ -210,6 +236,13 @@ stations_ve2 <- stations_2040_ve2 %>%
   dplyr::rename(pop_share_station = value) %>%
   dplyr::select(!pop_diff_2020)
 
+stations_suunnitelma <- stations_2040_suunnitelma %>%
+  dplyr::select(area, dplyr::ends_with("suunnitelma")) %>%
+  dplyr::rename_with(~ gsub("_suunnitelma", "", .x)) %>%
+  dplyr::mutate(scenario = "2040_suunnitelma") %>%
+  dplyr::rename(pop_share_station = value) %>%
+  dplyr::select(!pop_diff_2020)
+
 
 
 
@@ -233,6 +266,13 @@ centers_or_stations_ve2 <- centers_or_stations_2040_ve2 %>%
   dplyr::select(area, dplyr::ends_with("ve2")) %>%
   dplyr::rename_with(~ gsub("_ve2", "", .x)) %>%
   dplyr::mutate(scenario = "2040_ve2") %>%
+  dplyr::rename(pop_share_center_or_station = value) %>%
+  dplyr::select(!pop_diff_2020)
+
+centers_or_stations_suunnitelma <- centers_or_stations_2040_suunnitelma %>%
+  dplyr::select(area, dplyr::ends_with("suunnitelma")) %>%
+  dplyr::rename_with(~ gsub("_suunnitelma", "", .x)) %>%
+  dplyr::mutate(scenario = "2040_suunnitelma") %>%
   dplyr::rename(pop_share_center_or_station = value) %>%
   dplyr::select(!pop_diff_2020)
 
@@ -263,11 +303,17 @@ squares_areas_2040_ve2 <- ensi_ve2 %>%
   dplyr::left_join(stations_ve2, by = c("area", "scenario")) %>%
   dplyr::left_join(centers_or_stations_ve2, by = c("area", "scenario"))
 
+squares_areas_2040_suunnitelma <- ensi_suunnitelma %>%
+  dplyr::left_join(centers_suunnitelma, by = c("area", "scenario")) %>%
+  dplyr::left_join(stations_suunnitelma, by = c("area", "scenario")) %>%
+  dplyr::left_join(centers_or_stations_suunnitelma, by = c("area", "scenario"))
+
 
 
 squares_areas_2040_ve0 %>% readr::write_rds(here::here("results", "squares_areas_2040_ve0.rds"))
 # squares_areas_2040_ve1 %>% readr::write_rds(here::here("results", "squares_areas_2040_ve1u.rds"))
 squares_areas_2040_ve2 %>% readr::write_rds(here::here("results", "squares_areas_2040_ve2.rds"))
+squares_areas_2040_suunnitelma %>% readr::write_rds(here::here("results", "squares_areas_2040_suunnitelma.rds"))
 
 
 
