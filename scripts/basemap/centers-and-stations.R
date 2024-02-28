@@ -15,6 +15,8 @@ centers_and_stations_ve1 <- centers_and_stations %>%
   dplyr::filter(center | station_2040_ve1)
 centers_and_stations_ve2 <- centers_and_stations %>%
   dplyr::filter(center | station_2040_ve2)
+centers_and_stations_suunnitelma <- centers_and_stations %>%
+  dplyr::filter(center | station_2040_suunnitelma)
 
 ggplot() +
   geom_sf(mapping = aes(fill = center),
@@ -47,3 +49,19 @@ ggplot() +
   theme_mal_map()
 
 ggsave_map(here::here("figures", "map_basemap_centers-and-stations_2040_ve2.png"))
+
+ggplot() +
+  geom_sf(mapping = aes(fill = center),
+          data = centers_and_stations_suunnitelma, color = NA) +
+  geom_basemap() +
+  scale_fill_manual("Alue",
+                    values = c("#BFD7AC", "#3E8606"),
+                    labels = c("Raskas raideliikenne", "Seudun keskus")) +
+  coord_sf_mal() +
+  annotate_map(
+    title = "Seudun keskukset ja raskas raideliikenne",
+    subtitle = "2040 Suunnitelma"
+  ) +
+  theme_mal_map()
+
+ggsave_map(here::here("figures", "map_basemap_centers-and-stations_2040_suunnitelma.png"))

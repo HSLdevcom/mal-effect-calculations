@@ -1,6 +1,6 @@
 default:
-  helmet_data: "C:/../helmet-results"
-  forecast_zonedata_path: "C:/.../Syottodata"
+  helmet_data: "T:/JohannaP/mal2023"
+  forecast_zonedata_path: "T:/JohannaP/Ennusteskenaarioiden_syottotiedot"
   housing_cost: "AsKustannukset_01062021.xlsx"
   income_data: "tulotiedot_2016_korjattu.xlsx"
   present_scenario: "2018_agentti"
@@ -16,4 +16,10 @@ default:
   projected_scenario: "2040_ve2_agentti"
   baseline_scenario: "2040_ve0_agentti"
   projected_name: "2040 Luonnos"
+  baseline_name: "2040 Vertailupohja"
+
+2040_ve0-2040_suunnitelma:
+  projected_scenario: "2040_suunnitelma_agentti"
+  baseline_scenario: "2040_ve0_agentti"
+  projected_name: "2040 Suunnitelma"
   baseline_name: "2040 Vertailupohja"

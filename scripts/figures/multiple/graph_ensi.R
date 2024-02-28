@@ -12,7 +12,7 @@ translations <- here::here("utilities", "areas.tsv") %>%
 results <- readr::read_rds(here::here("results", "squares_areas_ensi_apartments.rds")) %>%
   dplyr::mutate(area = factor(area, levels = translations$level, labels = translations$label)) %>%
   dplyr::arrange(area) %>%
-  dplyr::mutate(scenario = "2040 2. luonnos")
+  dplyr::mutate(scenario = "2040 Suunnitelma")
 
 # Plot --------------------------------------------------------------------
 

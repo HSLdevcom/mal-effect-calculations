@@ -6,7 +6,7 @@ options(scipen = 999)
 
 # Set envinronment for config file ----
 
-Sys.setenv(R_CONFIG_ACTIVE = "2040_ve0-2040_ve2")
+Sys.setenv(R_CONFIG_ACTIVE = "2040_ve0-2040_suunnitelma")
 
 # Create output folder ----
 

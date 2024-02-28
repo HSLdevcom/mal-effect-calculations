@@ -8,7 +8,7 @@ library(cowplot)
 
 present <- "2018"
 baseline <- "2040_ve0"
-projected <- "2040_ve2"
+projected <- "2040_suunnitelma"
 
 centers <- readr::read_tsv(here::here("data", "centers.tsv"), col_types = "icll") %>%
   dplyr::filter(hub)

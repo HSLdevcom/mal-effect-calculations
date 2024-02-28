@@ -112,7 +112,7 @@ links <- readr::read_rds(here::here("results", sprintf("links_%s.rds", scenario_
 
 # Calculate noise population ----------------------------------------------
 
-if (scenario_attributes[["root"]] %in% c("2040_ve1u", "2040_ve2")) {
+if (scenario_attributes[["root"]] %in% c("2040_ve1u", "2040_ve2", "2040_suunnitelma")) {
   noise_population_reduction <- readr::read_tsv(
     here::here("utilities", sprintf("noise_population_reduction_%s.tsv",
                                     scenario_attributes[["root"]])),
