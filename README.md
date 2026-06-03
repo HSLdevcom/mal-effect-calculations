@@ -57,3 +57,4 @@ can be found on [their website](https://rstudio.github.io/renv/index.html).
 - Atte Supponen, [atte-wsp](https://github.com/atte-wsp)
 - Jens West, [zptro](https://github.com/zptro)
 - Johanna Piipponen, [johpiip](https://github.com/johpiip)
+- Petr Hajduk, [hsl-petrhaj](https://github.com/hsl-petrhaj)
