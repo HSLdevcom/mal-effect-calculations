@@ -31,7 +31,7 @@ transit_kms <- file.path(config::get("helmet_data"),
 
 kms <- readr::read_rds(here::here("results", sprintf("areas_%s.rds", scenario_attributes[["scenario"]]))) %>%
   dplyr::filter(area %in% "Helsingin seutu") %>%
-  dplyr::select(vehicle_kms_car, vehicle_kms_van, vehicle_kms_truck_all) %>%
+  dplyr::select(vehicle_kms_car, vehicle_kms_van, vehicle_kms_truck, vehicle_kms_trailer_truck) %>%
   tidyr::pivot_longer(
     cols = starts_with("vehicle_kms_"),
     names_to = "vehicle",
@@ -64,7 +64,7 @@ if (scenario_attributes[["present"]]) {
 emissions <- emissions %>%
   dplyr::mutate(emission = correction * emission)
 
-# if (scenario_attributes[["root"]] == "2040_ve2") {
+# if (scenario_attributes[["root"]] == "2045_ve2") {
 #   message("Decrease emissions because of speed limits...")
 #   emissions_before <- sum(emissions$emission)
 #   # reduction <- 21408224692 / emissions_before

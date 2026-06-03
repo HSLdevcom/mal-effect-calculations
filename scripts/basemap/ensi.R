@@ -7,8 +7,8 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-ensi_ruudut <- sf::read_sf(here::here("data", "MAL2023_Ve1_data_ja_info",
-                                      "MAL2023_ensisijaiset_vyöhykkeet_Ve1_ruudut_lisaykset.shp")) %>%
+ensi_ruudut <- sf::read_sf(here::here("data", "MAL2027_Ve1_data_ja_info",
+                                      "MAL2027_ensisijaiset_vyöhykkeet_Ve1_ruudut_lisaykset.shp")) %>%
   sf::st_cast("POLYGON") %>%
   sf::st_transform(3879) %>%
   dplyr::mutate(ensi = TRUE) %>%
@@ -16,8 +16,8 @@ ensi_ruudut <- sf::read_sf(here::here("data", "MAL2023_Ve1_data_ja_info",
 
 readr::write_rds(ensi_ruudut, file = here::here("results", "ensi_ruudut.rds"))
 
-ensi <- sf::read_sf(here::here("data", "MAL2023_Ve1_data_ja_info",
-                                      "MAL2023_ensisijaiset_vyohykkeet_Ve1.shp")) %>%
+ensi <- sf::read_sf(here::here("data", "MAL2027_Ve1_data_ja_info",
+                                      "MAL2027_ensisijaiset_vyohykkeet_Ve1.shp")) %>%
   sf::st_cast("POLYGON") %>%
   sf::st_transform(3879) %>%
   dplyr::mutate(ensi = TRUE) %>%

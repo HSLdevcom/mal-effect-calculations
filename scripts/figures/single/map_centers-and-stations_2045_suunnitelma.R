@@ -9,9 +9,9 @@ library(ggnewscale)
 # Data --------------------------------------------------------------------
 
 results <- readr::read_rds(here::here("results", "squares.rds")) %>%
-  dplyr::mutate(diff_pop = pop_diff_2020_2040_ve2) %>%
+  dplyr::mutate(diff_pop = pop_diff_2020_2040_suunnitelma) %>%
   dplyr::filter(diff_pop >= 5) %>%
-  dplyr::mutate(diff_pop = dplyr::if_else(center_or_station_2040_ve2, diff_pop, -diff_pop))
+  dplyr::mutate(diff_pop = dplyr::if_else(center_or_station_2040_suunnitelma, diff_pop, -diff_pop))
 
 
 # Plot --------------------------------------------------------------------
@@ -62,10 +62,10 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Uusien asukkaiden sijoittuminen seudun keskuksiin ja raskaan raideliikenteen piiriin",
-    subtitle = "2040 Luonnos"
+    subtitle = "2045 Suunnitelma"
   ) +
   theme_mal_map() +
   theme(legend.box = "horizontal",
         legend.box.just = "top")
 
-ggsave_map(here::here("figures", "map_centers-and-stations_2040_ve2.png"))
+ggsave_map(here::here("figures", "map_centers-and-stations_2045_suunnitelma.png"))

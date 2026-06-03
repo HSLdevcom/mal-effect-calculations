@@ -2,8 +2,8 @@
 library(here)
 library(tidyverse)
 
-squares <- here::here("data", "MAL2023_asukkaat_Ve2_1_20221010",
-                          "MAL2023_asukkaat_Ve2_1_20221010_region.shp") %>%
+squares <- here::here("data", "MAL2027_asukkaat_Ve2_1_20221010",
+                          "MAL2027_asukkaat_Ve2_1_20221010_region.shp") %>%
   sf::read_sf() %>%
   sf::st_transform(3879) %>%
   dplyr::select(xyind, asuk20YKR, asuk40uV00, asuk40Ve00, asyht_22_3) %>%
@@ -310,10 +310,10 @@ squares_areas_2040_suunnitelma <- ensi_suunnitelma %>%
 
 
 
-squares_areas_2040_ve0 %>% readr::write_rds(here::here("results", "squares_areas_2040_ve0.rds"))
-# squares_areas_2040_ve1 %>% readr::write_rds(here::here("results", "squares_areas_2040_ve1u.rds"))
-squares_areas_2040_ve2 %>% readr::write_rds(here::here("results", "squares_areas_2040_ve2.rds"))
-squares_areas_2040_suunnitelma %>% readr::write_rds(here::here("results", "squares_areas_2040_suunnitelma.rds"))
+squares_areas_2040_ve0 %>% readr::write_rds(here::here("results", "squares_areas_2045_ve0.rds"))
+# squares_areas_2040_ve1 %>% readr::write_rds(here::here("results", "squares_areas_2045_ve1u.rds"))
+squares_areas_2040_ve2 %>% readr::write_rds(here::here("results", "squares_areas_2045_ve2.rds"))
+squares_areas_2040_suunnitelma %>% readr::write_rds(here::here("results", "squares_areas_2045_suunnitelma.rds"))
 
 
 

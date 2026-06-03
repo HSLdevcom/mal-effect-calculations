@@ -30,7 +30,20 @@ source(here::here("scripts", "figures", "map_hubs.R"), encoding = "utf-8")
 
 # Prepare data ------------------------------------------------------------
 
-scenario_list <- c("2018", "2040_ve0", "2040_suunnitelma")
+scenario_list <- c("2023", "2045_ve0")
+#scenario_list <- c("2045_ve0")
+#scenario_list <- c("2023", "2045_ve0", "2045_suunnitelma")
+
+scenario <- "2045_ve0"
+scenario_attributes <- set_scenario(scenario)
+# message(sprintf("Prepare data in scenario %s...", scenario))
+source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
+# source(here::here("scripts", "figures", "links.R"), encoding = "utf-8")
+# source(here::here("scripts", "figures", "areas.R"), encoding = "utf-8")
+# source(here::here("scripts", "figures", "vdfs.R"), encoding = "utf-8")
+#source(here::here("scripts", "figures", "emissions.R"), encoding = "utf-8")
+# source(here::here("scripts", "figures", "cargo.R"), encoding = "utf-8")
+# source(here::here("scripts", "figures", "centers.R"), encoding = "utf-8")
 
 for (scenario in scenario_list) {
   scenario_attributes <- set_scenario(scenario)
@@ -52,12 +65,12 @@ sensitivity_scenario_list <- scenarios$scenario[scenarios$sensitivity]
 for (scenario in sensitivity_scenario_list) {
   scenario_attributes <- set_scenario(scenario)
   message(sprintf("Prepare data in scenario %s...", scenario))
-  source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
-  source(here::here("scripts", "figures", "links.R"), encoding = "utf-8")
+  #source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
+  #source(here::here("scripts", "figures", "links.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "areas.R"), encoding = "utf-8")
-  source(here::here("scripts", "figures", "vdfs.R"), encoding = "utf-8")
-  source(here::here("scripts", "figures", "emissions.R"), encoding = "utf-8")
-  source(here::here("scripts", "figures", "cargo.R"), encoding = "utf-8")
+  #source(here::here("scripts", "figures", "vdfs.R"), encoding = "utf-8")
+  #source(here::here("scripts", "figures", "emissions.R"), encoding = "utf-8")
+  #source(here::here("scripts", "figures", "cargo.R"), encoding = "utf-8")
 }
 
 source(here::here("scripts", "figures", "sensitivity.R"), encoding = "utf-8")
@@ -75,6 +88,14 @@ multiples <- list.files(here::here("scripts", "figures", "multiple"),
                       pattern = ".R$",
                       full.names = TRUE)
 
+#TODO: Remove when plan scenarios are available
+skipped = c("malpakka","cba","speed","bike2","sustainable2","transit2","walk2","simple2","all2","aht2","accessibility2","co2_2","co2_time","savu","delay")
+for (skip in skipped) {
+  differences <- differences[!grepl(skip, differences)]
+  multiples <- multiples[!grepl(skip, multiples)]
+}
+
+
 for (scenario in scenario_list) {
   scenario_attributes <- set_scenario(scenario)
   lapply(singles, verbose_source, encoding = "utf-8")
@@ -82,3 +103,4 @@ for (scenario in scenario_list) {
 
 invisible(lapply(differences, verbose_source, encoding = "utf-8"))
 invisible(lapply(multiples, verbose_source, encoding = "utf-8"))
+source(here::here("scripts", "figures", "multiple","graph_mode-share_sustainable_cap_reg.R"), encoding = "utf-8")

@@ -62,10 +62,10 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Uusien asukkaiden sijoittuminen seudun keskuksiin ja raskaan raideliikenteen piiriin",
-    subtitle = "2040 Vertailupohja"
+    subtitle = "2045 Vertailupohja"
   ) +
   theme_mal_map() +
   theme(legend.box = "horizontal",
         legend.box.just = "top")
 
-ggsave_map(here::here("figures", "map_centers-and-stations_2040_ve0.png"))
+ggsave_map(here::here("figures", "map_centers-and-stations_2045_ve0.png"))

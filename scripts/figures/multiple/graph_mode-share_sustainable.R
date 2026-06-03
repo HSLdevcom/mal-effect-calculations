@@ -18,6 +18,7 @@ results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
     names_prefix = "origin_share_"
     ) %>%
   dplyr::filter(mode != "car") %>%
+  dplyr::filter(area != "Pääkaupunkiseutu") %>%
   dplyr::mutate(
     lower = dplyr::case_when(
       mode == "transit" ~ origin_share_transit_lower,
@@ -191,7 +192,7 @@ ggplot(results_walk, aes(x = area, y = value, fill = scenario)) +
   ) +
   scale_y_continuous(
     labels = scales::label_percent(accuracy = 1, suffix = ""),
-    limits = c(0, 0.50),
+    limits = c(0, 0.60),
     expand = expansion(mult = c(0.025, 0.1))
   ) +
   scale_x_discrete(

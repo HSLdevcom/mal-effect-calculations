@@ -18,6 +18,7 @@ results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
     names_prefix = "origin_share_"
   ) %>%
   dplyr::filter(mode %in% c("transit", "bike", "walk")) %>%
+  dplyr::filter(area != "Pääkaupunkiseutu") %>%
   dplyr::mutate(mode = factor(mode, levels = translations$level, labels = translations$label))
 
 results_total <- results %>%

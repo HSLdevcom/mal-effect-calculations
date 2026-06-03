@@ -14,7 +14,7 @@ hsl_yellows_fill <- c("#FEEDC5", "#FDDC8C", "#FCCA52", "#FCB919")
 region <- readr::read_rds(here::here("results", "region.rds"))
 bonus_region <- readr::read_rds(here::here("results", "bonus_region.rds"))
 metro <- readr::read_rds(here::here("results", "metro.rds"))
-metro_2040_ve0 <- readr::read_rds(here::here("results", "metro_2040_ve0.rds"))
+#metro_2040_ve0 <- readr::read_rds(here::here("results", "metro_2045_ve0.rds"))
 train <- readr::read_rds(here::here("results", "train.rds"))
 roads <- readr::read_rds(here::here("results", "roads.rds"))
 municipalities <- readr::read_rds(here::here("results", "municipalities.rds"))
@@ -31,8 +31,8 @@ geom_basemap <- function(show_roads = TRUE) {
     geom_sf(data = train, color = "#ffffff", linetype = "22", linewidth = 0.53),
     geom_sf(data = metro, color = "#ff7f00", linetype = "solid", linewidth = 0.66),
     geom_sf(data = metro, color = "#ffffff", linetype = "22", linewidth = 0.53),
-    geom_sf(data = metro_2040_ve0, color = "#ff7f00", linetype = "solid", linewidth = 0.66),
-    geom_sf(data = metro_2040_ve0, color = "#ffffff", linetype = "22", linewidth = 0.53),
+#    geom_sf(data = metro_2040_ve0, color = "#ff7f00", linetype = "solid", linewidth = 0.66),
+#    geom_sf(data = metro_2040_ve0, color = "#ffffff", linetype = "22", linewidth = 0.53),
     geom_sf(data = region, color = "#000000", fill = NA, linewidth = 0.46),
     geom_sf(data = bonus_region, color = "#000000", fill = NA, linetype = "33", linewidth = 0.46)
   )

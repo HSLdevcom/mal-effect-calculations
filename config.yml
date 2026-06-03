@@ -1,25 +1,13 @@
 default:
-  helmet_data: "T:/JohannaP/mal2023"
-  forecast_zonedata_path: "T:/JohannaP/Ennusteskenaarioiden_syottotiedot"
+  helmet_data: "C:/Users/HajduPe/mal-effect-calculations2027/results"
+  forecast_zonedata_path: "C:/Users/HajduPe/mal-effect-calculations2027/scenarios"
   housing_cost: "AsKustannukset_01062021.xlsx"
   income_data: "tulotiedot_2016_korjattu.xlsx"
-  present_scenario: "2018_agentti"
-  present_name: "2018 Nykytila"
+  present_scenario: "2023_agentti"
+  present_name: "2023 Nykytila"
 
-2040_ve0-2040_ve1:
-  projected_scenario: "2040_ve1_agentti"
-  baseline_scenario: "2040_ve0_agentti"
-  projected_name: "2040 1. luonnos"
-  baseline_name: "2040 Vertailupohja"
-
-2040_ve0-2040_ve2:
-  projected_scenario: "2040_ve2_agentti"
-  baseline_scenario: "2040_ve0_agentti"
-  projected_name: "2040 Luonnos"
-  baseline_name: "2040 Vertailupohja"
-
-2040_ve0-2040_suunnitelma:
-  projected_scenario: "2040_suunnitelma_agentti"
-  baseline_scenario: "2040_ve0_agentti"
-  projected_name: "2040 Suunnitelma"
-  baseline_name: "2040 Vertailupohja"
+2045_ve0-2045_suunnitelma:
+  projected_scenario: "2045_suunnitelma_agentti"
+  baseline_scenario: "2045_ve0_agentti"
+  projected_name: "2045 Suunnitelma"
+  baseline_name: "2045 Vertailupohja"

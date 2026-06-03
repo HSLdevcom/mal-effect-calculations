@@ -7,7 +7,9 @@ library(sf)
 # Data --------------------------------------------------------------------
 
 results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
-  dplyr::filter(area != "Helsingin seutu")
+  dplyr::filter(area != "Helsingin seutu") %>%
+  dplyr::filter(area != "Pääkaupunkiseutu")
+
 
 results_total <- results %>%
   dplyr::group_by(scenario) %>%
@@ -39,7 +41,7 @@ ggplot(results, aes(x = scenario, y = total_pop)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#3E8606", "#BFD7AC", "#f092cd", "#007AC9", "#AAD3ED")
+    values = c("#3E8606", "#3E8606", "#BFD7AC", "#f092cd", "#007AC9", "#AAD3ED")
   ) +
   labs(
     title = "Väestö",

@@ -27,7 +27,8 @@ read_tsv_helmet <- function(..., first_col_name, comment = "#") {
   withCallingHandlers({
     readr::read_tsv(..., comment = comment) %>%
       dplyr::rename({{first_col_name}} := `...1`) %>%
-      dplyr::rename_with(~ gsub("-", "_", .x, fixed = TRUE))
+      dplyr::rename_with(~ gsub("-", "_", .x, fixed = TRUE)) %>%
+      dplyr::mutate(across(everything(), ~ ifelse(is.na(.), 0, .)))
   }, message = function(w) {
     # Helmet results never include first column name so if the message is only
     # about the first column, we suppress it. Message is usually:
@@ -139,7 +140,7 @@ twocenters <- function(.data, mode) {
     sf::st_drop_geometry() %>%
     dplyr::filter(!(zone %in% outlier_zones))
   if (scenario_attributes[["present"]]) {
-    xrange <- range(.data_to_range[[column]])
+    xrange <- range(.data_to_range[[column]], na.rm = TRUE) #TODO: Indentify why NA values are present
     readr::write_rds(xrange, file = here::here("results", sprintf("twocenters_range_%s.rds", mode)))
   } else {
     message("twocenters: read ranges...")
@@ -159,7 +160,7 @@ twocenters <- function(.data, mode) {
     message("twocenters: read breaks...")
     breaks <- readr::read_rds(here::here("results", sprintf("twocenters_breaks_%s.rds", mode)))
   }
-  # Cut variable into bins and plot.
+  # # Cut variable into bins and plot.
   bins = cut_twocenters(ttime_twocenters_normal,
                         breaks = breaks)
   return(list(ttime_twocenters_normal = ttime_twocenters_normal,

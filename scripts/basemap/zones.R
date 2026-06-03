@@ -3,23 +3,14 @@ library(here)
 library(tidyverse)
 library(sf)
 
-zones <- here::here("data", "aluejaot_2019_SHP", "sijoittelualueet2019.shp") %>%
+zones <- here::here("data", "aluejaot_2023_SHP", "sijoittelualueet2023.shp") %>%
   sf::read_sf(options = "ENCODING=UTF-8") %>%
   sf::st_set_crs(3879) %>%
-  sf::st_zm(drop = TRUE) %>%
-  dplyr::mutate(KUNTANIMI = dplyr::case_when(
-    KUNTANIMI == "HÃ¤meenlinna" ~ "Hämeenlinna",
-    KUNTANIMI == "HausjÃƒÆ’Ã‚Â¤rvi" ~ "Hausjärvi",
-    KUNTANIMI == "HyvinkÃƒÆ’Ã‚Â¤ÃƒÆ" ~ "Hyvinkää",
-    KUNTANIMI == "JÃƒÆ’Ã‚Â¤rvenpÃƒÆ" ~ "Järvenpää",
-    KUNTANIMI == "KÃ¤rkÃ¶lÃ¤" ~ "Kärkölä",
-    KUNTANIMI == "LapinjÃƒÆ’Ã‚Â¤rvi" ~ "Lapinjärvi",
-    KUNTANIMI == "MÃƒÆ’Ã‚Â¤ntsÃƒÆ" ~ "Mäntsälä",
-    KUNTANIMI == "MyrskylÃƒÆ’Ã‚Â¤" ~ "Myrskylä",
-    KUNTANIMI == "NurmijÃƒÆ’Ã‚Â¤rvi" ~ "Nurmijärvi",
-    KUNTANIMI == "RiihimÃƒÆ’Ã‚Â¤ki" ~ "Riihimäki",
-    TRUE ~ KUNTANIMI
-  ))
+  sf::st_zm(drop = TRUE)
+
+
+zones <- zones %>%
+  mutate(SIJ2023 = as.integer(SIJ2023))
 
 hs15 <- c("Helsinki",
           "Espoo",
@@ -39,12 +30,12 @@ hs15 <- c("Helsinki",
 
 # Save whole model area
 zones %>%
-  dplyr::mutate(hs15 = KUNTANIMI %in% hs15) %>%
-  readr::write_rds(here::here("results", "sijoittelualueet2019.rds"))
+  dplyr::mutate(hs15 = SIJ2023 < 16000) %>%
+  readr::write_rds(here::here("results", "sijoittelualueet2023.rds"))
 
 zones <- zones %>%
-  dplyr::filter(KUNTANIMI %in% hs15) %>%
-  dplyr::mutate(KUNTANIMI = factor(KUNTANIMI, levels = hs15))
+  dplyr::filter(SIJ2023 < 16000)
+#  dplyr::mutate(KUNTANIMI = factor(KUNTANIMI, levels = hs15))
 
 # Save only HS15 area
 zones %>%

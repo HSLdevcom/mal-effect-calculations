@@ -22,7 +22,7 @@ ggplot() +
     name = "Pisteluku",
     labels = scales::label_number(accuracy = 1),
     direction = 1,
-    limits = c(-185.9973, -122.3190),
+    limits = c(-100, -40),
     oob = scales::squish
   ) +
   geom_basemap() +

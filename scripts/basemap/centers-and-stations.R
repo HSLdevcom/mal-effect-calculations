@@ -8,15 +8,23 @@ library(tidyverse)
 centers_and_stations <- sf::read_sf(here::here("data", "centers_and_stations2.gpkg"))
 readr::write_rds(centers_and_stations, file = here::here("results", "centers-and-stations.rds"))
 
+# Update columns ----------------------------------------------------------
+
+centers_and_stations <- centers_and_stations %>%
+  dplyr::rename(station_2023 = station_2018) %>%
+  dplyr::rename(station_2045_ve0 = station_2040_ve0) %>%
+  dplyr::rename(station_2045_ve1 = station_2040_ve1) %>%
+  dplyr::rename(station_2045_ve2 = station_2040_ve2) %>%
+  dplyr::rename(station_2045_suunnitelma = station_2040_suunnitelma)
 
 # Plot --------------------------------------------------------------------
 
 centers_and_stations_ve1 <- centers_and_stations %>%
-  dplyr::filter(center | station_2040_ve1)
+  dplyr::filter(center | station_2045_ve1)
 centers_and_stations_ve2 <- centers_and_stations %>%
-  dplyr::filter(center | station_2040_ve2)
+  dplyr::filter(center | station_2045_ve2)
 centers_and_stations_suunnitelma <- centers_and_stations %>%
-  dplyr::filter(center | station_2040_suunnitelma)
+  dplyr::filter(center | station_2045_suunnitelma)
 
 ggplot() +
   geom_sf(mapping = aes(fill = center),
@@ -28,11 +36,11 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Seudun keskukset ja raskas raideliikenne",
-    subtitle = "2040 1. luonnos"
+    subtitle = "2045 1. luonnos"
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", "map_basemap_centers-and-stations_2040_ve1.png"))
+ggsave_map(here::here("figures", "map_basemap_centers-and-stations_2045_ve1.png"))
 
 ggplot() +
   geom_sf(mapping = aes(fill = center),
@@ -44,11 +52,11 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Seudun keskukset ja raskas raideliikenne",
-    subtitle = "2040 2. luonnos"
+    subtitle = "2045 2. luonnos"
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", "map_basemap_centers-and-stations_2040_ve2.png"))
+ggsave_map(here::here("figures", "map_basemap_centers-and-stations_2045_ve2.png"))
 
 ggplot() +
   geom_sf(mapping = aes(fill = center),
@@ -60,8 +68,8 @@ ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Seudun keskukset ja raskas raideliikenne",
-    subtitle = "2040 Suunnitelma"
+    subtitle = "2045 Suunnitelma"
   ) +
   theme_mal_map()
 
-ggsave_map(here::here("figures", "map_basemap_centers-and-stations_2040_suunnitelma.png"))
+ggsave_map(here::here("figures", "map_basemap_centers-and-stations_2045_suunnitelma.png"))

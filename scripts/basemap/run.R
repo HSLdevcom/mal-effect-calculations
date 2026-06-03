@@ -6,7 +6,6 @@ source(here::here("scripts", "basemap", "bonus_region.R"), encoding = "utf-8")
 source(here::here("scripts", "basemap", "region.R"), encoding = "utf-8")
 
 source(here::here("scripts", "basemap", "metro.R"), encoding = "utf-8")
-source(here::here("scripts", "basemap", "metro_2040_ve0.R"), encoding = "utf-8")
 source(here::here("scripts", "basemap", "roads.R"), encoding = "utf-8")
 source(here::here("scripts", "basemap", "train.R"), encoding = "utf-8")
 source(here::here("scripts", "basemap", "water.R"), encoding = "utf-8")

@@ -25,7 +25,7 @@ car_use <- read_tsv_helmet(
 origin_demand <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             scenario_attributes[["results"]],
-            "origin_demand_areas.txt"),
+            "origins_demand_areas.txt"),
   col_types = "cdddd",
   first_col_name = "area"
 )
@@ -110,18 +110,18 @@ links <- readr::read_rds(here::here("results", sprintf("links_%s.rds", scenario_
                    .groups = "drop")
 
 
-# Calculate noise population ----------------------------------------------
-
-if (scenario_attributes[["root"]] %in% c("2040_ve1u", "2040_ve2", "2040_suunnitelma")) {
-  noise_population_reduction <- readr::read_tsv(
-    here::here("utilities", sprintf("noise_population_reduction_%s.tsv",
-                                    scenario_attributes[["root"]])),
-    col_types = "ci")
-  noise <- noise %>%
-  dplyr::left_join(noise_population_reduction, by = "area") %>%
-  dplyr::mutate(noise_population = noise_population - reduction) %>%
-  dplyr::select(!reduction)
-}
+# # Calculate noise population ----------------------------------------------
+#
+# if (scenario_attributes[["root"]] %in% c("2045_ve1u", "2045_ve2", "2045_suunnitelma")) {
+#   noise_population_reduction <- readr::read_tsv(
+#     here::here("utilities", sprintf("noise_population_reduction_%s.tsv",
+#                                     scenario_attributes[["root"]])),
+#     col_types = "ci")
+#   noise <- noise %>%
+#   dplyr::left_join(noise_population_reduction, by = "area") %>%
+#   dplyr::mutate(noise_population = noise_population - reduction) %>%
+#   dplyr::select(!reduction)
+# }
 
 
 # Join data ---------------------------------------------------------------
@@ -179,6 +179,8 @@ areas <- areas %>%
     vehicle_kms_total = sum(.$vehicle_kms_total),
     vehicle_kms_car = sum(.$vehicle_kms_car),
     vehicle_kms_van = sum(.$vehicle_kms_van),
+    vehicle_kms_truck = sum(.$vehicle_kms_truck),
+    vehicle_kms_trailer_truck = sum(.$vehicle_kms_trailer_truck),
     vehicle_kms_truck_all = sum(.$vehicle_kms_truck_all),
     accessibility_scaled = weighted.mean(.$accessibility_scaled, .$total_pop, na.rm=TRUE),
     sustainable_accessibility_scaled = weighted.mean(.$sustainable_accessibility_scaled, .$total_pop),
@@ -200,6 +202,52 @@ areas <- areas %>%
     total_pop = sum(.$total_pop),
     total_wrk = sum(.$total_wrk),
   )
+
+# Capital region
+capital_region_areas <- c("helsinki_cbd", "helsinki_other", "espoo_vant_kau")
+
+
+subset_row <- areas %>%
+  dplyr::filter(area %in% capital_region_areas) %>%
+  dplyr::summarise(
+    area = "capital_region",
+    weighted_delay_car_all = sum(weighted_delay_car_all, na.rm = TRUE),
+    weighted_delay_truck_all = sum(weighted_delay_truck_all, na.rm = TRUE),
+    weighted_delay_transit = sum(weighted_delay_transit, na.rm = TRUE),
+    weighted_delay_all = sum(weighted_delay_all, na.rm = TRUE),
+    vehicle_kms_total = sum(vehicle_kms_total, na.rm = TRUE),
+    vehicle_kms_car = sum(vehicle_kms_car, na.rm = TRUE),
+    vehicle_kms_van = sum(vehicle_kms_van, na.rm = TRUE),
+    vehicle_kms_truck = sum(vehicle_kms_truck, na.rm = TRUE),
+    vehicle_kms_trailer_truck = sum(vehicle_kms_trailer_truck, na.rm = TRUE),
+    vehicle_kms_truck_all = sum(vehicle_kms_truck_all, na.rm = TRUE),
+    accessibility_scaled = weighted.mean(accessibility_scaled, total_pop, na.rm = TRUE),
+    sustainable_accessibility_scaled = weighted.mean(sustainable_accessibility_scaled, total_pop, na.rm = TRUE),
+    workplace_accessibility_scaled = weighted.mean(workplace_accessibility_scaled, total_wrk, na.rm = TRUE),
+    workforce_accessibility = weighted.mean(workforce_accessibility, total_wrk, na.rm = TRUE),
+    malpakka = weighted.mean(malpakka, land_area, na.rm = TRUE),
+    malpakka_potential = weighted.mean(malpakka_potential, land_area, na.rm = TRUE),
+    tontin_teho_2017 = weighted.mean(tontin_teho_2017, land_area, na.rm = TRUE),
+    car_density = weighted.mean(car_density, total_pop, na.rm = TRUE),
+    goodness_share = sum(goodness_wrk, na.rm = TRUE) / sum(total_wrk, na.rm = TRUE),
+    origin_share_walk = sum(origin_demand_walk, na.rm = TRUE) / sum(origin_demand_total, na.rm = TRUE),
+    origin_share_transit = sum(origin_demand_transit, na.rm = TRUE) / sum(origin_demand_total, na.rm = TRUE),
+    origin_share_car = sum(origin_demand_car, na.rm = TRUE) / sum(origin_demand_total, na.rm = TRUE),
+    origin_share_bike = sum(origin_demand_bike, na.rm = TRUE) / sum(origin_demand_total, na.rm = TRUE),
+    origin_share_sustainable = (
+      sum(origin_demand_transit, na.rm = TRUE) +
+        sum(origin_demand_bike, na.rm = TRUE) +
+        sum(origin_demand_walk, na.rm = TRUE)
+    ) / sum(origin_demand_total, na.rm = TRUE),
+    noise_area_km2 = sum(noise_area_km2, na.rm = TRUE),
+    noise_population = sum(noise_population, na.rm = TRUE),
+    twocenters = weighted.mean(twocenters, total_pop, na.rm = TRUE),
+    total_pop = sum(total_pop, na.rm = TRUE),
+    total_wrk = sum(total_wrk, na.rm = TRUE)
+  )
+
+areas <- dplyr::bind_rows(areas, subset_row)
+
 
 
 # Join square areas --------------------------------------------------------

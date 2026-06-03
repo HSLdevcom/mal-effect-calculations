@@ -19,7 +19,7 @@ pop <- read_tsv_helmet(
                        scenario_attributes[["forecast"]]),
              pattern = ".pop$",
              full.names = TRUE),
-  col_types = "iiddddd",
+  col_types = "idddddd",
   first_col_name = "zone"
 )
 lnd <- read_tsv_helmet(
@@ -35,7 +35,7 @@ edu <- read_tsv_helmet(
                        scenario_attributes[["forecast"]]),
              pattern = ".edu$",
              full.names = TRUE),
-  col_types = "iiii",
+  col_types = "iddd",
   first_col_name = "zone"
 )
 wrk <- read_tsv_helmet(
@@ -43,7 +43,7 @@ wrk <- read_tsv_helmet(
                        scenario_attributes[["forecast"]]),
              pattern = ".wrk$",
              full.names = TRUE),
-  col_types = "iidddd",
+  col_types = "iddddd",
   first_col_name = "zone"
 )
 prk <- read_tsv_helmet(
@@ -62,6 +62,9 @@ accessibility <- read_tsv_helmet(
   col_types = "idddddddddddddddddddddddddddddddddddddddddddddddddd",
   first_col_name = "zone"
 )
+if (anyNA(accessibility)) {
+  rlang::abort("read_tsv_helmet(): NA values remain after import. accessibility")
+}
 attraction <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             scenario_attributes[["results"]],
@@ -69,6 +72,9 @@ attraction <- read_tsv_helmet(
   col_types = "idddddddddddd",
   first_col_name = "zone"
 )
+if (anyNA(attraction)) {
+  rlang::abort("read_tsv_helmet(): NA values remain after import. attraction")
+}
 car_density <- read_tsv_helmet(
 
   file.path(config::get("helmet_data"),
@@ -77,6 +83,9 @@ car_density <- read_tsv_helmet(
   col_types = "id",
   first_col_name = "zone"
 )
+if (anyNA(car_density)) {
+  rlang::abort("read_tsv_helmet(): NA values remain after import. car_density")
+}
 car_use <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             scenario_attributes[["results"]],
@@ -84,6 +93,9 @@ car_use <- read_tsv_helmet(
   col_types = "id",
   first_col_name = "zone"
 )
+if (anyNA(car_use)) {
+  rlang::abort("read_tsv_helmet(): NA values remain after import. car_use")
+}
 generation <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             scenario_attributes[["results"]],
@@ -91,6 +103,9 @@ generation <- read_tsv_helmet(
   col_types = "iddddddddddd",
   first_col_name = "zone"
 )
+if (anyNA(generation)) {
+  rlang::abort("read_tsv_helmet(): NA values remain after import. generation")
+}
 impedance_ratio <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             scenario_attributes[["results"]],
@@ -98,6 +113,9 @@ impedance_ratio <- read_tsv_helmet(
   col_types = "idd",
   first_col_name = "zone"
 )
+if (anyNA(impedance_ratio)) {
+  rlang::abort("read_tsv_helmet(): NA values remain after import. impedance_ratio")
+}
 origins_demand <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             scenario_attributes[["results"]],
@@ -105,6 +123,9 @@ origins_demand <- read_tsv_helmet(
   col_types = "idddd",
   first_col_name = "zone"
 )
+if (anyNA(origins_demand)) {
+  rlang::abort("read_tsv_helmet(): NA values remain after import. origins_demand")
+}
 origins_shares <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             scenario_attributes[["results"]],
@@ -112,6 +133,9 @@ origins_shares <- read_tsv_helmet(
   col_types = "idddd",
   first_col_name = "zone"
 )
+if (anyNA(origins_shares)) {
+  rlang::abort("read_tsv_helmet(): NA values remain after import. origins_shares")
+}
 savu <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             scenario_attributes[["results"]],
@@ -119,6 +143,9 @@ savu <- read_tsv_helmet(
   col_types = "id",
   first_col_name = "zone"
 )
+if (anyNA(savu)) {
+  rlang::abort("read_tsv_helmet(): NA values remain after import. savu")
+}
 sustainable_accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             scenario_attributes[["results"]],
@@ -126,6 +153,9 @@ sustainable_accessibility <- read_tsv_helmet(
   col_types = "idddddddddddd",
   first_col_name = "zone"
 )
+if (anyNA(sustainable_accessibility)) {
+  rlang::abort("read_tsv_helmet(): NA values remain after import. sustainable_accessibility")
+}
 workplace_accessibility <- read_tsv_helmet(
   file.path(config::get("helmet_data"),
             scenario_attributes[["results"]],
@@ -133,6 +163,9 @@ workplace_accessibility <- read_tsv_helmet(
   col_types = "idd",
   first_col_name = "zone"
 )
+if (anyNA(workplace_accessibility)) {
+  rlang::abort("read_tsv_helmet(): NA values remain after import. workplace_accessibility")
+}
 
 centers <- readr::read_rds(here::here("results", "centers_uusimaa-2050.rds"))
 
@@ -393,14 +426,15 @@ if (scenario_attributes[["projected"]]) {
 
 # Clean data --------------------------------------------------------------
 
-zones <- zones %>%
-  dplyr::select(!c(FID_1, WSP_SIJ, WSP_ENN, SIJ2016, SIJ_MAARA, SIJ_ID, ENN2016)) %>%
-  dplyr::relocate(zone) %>%
-  dplyr::relocate(area, .after = zone) %>%
-  dplyr::relocate(KUNTANIMI, .after = area)
+# zones <- zones %>%
+#   dplyr::select(!c(FID_1, WSP_SIJ, WSP_ENN, SIJ2023, SIJ_MAARA, SIJ_ID, ENN2016)) %>%
+#   dplyr::relocate(zone) %>%
+#   dplyr::relocate(area, .after = zone) %>%
+#   dplyr::relocate(KUNTANIMI, .after = area)
 
 
 # Output ------------------------------------------------------------------
-
+zones <- zones |>
+  dplyr::mutate(fid = as.integer(fid))
 readr::write_rds(zones, file = here::here("results", sprintf("zones_%s.rds", scenario_attributes[["scenario"]])))
 sf::write_sf(zones, here::here("results", sprintf("zones_%s.gpkg", scenario_attributes[["scenario"]])), append = FALSE, delete_dsn = TRUE)

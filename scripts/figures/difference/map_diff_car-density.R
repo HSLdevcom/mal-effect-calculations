@@ -7,8 +7,8 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-scenario0 <- "2018"
-scenario1 <- "2040_ve0"
+scenario0 <- "2023"
+scenario1 <- "2045_ve0"
 
 results0 <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario0))) %>%
   dplyr::select(zone, car_density) %>%

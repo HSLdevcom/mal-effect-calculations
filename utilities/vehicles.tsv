@@ -3,6 +3,8 @@ car	Henkilöautot
 van	Pakettiautot
 bus_hsl	HSL:n linja-autoliikenne
 bus_other	Muu linja-autoliikenne
-truck_all	Kuorma-autot
+truck_all	Kuorma-autot (kaikki)
+trailer_truck	Yhdistelmäajoneuvo
+truck	Kuorma-autot
 all	Kaikki ajoneuvotyypit
 total	total
