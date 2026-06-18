@@ -81,6 +81,9 @@ gap <- agent_sums %>%
 
 max_gap <- max(abs(gap$utility_dif)) + 1
 
+gap <- gap %>%
+  dplyr::filter(scenario!="2045 Suunnitelma")
+
 gap %>%
   ggplot(aes(x = income_group, y = utility_dif, group = scenario)) +
   facet_grid(cols = vars(area), switch = "both", labeller = labeller(.cols = scales::label_wrap(10)), margin = 10) +

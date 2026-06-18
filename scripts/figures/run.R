@@ -34,7 +34,7 @@ scenario_list <- c("2023", "2045_ve0")
 #scenario_list <- c("2045_ve0")
 #scenario_list <- c("2023", "2045_ve0", "2045_suunnitelma")
 
-scenario <- "2045_ve0"
+scenario <- "2023"
 scenario_attributes <- set_scenario(scenario)
 # message(sprintf("Prepare data in scenario %s...", scenario))
 source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
@@ -65,12 +65,12 @@ sensitivity_scenario_list <- scenarios$scenario[scenarios$sensitivity]
 for (scenario in sensitivity_scenario_list) {
   scenario_attributes <- set_scenario(scenario)
   message(sprintf("Prepare data in scenario %s...", scenario))
-  #source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
-  #source(here::here("scripts", "figures", "links.R"), encoding = "utf-8")
+  source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
+  source(here::here("scripts", "figures", "links.R"), encoding = "utf-8")
   source(here::here("scripts", "figures", "areas.R"), encoding = "utf-8")
-  #source(here::here("scripts", "figures", "vdfs.R"), encoding = "utf-8")
-  #source(here::here("scripts", "figures", "emissions.R"), encoding = "utf-8")
-  #source(here::here("scripts", "figures", "cargo.R"), encoding = "utf-8")
+  source(here::here("scripts", "figures", "vdfs.R"), encoding = "utf-8")
+  source(here::here("scripts", "figures", "emissions.R"), encoding = "utf-8")
+  source(here::here("scripts", "figures", "cargo.R"), encoding = "utf-8")
 }
 
 source(here::here("scripts", "figures", "sensitivity.R"), encoding = "utf-8")
@@ -89,7 +89,7 @@ multiples <- list.files(here::here("scripts", "figures", "multiple"),
                       full.names = TRUE)
 
 #TODO: Remove when plan scenarios are available
-skipped = c("malpakka","cba","speed","bike2","sustainable2","transit2","walk2","simple2","all2","aht2","accessibility2","co2_2","co2_time","savu","delay")
+skipped = c("malpakka","cba","speed","bike2","sustainable2","transit2","walk2","simple2","all2","aht2","accessibility2","co2_2","co2_time","delay")
 for (skip in skipped) {
   differences <- differences[!grepl(skip, differences)]
   multiples <- multiples[!grepl(skip, multiples)]

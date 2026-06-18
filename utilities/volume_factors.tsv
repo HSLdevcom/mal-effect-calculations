@@ -1,5 +1,5 @@
 mode	aht	pt	iht
-car_work	0,425	0,093	0.402
+car_work	0.425	0.093	0.402
 car_leisure	0.506	0.096	0.384
 transit_work	0.533	0.111	0.414
 transit_leisure	0.612	0.108	0.400
