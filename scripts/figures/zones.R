@@ -46,6 +46,57 @@ wrk <- read_tsv_helmet(
   col_types = "iddddd",
   first_col_name = "zone"
 )
+wrk_kunnittain <- wrk %>%
+  dplyr::mutate(.total_weight = total) %>%
+  dplyr::left_join(
+    zones %>%
+      sf::st_drop_geometry() %>%
+      dplyr::select(SIJ2023, KUNTANIMI) %>%
+      dplyr::rename(zone = SIJ2023),
+    by = "zone"
+  ) %>%
+  dplyr::filter(!is.na(KUNTANIMI)) %>%
+  dplyr::group_by(KUNTANIMI) %>%
+  dplyr::summarise(
+    total = sum(.total_weight, na.rm = TRUE),
+    dplyr::across(
+      dplyr::starts_with("sh_"),
+      ~ weighted.mean(.x, w = .total_weight, na.rm = TRUE)
+    ),
+    .groups = "drop"
+  ) %>%
+  dplyr::mutate(scenario = scenario_attributes[["scenario"]])
+
+pop_kunnittain <- pop %>%
+  dplyr::mutate(.total_weight = total) %>%
+  dplyr::left_join(
+    zones %>%
+      sf::st_drop_geometry() %>%
+      dplyr::select(SIJ2023, KUNTANIMI) %>%
+      dplyr::rename(zone = SIJ2023),
+    by = "zone"
+  ) %>%
+  dplyr::filter(!is.na(KUNTANIMI)) %>%
+  dplyr::group_by(KUNTANIMI) %>%
+  dplyr::summarise(
+    total = sum(.total_weight, na.rm = TRUE),
+    dplyr::across(
+      dplyr::starts_with("sh_"),
+      ~ weighted.mean(.x, w = .total_weight, na.rm = TRUE)
+    ),
+    .groups = "drop"
+  ) %>%
+  dplyr::mutate(scenario = scenario_attributes[["scenario"]])
+
+readr::write_csv(
+  wrk_kunnittain,
+  here::here("results", sprintf("wrk_kunnittain_%s.csv", scenario_attributes[["scenario"]]))
+)
+readr::write_csv(
+  pop_kunnittain,
+  here::here("results", sprintf("pop_kunnittain_%s.csv", scenario_attributes[["scenario"]]))
+)
+
 prk <- read_tsv_helmet(
   list.files(file.path(config::get("forecast_zonedata_path"),
                        scenario_attributes[["forecast"]]),
@@ -426,11 +477,11 @@ if (scenario_attributes[["projected"]]) {
 
 # Clean data --------------------------------------------------------------
 
-# zones <- zones %>%
-#   dplyr::select(!c(FID_1, WSP_SIJ, WSP_ENN, SIJ2023, SIJ_MAARA, SIJ_ID, ENN2016)) %>%
-#   dplyr::relocate(zone) %>%
-#   dplyr::relocate(area, .after = zone) %>%
-#   dplyr::relocate(KUNTANIMI, .after = area)
+zones <- zones %>%
+  dplyr::select(!c(FID_1)) %>%
+  dplyr::relocate(zone) %>%
+  dplyr::relocate(area, .after = zone) %>%
+  dplyr::relocate(KUNTANIMI, .after = area)
 
 
 # Output ------------------------------------------------------------------
