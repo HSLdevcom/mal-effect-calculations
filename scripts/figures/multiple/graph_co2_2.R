@@ -20,14 +20,26 @@ results <- readr::read_rds(here::here("results", "emissions_all.rds")) %>%
     vehicle = factor("total"),
     emission = emission_statistics["2005"]
   ) %>%
-  dplyr::mutate(vehicle = forcats::fct_rev(vehicle),
+  dplyr::mutate(
+    vehicle = forcats::fct_rev(vehicle),
                 scenario = forcats::fct_relevel(scenario, "2005"))
 
 results_total <- results %>%
   dplyr::filter(vehicle == "total")
 
+vehicle_levels <- c(
+  "Kaikki ajoneuvotyypit",
+  "Yhdistelmäajoneuvo",
+  "Kuorma-autot",
+  "Muu linja-autoliikenne",
+  "HSL:n linja-autoliikenne",
+  "Pakettiautot",
+  "Henkilöautot"
+)
+
 results <- results %>%
-  dplyr::filter(vehicle != "total")
+  dplyr::filter(vehicle != "total") %>%
+  dplyr::mutate(vehicle = factor(vehicle, levels = vehicle_levels))
 
 
 # Plot --------------------------------------------------------------------
@@ -55,11 +67,11 @@ ggplot(results, aes(x = scenario, y = emission)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#e0e0e0", "#333333", "#AAD3ED", "#007AC9", "#F7C8E6", "#f092cd")
+    values = c("#e0e0e0","#666666","#333333", "#AAD3ED", "#007AC9", "#F7C8E6", "#f092cd", "#ffffcd")
   ) +
   scale_color_manual(
     name = NULL,
-    values = c("#333333", "#ffffff", "#33333300", "#33333300", "#33333300", "#333333")
+    values = c("#333333", "#ffffff","#ffffff", "#33333300", "#33333300", "#33333300", "#333333")
   ) +
   labs(
     title = "Moottoriajoneuvoliikenteen CO2-päästöt kulkuneuvoittain Helsingin seudulla",
