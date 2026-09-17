@@ -6,8 +6,6 @@ library(tidyverse)
 # Data --------------------------------------------------------------------
 
 centers_and_stations <- sf::read_sf(here::here("data", "centers_and_stations2.gpkg"))
-readr::write_rds(centers_and_stations, file = here::here("results", "centers-and-stations.rds"))
-
 # Update columns ----------------------------------------------------------
 
 centers_and_stations <- centers_and_stations %>%
@@ -16,6 +14,8 @@ centers_and_stations <- centers_and_stations %>%
   dplyr::rename(station_2045_ve1 = station_2040_ve1) %>%
   dplyr::rename(station_2045_ve2 = station_2040_ve2) %>%
   dplyr::rename(station_2045_suunnitelma = station_2040_suunnitelma)
+
+readr::write_rds(centers_and_stations, file = here::here("results", "centers-and-stations.rds"))
 
 # Plot --------------------------------------------------------------------
 

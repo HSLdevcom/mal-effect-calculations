@@ -13,7 +13,7 @@ centers <- readr::read_tsv(here::here("data", "centers.tsv"), col_types = "icll"
   dplyr::filter(center)
 
 zones <- zones %>%
-  dplyr::rename(zone = SIJ2019) %>%
+  dplyr::rename(zone = SIJ2023) %>%
   dplyr::filter(zone %in% centers$level) %>%
   dplyr::mutate(center_number = match(zone, centers$level)) %>%
   sf::st_centroid()

@@ -9,9 +9,9 @@ library(ggnewscale)
 # Data --------------------------------------------------------------------
 
 results <- readr::read_rds(here::here("results", "squares.rds")) %>%
-  dplyr::mutate(diff_pop = pop_diff_2020_2040_suunnitelma) %>%
+  dplyr::mutate(diff_pop = pop_diff_2023_2045_suunnitelma) %>%
   dplyr::filter(diff_pop >= 5) %>%
-  dplyr::mutate(diff_pop = dplyr::if_else(center_or_station_2040_suunnitelma, diff_pop, -diff_pop))
+  dplyr::mutate(diff_pop = dplyr::if_else(center_or_station_2045_suunnitelma, diff_pop, -diff_pop))
 
 
 # Plot --------------------------------------------------------------------

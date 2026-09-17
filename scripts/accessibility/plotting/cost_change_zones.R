@@ -15,7 +15,7 @@ load(file_path)
 zones <- readr::read_rds(here::here("results", "zones.rds"))
 
 zones <- zones %>%
-  dplyr::rename(zone = SIJ2019)
+  dplyr::rename(zone = SIJ2023)
 
 # Calc cost per month ----
 
