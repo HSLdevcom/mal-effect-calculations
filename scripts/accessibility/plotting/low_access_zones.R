@@ -18,7 +18,19 @@ load(file_path)
 zones <- readr::read_rds(here::here("results", "zones.rds"))
 
 zones <- zones %>%
-  dplyr::rename(zone = SIJ2019)
+  dplyr::rename(zone = SIJ2019) %>%
+  dplyr::mutate(
+    area = dplyr::case_when(
+      zone %in% 0:999 ~ "Helsingin kantakaupunki",
+      zone %in% 1000:1999 ~ "Muu Helsinki",
+      zone %in% 2000:5999 ~ "Muu pääkaupunkiseutu",
+      zone %in% c(6000:6999, 10000:11999, 13000:14999, 15500:15999) ~
+        "Junaliikenteen kehyskunnat",
+      zone %in% c(7000:9999, 12000:12999, 15000:15499) ~
+        "Bussiliikenteen kehyskunnat",
+      TRUE ~ NA_character_
+    )
+  )
 
 # Parameters for plotting ----
 
@@ -94,7 +106,10 @@ low_access_1 <- agents_1 %>%
 # Combine to shapefile ----
 
 zones <- zones %>%
-  left_join(low_access_1, by = c("zone" = "number"))
+  left_join(
+    dplyr::select(low_access_1, -area),
+    by = c("zone" = "number")
+  )
 
 # Plot accessibility ----
 
