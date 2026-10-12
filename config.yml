@@ -9,5 +9,5 @@ default:
 2045_ve0-2045_suunnitelma:
   projected_scenario: "2045_suunnitelma_agentti"
   baseline_scenario: "2045_ve0_agentti"
-  projected_name: "2045 Suunnitelma"
+  projected_name: "2045 Tavoiteverkko"
   baseline_name: "2045 Vertailupohja"

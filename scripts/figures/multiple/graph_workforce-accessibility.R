@@ -5,7 +5,8 @@ library(tidyverse)
 
 # Data --------------------------------------------------------------------
 
-results <- readr::read_rds(here::here("results", "areas_all.rds"))
+results <- readr::read_rds(here::here("results", "areas_all.rds"))   %>%
+  dplyr::filter(area != "Pääkaupunkiseutu")
 
 
 # Plot --------------------------------------------------------------------

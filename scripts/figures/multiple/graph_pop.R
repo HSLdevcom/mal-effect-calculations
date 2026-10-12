@@ -41,7 +41,7 @@ ggplot(results, aes(x = scenario, y = total_pop)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#3E8606", "#3E8606", "#BFD7AC", "#f092cd", "#007AC9", "#AAD3ED")
+    values = c("#3E8606", "#BFD7AC", "#f092cd", "#007AC9", "#AAD3ED")
   ) +
   labs(
     title = "Väestö",

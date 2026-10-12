@@ -4,19 +4,33 @@ library(tidyverse)
 
 add_lower_and_upper_limits <- function(scenario_list, sensitivity_scenario_list, file_name, grouping_variables) {
   all <- read_and_bind(scenario_list, file_name)
-  sensitivity <- read_and_bind(sensitivity_scenario_list, file_name)
+  # sensitivity <- read_and_bind(sensitivity_scenario_list, file_name)
 
-  sensitivity <- sensitivity %>%
-    # Values in main scenarios are always inside error bars
-    dplyr::bind_rows(all) %>%
-    dplyr::filter(scenario != sprintf("%i %s", scenarios$year[scenarios$present], scenarios$name[scenarios$present])) %>%
-    dplyr::group_by(across(all_of(grouping_variables))) %>%
-    dplyr::summarise(across(where(is.numeric), list(lower = min, upper = max),
-                            .names = "{.col}_{.fn}"), .groups = "drop")
+  # sensitivity <- sensitivity %>%
+  #   # Values in main scenarios are always inside error bars
+  #   dplyr::bind_rows(all) %>%
+  #   dplyr::filter(scenario != sprintf("%i %s", scenarios$year[scenarios$present], scenarios$name[scenarios$present])) %>%
+  #   dplyr::group_by(across(all_of(grouping_variables))) %>%
+  #   dplyr::summarise(across(where(is.numeric), list(lower = min, upper = max),
+  #                           .names = "{.col}_{.fn}"), .groups = "drop")
 
   all <- all %>%
-    dplyr::left_join(sensitivity, by = grouping_variables) %>%
+    # dplyr::left_join(sensitivity, by = grouping_variables) %>%
     dplyr::mutate(scenario = forcats::as_factor(scenario))
+
+  numeric_columns <- names(all)[vapply(all, is.numeric, logical(1))]
+  for (column in numeric_columns) {
+    lower_name <- paste0(column, "_lower")
+    upper_name <- paste0(column, "_upper")
+
+    if (!lower_name %in% names(all)) {
+      all[[lower_name]] <- all[[column]]
+    }
+    if (!upper_name %in% names(all)) {
+      all[[upper_name]] <- all[[column]]
+    }
+  }
+
   return(all)
 }
 

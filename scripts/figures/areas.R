@@ -84,7 +84,7 @@ zones1 <- zones %>%
     # malpakka = weighted.mean(malpakka, w = land_area),
     # malpakka_potential = weighted.mean(malpakka_potential, w = land_area, na.rm = TRUE),
     # tontin_teho_2017 = weighted.mean(tontin_teho_2017, w = land_area, na.rm = TRUE),
-    # land_area = sum(land_area),
+    land_area = sum(land_area),
     total_pop = sum(total_pop),
     total_wrk = sum(total_wrk)
   )

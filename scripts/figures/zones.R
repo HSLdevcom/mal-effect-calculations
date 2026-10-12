@@ -11,6 +11,15 @@ zones <- readr::read_rds(here::here("results", "zones.rds"))
 # land_area <- readxl::read_xlsx(here::here("data", "maapinta_ala_ja_asutut_ruudut.xlsx"),
 #                                sheet = "pinta_alat")
 
+lnd0 <- read_tsv_helmet(
+  list.files(here::here("data", "lnd"),
+             pattern = ".lnd$",
+             full.names = TRUE),
+  col_types = "iddd",
+  first_col_name = "zone"
+) %>%
+  dplyr::filter(zone < 16000)
+
 # tontin_teho <- readxl::read_xlsx(here::here("data", "Data_analyysiin_22102021.xlsx"),
 #                                sheet = "Taul1")
 
@@ -126,13 +135,12 @@ attraction <- read_tsv_helmet(
 if (anyNA(attraction)) {
   rlang::abort("read_tsv_helmet(): NA values remain after import. attraction")
 }
-car_density <- read_tsv_helmet(
+car_density <- read_tsv_helmet_with_zone(
 
   file.path(config::get("helmet_data"),
             scenario_attributes[["results"]],
             "car_density.txt"),
   col_types = "id",
-  first_col_name = "zone"
 )
 if (anyNA(car_density)) {
   rlang::abort("read_tsv_helmet(): NA values remain after import. car_density")
@@ -381,13 +389,13 @@ zones <- zones %>%
 #   dplyr::mutate(malpakka_potential = malpakka - tontin_teho_2017)
 
 # # Calculate workplace densities as number of workplaces per land area (km2)
-# land_area <- land_area %>%
-#   dplyr::select(SIJ2023, Maa_ala) %>%
-#   dplyr::rename(zone = SIJ2023,
-#                 land_area = Maa_ala)
-# zones <- zones %>%
-#   dplyr::left_join(lnd, by = "zone") %>%
-#   dplyr::mutate(total_wrk_density = total_wrk / land_area)
+lnd0 <- lnd0 %>%
+  dplyr::select(zone, landar) %>%
+  dplyr::rename(zone = zone,
+                land_area = landar)
+zones <- zones %>%
+  dplyr::left_join(lnd0, by = "zone") %>%
+  dplyr::mutate(total_wrk_density = total_wrk / land_area)
 
 # Sum of travel times to two temporally closest centers
 ttimes <- ttimes_pt %>%

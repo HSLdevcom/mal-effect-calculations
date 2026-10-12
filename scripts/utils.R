@@ -40,10 +40,33 @@ read_tsv_helmet <- function(..., first_col_name, comment = "#") {
   })
 }
 
-read_helmet_omx <- function(path) {
+read_tsv_helmet_with_zone <- function(..., comment = "#") {
+  withCallingHandlers({
+    readr::read_tsv(..., comment = comment) %>%
+      dplyr::rename_with(~ gsub("-", "_", .x, fixed = TRUE)) %>%
+      dplyr::mutate(across(everything(), ~ ifelse(is.na(.), 0, .)))
+  }, message = function(w) {
+    # Helmet results never include first column name so if the message is only
+    # about the first column, we suppress it. Message is usually:
+    # New names:
+    # * `` -> ...1
+    if (grepl("\\* `` -> \\.\\.\\.1$", conditionMessage(w), perl = TRUE)) {
+      invokeRestart("muffleMessage")
+    }
+  })
+}
+
+read_helmet_omx <- function(path, matrix_name = NULL) {
+  if (!is.null(matrix_name)) {
+    available_matrices <- omxr::list_omx(path)[["Matrices"]][["name"]]
+    if (!matrix_name %in% available_matrices) {
+      rlang::abort(sprintf("Matrix '%s' is missing from %s.", matrix_name, path))
+    }
+  }
+
   zone_numbers <- omxr::read_lookup(path, name = "zone_number")
   zone_numbers <- as.vector(zone_numbers$Lookup, mode = "integer")
-  omx_matrix <- omxr::read_all_omx(path) %>%
+  omx_matrix <- omxr::read_all_omx(path, names = matrix_name) %>%
     dplyr::mutate(
       origin = zone_numbers[origin],
       destination = zone_numbers[destination]

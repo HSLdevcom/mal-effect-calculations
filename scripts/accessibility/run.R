@@ -43,3 +43,6 @@ for (f in analysis_files) {
   message(sprintf("Running analysis in %s...", f))
   source(here("scripts", "accessibility", "plotting", f), encoding = "utf-8")
 }
+
+source(here("scripts", "accessibility", "plotting", "cost_change_age_group.R"), encoding = "utf-8")
+source(here("scripts", "accessibility", "plotting", "low_access_low_income_pt.R"), encoding = "utf-8")
