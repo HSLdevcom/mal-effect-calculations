@@ -24,6 +24,7 @@ results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
       mode == "transit" ~ origin_share_transit_lower,
       mode == "bike" ~ origin_share_bike_lower,
       mode == "walk" ~ origin_share_walk_lower,
+      mode == "pnr" ~ origin_share_pnr_lower,
       mode == "sustainable" ~ origin_share_sustainable_lower,
       TRUE ~ NA_real_
     ),
@@ -31,6 +32,7 @@ results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
       mode == "transit" ~ origin_share_transit_upper,
       mode == "bike" ~ origin_share_bike_upper,
       mode == "walk" ~ origin_share_walk_upper,
+      mode == "pnr" ~ origin_share_pnr_upper,
       mode == "sustainable" ~ origin_share_sustainable_upper,
       TRUE ~ NA_real_
     )
@@ -51,6 +53,9 @@ results_bike <- results %>%
 
 results_walk <- results %>%
   dplyr::filter(mode == "Kävely")
+
+results_pnr <- results %>%
+  dplyr::filter(mode == "Liityntäpysäköinti")
 
 
 # Plot --------------------------------------------------------------------
@@ -210,3 +215,40 @@ ggplot(results_walk, aes(x = area, y = value, fill = scenario)) +
   theme_mal_graph()
 
 ggsave_graph(here::here("figures", "graph_mode-share_walk.png"), width = 150, height = 84)
+
+# PNR --------------------------------------------------------------------
+
+ggplot(results_pnr, aes(x = area, y = value, fill = scenario)) +
+  geom_col(position = position_dodge2()) +
+  geom_errorbar(
+    mapping = aes(ymin = lower, ymax = upper),
+    position =  position_dodge2(width = 0.9, padding = 0.66),
+    color = "#333333",
+    linewidth = 0.35
+  ) +
+  geom_text(
+    aes(y = value / 2, label = scales::label_percent(accuracy = 0.1, suffix = "%")(value)),
+    position = position_dodge2(width = 0.9),
+    size = points2mm(8),
+    color = "#333333"
+  ) +
+  scale_y_continuous(
+    labels = scales::label_percent(accuracy = 0.1, suffix = "%"),
+    limits = c(0, 0.02),
+    expand = expansion(mult = c(0.025, 0.1))
+  ) +
+  scale_x_discrete(
+    labels = scales::label_wrap(5)
+  ) +
+  scale_fill_manual(
+    name = NULL,
+    values = hsl_greens_fill
+  ) +
+  labs(
+    title = "Liityntäpysäköinnin osuus alueelta alkavista kiertomatkoista",
+    x = NULL,
+    y = "%"
+  ) +
+  theme_mal_graph()
+
+ggsave_graph(here::here("figures", "graph_mode-share_pnr.png"), width = 150, height = 84)

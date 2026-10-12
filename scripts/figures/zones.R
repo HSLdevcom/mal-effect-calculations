@@ -256,12 +256,14 @@ origins_shares <- origins_shares %>%
   dplyr::rename(mode_share_car = car,
                 mode_share_transit = transit,
                 mode_share_bike = bike,
-                mode_share_walk = walk)
+                mode_share_walk = walk,
+                mode_share_pnr = park_and_ride)
 origins_demand <- origins_demand %>%
   dplyr::rename(demand_car = car,
                 demand_transit = transit,
                 demand_bike = bike,
-                demand_walk = walk)
+                demand_walk = walk,
+                demand_pnr = park_and_ride)
 if (scenario_attributes[["projected"]]) {
   cba <- cba %>%
   dplyr::rename_with(~ sprintf("cba_%s", .x), -zone)
@@ -361,7 +363,8 @@ zones <- zones %>%
   dplyr::mutate(
     mode_share_sustainable = (mode_share_transit +
                                 mode_share_bike +
-                                mode_share_walk),
+                                mode_share_walk +
+                                mode_share_pnr),
     mode_share_bike_walk = (mode_share_bike +
                               mode_share_walk)
   )

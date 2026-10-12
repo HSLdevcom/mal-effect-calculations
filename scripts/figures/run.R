@@ -91,13 +91,19 @@ multiples <- list.files(here::here("scripts", "figures", "multiple"),
                       full.names = TRUE)
 
 #TODO: Remove when plan scenarios are available
-skipped = c("wrk","pop","ttime","malpakka","cba","speed","bike2","sustainable2","transit2","walk2","simple2","all2","aht2","accessibility2","co2_2","co2_time","delay")
+skipped = c("apartments", "twocenter")
+for (skip in skipped) {
+  singles <- singles[!grepl(skip, singles)]
+}
+
+#TODO: Remove when plan scenarios are available
+skipped = c("ttime","malpakka","cba","speed","co2_time","delay", "twocenter")
 for (skip in skipped) {
   differences <- differences[!grepl(skip, differences)]
 }
 
 #TODO: Remove when plan scenarios are available
-skipped = c("ttime","malpakka","cba","speed","bike2","sustainable2","transit2","walk2","simple2","all2","aht2","accessibility2","co2_2","co2_time","delay")
+skipped = c("ttime","malpakka","cba","speed","co2_time","delay", "twocenter")
 for (skip in skipped) {
   multiples <- multiples[!grepl(skip, multiples)]
 }

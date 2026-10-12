@@ -1,5 +1,6 @@
 level	label
-car	Henkilöauto
+car	    Henkilöauto
 transit	Joukkoliikenne
 bike	Pyöräily
 walk	Kävely
+pnr	Liityntäpysäköinti
