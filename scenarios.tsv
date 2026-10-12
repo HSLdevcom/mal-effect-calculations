@@ -11,7 +11,7 @@ scenario	year	name	forecast	results	co2	basemap	present	baseline	projected	sensi
 ##2045_ve2_jklmaksi	2045	Luonnos	2045_ve0_kes	2045_ve2_jklmaksi	2045MAL	2045_ve1	FALSE	FALSE	FALSE	TRUE	2045_ve2
 ##2045_ve2_mini	2045	Luonnos	2045_ve0_hid	2045_ve2_mini	2045MAL	2045_ve1	FALSE	FALSE	FALSE	TRUE	2045_ve2
 ##2045_ve2_tieruuhka	2045	Luonnos	2045_ve0_haj	2045_ve2_tieruuhka	2045MAL	2045_ve1	FALSE	FALSE	FALSE	TRUE	2045_ve2
-2045_suunnitelma	2045	Suunnitelma	2045_suunnitelma	2045_suunnitelma	2045	2045_ve1	FALSE	FALSE	TRUE	FALSE	2045_suunnitelma
+2045_suunnitelma	2045	Tavoiteverkko	2045_suunnitelma	2045_suunnitelma	2045	2045_ve1	FALSE	FALSE	TRUE	FALSE	2045_suunnitelma
 2045_suunnitelma_etatyo	2045	Suunnitelma	2045_suunnitelma	2045_suunnitelma_etatyo	2045	2045_ve1	FALSE	FALSE	FALSE	TRUE	2045_suunnitelma
 2045_suunnitelma_jklmaksi	2045	Suunnitelma	2045_suunnitelma	2045_suunnitelma_jklmaksi	2045	2045_ve1	FALSE	FALSE	FALSE	TRUE	2045_suunnitelma
 #2045_suunnitelma_mini	2045	Suunnitelma	2045_ve0_hid	2045_suunnitelmaluonnos_alennus35_mini	2045MAL	2045_ve1	FALSE	FALSE	FALSE	TRUE	2045_suunnitelma
