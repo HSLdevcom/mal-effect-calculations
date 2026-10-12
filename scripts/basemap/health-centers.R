@@ -11,42 +11,35 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 health_codes <- sprintf("06%02d", 10:19)
 building_file <- here::here(
   "data", "sotepe_alueet",
-  "Sotepe rakennukset ja tulevat hankkeet 12.6.2026.xlsx"
+  "Sotepe rakennukset HELMET-alue.xlsx"
 )
 
-read_buildings <- function(sheet, skip = 0, status) {
-  buildings <- readxl::read_excel(building_file, sheet = sheet, skip = skip)
-  id_column <- if ("Pysyvä rakennustunnus" %in% names(buildings)) {
-    "Pysyvä rakennustunnus"
-  } else {
-    "Hankenumero"
-  }
+health_centers <- readxl::read_excel(
+  building_file,
+  sheet = "Toimipaikat"
+) %>%
+  dplyr::mutate(
+    id = sprintf("HC-%04d", dplyr::row_number())
+  ) %>%
+  dplyr::transmute(
+    id,
+    municipality = as.character(Kunta),
+    status = as.character(Tila),
+    name = as.character(Kohde),
+    address = as.character(Osoite),
+    purpose = as.character(`Käyttötarkoitus`),
+    latitude = as.numeric(Leveysaste),
+    longitude = as.numeric(Pituusaste)
+  ) %>%
+  dplyr::filter(
+    stringr::str_sub(purpose, 1, 4) %in% health_codes,
+    status %in% c("Nykyinen", "Suunniteltu")
+  ) %>%
+  dplyr::mutate(
+    purpose_code = stringr::str_sub(purpose, 1, 4),
+    purpose_name = stringr::str_trim(stringr::str_remove(purpose, "^[0-9]+\\s+"))
+  )
 
-  buildings %>%
-    dplyr::transmute(
-      status = status,
-      id = as.character(.data[[id_column]]),
-      name = as.character(Kohde),
-      address = as.character(Osoite),
-      purpose = as.character(`Käyttötarkoitus`),
-      latitude = as.numeric(Leveysaste),
-      longitude = as.numeric(Pituusaste)
-    ) %>%
-    dplyr::filter(stringr::str_sub(purpose, 1, 4) %in% health_codes) %>%
-    dplyr::mutate(
-      purpose_code = stringr::str_sub(purpose, 1, 4),
-      purpose_name = stringr::str_trim(stringr::str_remove(purpose, "^[0-9]+\\s+"))
-    )
-}
-
-current_buildings <- read_buildings("Nykyiset rakennukset", status = "Nykyinen")
-future_buildings <- read_buildings(
-  "Tulevat hankkeet (ennuste)",
-  skip = 1,
-  status = "Suunniteltu"
-)
-
-health_centers <- dplyr::bind_rows(current_buildings, future_buildings)
 missing_coordinates <- health_centers %>%
   dplyr::filter(is.na(latitude) | is.na(longitude))
 
@@ -109,7 +102,7 @@ health_centers_map <- ggplot() +
   coord_sf_mal() +
   annotate_map(
     title = "Helsingin seudun terveys- ja hyvinvointikeskukset",
-    subtitle = "Nykyiset ja suunnitellut kohteet TAZ-alueilla"
+    subtitle = "Nykyiset ja suunnitellut kohteet sijoittelualueilla"
   ) +
   theme_mal_map()
 
@@ -118,45 +111,23 @@ ggsave_map(
   plot = health_centers_map
 )
 
-# # Graphs ------------------------------------------------------------------
+# Graphs ------------------------------------------------------------------
 
-# facilities_by_zone <- health_centers %>%
-#   sf::st_drop_geometry() %>%
-#   dplyr::count(zone, status, name = "facilities")
+graph_service_areas <- service_area_summary %>%
+  ggplot(aes(x = forcats::fct_reorder(Terveysasema, subareas), y = subareas)) +
+  geom_col(fill = "#3E8606") +
+  coord_flip() +
+  labs(
+    title = "Terveysasemien palvelualueet",
+    x = "Terveysasema",
+    y = "Osa-alueiden lukumäärä"
+  ) +
+  theme_mal_graph()
 
-# graph_facilities_by_zone <- facilities_by_zone %>%
-#   ggplot(aes(x = forcats::fct_reorder(as.character(zone), facilities, .fun = sum),
-#              y = facilities, fill = status)) +
-#   geom_col() +
-#   coord_flip() +
-#   labs(
-#     title = "Terveysalan kohteet TAZ-alueittain",
-#     x = "TAZ",
-#     y = "Kohteiden lukumäärä",
-#     fill = NULL
-#   ) +
-#   theme_mal_graph()
-
-# ggsave_graph(
-#   here::here("figures", "graph_health-centers-by-zone.png"),
-#   plot = graph_facilities_by_zone
-# )
-
-# graph_service_areas <- service_area_summary %>%
-#   ggplot(aes(x = forcats::fct_reorder(Terveysasema, subareas), y = subareas)) +
-#   geom_col(fill = "#3E8606") +
-#   coord_flip() +
-#   labs(
-#     title = "Terveysasemien palvelualueet",
-#     x = "Terveysasema",
-#     y = "Osa-alueiden lukumäärä"
-#   ) +
-#   theme_mal_graph()
-
-# ggsave_graph(
-#   here::here("figures", "graph_health-centre-service-areas.png"),
-#   plot = graph_service_areas
-# )
+ggsave_graph(
+  here::here("figures", "graph_health-centre-service-areas.png"),
+  plot = graph_service_areas
+)
 
 message(
   "Health-centre workflow complete: ", nrow(health_centers),
