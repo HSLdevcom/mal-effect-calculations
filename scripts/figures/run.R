@@ -124,6 +124,7 @@ source(here::here("scripts", "figures", "multiple","graph_ttime-transit.R"), enc
 source(here::here("scripts", "figures", "multiple","graph_ttime-car.R"), encoding = "utf-8")
 source(here::here("scripts", "figures", "multiple","graph_weighted-delay.R"), encoding = "utf-8")
 source(here::here("scripts", "figures", "multiple","graph_mode-share_sustainable.R"), encoding = "utf-8")
+source(here::here("scripts", "figures", "sustainable_accessibility.R"), encoding = "utf-8")
 source(here::here("scripts", "figures", "single","map_relative-speed.R"), encoding = "utf-8")
 source(here::here("scripts", "figures", "difference","map_diff_cba.R"), encoding = "utf-8")
 source(here::here("scripts", "figures", "difference","map_diff_relative_speed.R"), encoding = "utf-8")
