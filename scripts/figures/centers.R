@@ -10,7 +10,8 @@ centers <- readr::read_tsv(here::here("data", "centers.tsv"), col_types = "icll"
 ttimes_aht <- read_helmet_omx(file.path(config::get("helmet_data"),
                                         scenario_attributes[["results"]],
                                         "Matrices",
-                                        "time_aht.omx")) %>%
+                                        "time_aht.omx"),
+                              matrix_name = c("car_work", "transit_work")) %>%
   dplyr::select(origin, destination, car_work, transit_work) %>%
   dplyr::filter(origin %in% centers$level & destination %in% centers$level) %>%
   dplyr::rename(ttime_car_work_aht = car_work,
@@ -20,7 +21,8 @@ ttimes_aht <- read_helmet_omx(file.path(config::get("helmet_data"),
 ttimes_pt <- read_helmet_omx(file.path(config::get("helmet_data"),
                                         scenario_attributes[["results"]],
                                         "Matrices",
-                                        "time_pt.omx")) %>%
+                                        "time_pt.omx"),
+                             matrix_name = c("car_work", "transit_work")) %>%
   dplyr::select(origin, destination, car_work, transit_work) %>%
   dplyr::filter(origin %in% centers$level & destination %in% centers$level) %>%
   dplyr::rename(ttime_car_work_pt = car_work,

@@ -59,8 +59,15 @@ read_tsv_helmet_with_zone <- function(..., comment = "#") {
 read_helmet_omx <- function(path, matrix_name = NULL) {
   if (!is.null(matrix_name)) {
     available_matrices <- omxr::list_omx(path)[["Matrices"]][["name"]]
-    if (!matrix_name %in% available_matrices) {
-      rlang::abort(sprintf("Matrix '%s' is missing from %s.", matrix_name, path))
+    missing_matrices <- setdiff(matrix_name, available_matrices)
+    if (length(missing_matrices) > 0) {
+      rlang::abort(sprintf(
+        "%s %s %s missing from %s.",
+        if (length(missing_matrices) == 1) "Matrix" else "Matrices",
+        paste(sprintf("'%s'", missing_matrices), collapse = ", "),
+        if (length(missing_matrices) == 1) "is" else "are",
+        path
+      ))
     }
   }
 

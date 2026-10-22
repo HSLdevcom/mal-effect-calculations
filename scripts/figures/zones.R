@@ -231,7 +231,8 @@ centers <- readr::read_rds(here::here("results", "centers_uusimaa-2050.rds"))
 ttimes_pt <- read_helmet_omx(file.path(config::get("helmet_data"),
                                        scenario_attributes[["results"]],
                                        "Matrices",
-                                       "time_pt.omx"))
+                                       "time_pt.omx"),
+                             matrix_name = c("car_work", "transit_work", "bike", "walk"))
 
 # TODO: Maybe fix scenarios$scenario[...
 if (scenario_attributes[["projected"]]) {

@@ -59,7 +59,8 @@ read_travel_times <- function(scenario) {
     scenario_attributes[["results"]],
     "Matrices",
     "time_pt.omx"
-  )) %>%
+  ),
+  matrix_name = c("car_work", "transit_work")) %>%
     dplyr::select(origin, destination, car_work, transit_work) %>%
     dplyr::mutate(
       origin = as.character(origin),

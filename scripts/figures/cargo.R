@@ -8,19 +8,22 @@ library(tidyverse)
 demand_aht <- read_helmet_omx(file.path(config::get("helmet_data"),
                                         scenario_attributes[["results"]],
                                         "Matrices",
-                                        "demand_aht.omx")) %>%
+                                        "demand_aht.omx"),
+                              matrix_name = c("trailer_truck", "truck")) %>%
   dplyr::select(origin, destination, trailer_truck, truck)
 
 dist_aht <- read_helmet_omx(file.path(config::get("helmet_data"),
                                       scenario_attributes[["results"]],
                                       "Matrices",
-                                      "dist_aht.omx")) %>%
+                                      "dist_aht.omx"),
+                            matrix_name = c("trailer_truck", "truck")) %>%
   dplyr::select(origin, destination, trailer_truck, truck)
 
 ttimes_aht <- read_helmet_omx(file.path(config::get("helmet_data"),
                                         scenario_attributes[["results"]],
                                         "Matrices",
-                                        "time_aht.omx")) %>%
+                                        "time_aht.omx"),
+                              matrix_name = c("trailer_truck", "truck")) %>%
   dplyr::select(origin, destination, trailer_truck, truck)
 
 
@@ -28,7 +31,7 @@ ttimes_aht <- read_helmet_omx(file.path(config::get("helmet_data"),
 
 helsinki_region <- 1:15499
 # Terminal nodes inside Helsinki region
-terminals <- c(31400, 31500, 31501, 31502, 31503)
+terminals <- c(34400, 34500, 34501, 34502, 34503)
 
 matrices <- demand_aht %>%
   dplyr::left_join(dist_aht, by = c("origin", "destination"), suffix = c("", "_dist")) %>%
