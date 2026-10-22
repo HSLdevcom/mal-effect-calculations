@@ -10,6 +10,7 @@ scenarios <- readr::read_tsv(
     co2 = readr::col_character(),
     present = readr::col_logical(),
     baseline = readr::col_logical(),
+    target = readr::col_logical(),
     projected = readr::col_logical(),
     sensitivity = readr::col_logical(),
     .default = readr::col_character()
@@ -20,6 +21,5 @@ stopifnot(all(!duplicated(scenarios$scenario)))
 stopifnot(sum(scenarios$present) == 1)
 stopifnot(sum(scenarios$baseline) == 1)
 stopifnot(sum(scenarios$projected) >= 1)
-stopifnot(all(rowSums(dplyr::select(scenarios, present, baseline, projected, sensitivity)) == 1))
+stopifnot(all(rowSums(dplyr::select(scenarios, present, baseline, target, projected, sensitivity)) == 1))
 stopifnot(all(scenarios$root %in% scenarios$scenario))
-

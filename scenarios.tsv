@@ -1,18 +1,18 @@
-scenario	year	name	forecast	results	co2	basemap	present	baseline	projected	sensitivity	root
-2023	2023	Nykytila	2023	2023	2023	2023	TRUE	FALSE	FALSE	FALSE	2023
-2045_ve0	2045	Vertailupohja	2045_ve0	2045_ve0	2045	2045_ve0	FALSE	TRUE	FALSE	FALSE	2045_ve0
-#2045_ve0_ruuhkautuva	2045	Vertailupohja	2045_ve0_bulepois	2045_ve0_ruuhkautuva	2045	2045_ve0	FALSE	FALSE	FALSE	TRUE	2045_ve0
-#2045_ve0_tieruuhka	2045	Vertailupohja	2045_ve0_haj	2045_ve0_tieruuhka	2045	2045_ve0	FALSE	FALSE	FALSE	TRUE	2045_ve0
-#2045_ve0_jklmaksi	2045	Vertailupohja	2045_ve0_kes	2045_ve0_jklmaksi	2045	2045_ve0	FALSE	FALSE	FALSE	TRUE	2045_ve0
-#2045_ve0_etatyo	2045	Vertailupohja	2045_ve0_haj	2045_ve0_etatyo	2045	2045_ve0	FALSE	FALSE	FALSE	TRUE	2045_ve0
-#2045_ve0_mini	2045	Vertailupohja	2045_ve0_hid	2045_ve0_mini	2045	2045_ve0	FALSE	FALSE	FALSE	TRUE	2045_ve0
-##2045_ve2	2045	Luonnos	2045_ve2	2045_ve2	2045MAL	2045_ve1	FALSE	FALSE	TRUE	FALSE	2045_ve2
-##2045_ve2_etatyo	2045	Luonnos	2045_ve0_haj	2045_ve2_etatyo	2045MAL	2045_ve1	FALSE	FALSE	FALSE	TRUE	2045_ve2
-##2045_ve2_jklmaksi	2045	Luonnos	2045_ve0_kes	2045_ve2_jklmaksi	2045MAL	2045_ve1	FALSE	FALSE	FALSE	TRUE	2045_ve2
-##2045_ve2_mini	2045	Luonnos	2045_ve0_hid	2045_ve2_mini	2045MAL	2045_ve1	FALSE	FALSE	FALSE	TRUE	2045_ve2
-##2045_ve2_tieruuhka	2045	Luonnos	2045_ve0_haj	2045_ve2_tieruuhka	2045MAL	2045_ve1	FALSE	FALSE	FALSE	TRUE	2045_ve2
-2045_suunnitelma	2045	Tavoiteverkko	2045_suunnitelma	2045_suunnitelma	2045	2045_ve1	FALSE	FALSE	TRUE	FALSE	2045_suunnitelma
-2045_suunnitelma_etatyo	2045	Suunnitelma	2045_suunnitelma	2045_suunnitelma_etatyo	2045	2045_ve1	FALSE	FALSE	FALSE	TRUE	2045_suunnitelma
-2045_suunnitelma_jklmaksi	2045	Suunnitelma	2045_suunnitelma	2045_suunnitelma_jklmaksi	2045	2045_ve1	FALSE	FALSE	FALSE	TRUE	2045_suunnitelma
-#2045_suunnitelma_mini	2045	Suunnitelma	2045_ve0_hid	2045_suunnitelmaluonnos_alennus35_mini	2045MAL	2045_ve1	FALSE	FALSE	FALSE	TRUE	2045_suunnitelma
-#2045_suunnitelma_tieruuhka	2045	Suunnitelma	2045_ve0_haj	2045_suunnitelmaluonnos_alennus35_tieruuhka	2045MAL	2045_ve1	FALSE	FALSE	FALSE	TRUE	2045_suunnitelma
+scenario	year	name	forecast	results	co2	basemap	present	baseline	target	projected	sensitivity	root
+2023	2023	Nykytila	2023	2023	2023	2023	TRUE	FALSE	FALSE	FALSE	FALSE	2023
+2045_ve0	2045	Vertailupohja	2045_ve0	2045_ve0	2045	2045_ve0	FALSE	TRUE	FALSE	FALSE	FALSE	2045_ve0
+#2045_ve0_ruuhkautuva	2045	Vertailupohja	2045_ve0_bulepois	2045_ve0_ruuhkautuva	2045	2045_ve0	FALSE	FALSE	FALSE	FALSE	TRUE	2045_ve0
+#2045_ve0_tieruuhka	2045	Vertailupohja	2045_ve0_haj	2045_ve0_tieruuhka	2045	2045_ve0	FALSE	FALSE	FALSE	FALSE	TRUE	2045_ve0
+#2045_ve0_jklmaksi	2045	Vertailupohja	2045_ve0_kes	2045_ve0_jklmaksi	2045	2045_ve0	FALSE	FALSE	FALSE	FALSE	TRUE	2045_ve0
+#2045_ve0_etatyo	2045	Vertailupohja	2045_ve0_haj	2045_ve0_etatyo	2045	2045_ve0	FALSE	FALSE	FALSE	FALSE	TRUE	2045_ve0
+#2045_ve0_mini	2045	Vertailupohja	2045_ve0_hid	2045_ve0_mini	2045	2045_ve0	FALSE	FALSE	FALSE	FALSE	TRUE	2045_ve0
+2045_tavoiteverkko	2045	Tavoiteverkko	2045_tavoiteverkko	2045_tavoiteverkko	2045	2045_ve1	FALSE	FALSE	TRUE	FALSE	FALSE	2045_tavoiteverkko
+#2045_ve2_etatyo	2045	Luonnos	2045_ve0_haj	2045_ve2_etatyo	2045MAL	2045_ve1	FALSE	FALSE	FALSE	FALSE	TRUE	2045_ve2
+#2045_ve2_jklmaksi	2045	Luonnos	2045_ve0_kes	2045_ve2_jklmaksi	2045MAL	2045_ve1	FALSE	FALSE	FALSE	FALSE	TRUE	2045_ve2
+#2045_ve2_mini	2045	Luonnos	2045_ve0_hid	2045_ve2_mini	2045MAL	2045_ve1	FALSE	FALSE	FALSE	FALSE	TRUE	2045_ve2
+#2045_ve2_tieruuhka	2045	Luonnos	2045_ve0_haj	2045_ve2_tieruuhka	2045MAL	2045_ve1	FALSE	FALSE	FALSE	FALSE	TRUE	2045_ve2
+2045_suunnitelma	2045	Suunnitelma	2045_suunnitelma	2045_suunnitelma	2045	2045_ve1	FALSE	FALSE	FALSE	TRUE	FALSE	2045_suunnitelma
+#2045_suunnitelma_etatyo	2045	Suunnitelma	2045_suunnitelma	2045_suunnitelma_etatyo	2045	2045_ve1	FALSE	FALSE	FALSE	FALSE	TRUE	2045_suunnitelma
+#2045_suunnitelma_jklmaksi	2045	Suunnitelma	2045_suunnitelma	2045_suunnitelma_jklmaksi	2045	2045_ve1	FALSE	FALSE	FALSE	FALSE	TRUE	2045_suunnitelma
+#2045_suunnitelma_mini	2045	Suunnitelma	2045_ve0_hid	2045_suunnitelmaluonnos_alennus35_mini	2045MAL	2045_ve1	FALSE	FALSE	FALSE	FALSE	TRUE	2045_suunnitelma
+#2045_suunnitelma_tieruuhka	2045	Suunnitelma	2045_ve0_haj	2045_suunnitelmaluonnos_alennus35_tieruuhka	2045MAL	2045_ve1	FALSE	FALSE	FALSE	FALSE	TRUE	2045_suunnitelma

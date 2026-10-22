@@ -257,7 +257,7 @@ areas <- dplyr::bind_rows(areas, subset_row)
 
 # Join square areas --------------------------------------------------------
 
-if (!scenario_attributes[["present"]] & !scenario_attributes[["sensitivity"]]) {
+if (!scenario_attributes[["present"]] & !scenario_attributes[["sensitivity"]] & !scenario_attributes[["target"]]) {
   squares <- readr::read_rds(here::here("results", sprintf("squares_areas_%s.rds", scenario_attributes[["scenario"]]))) %>%
     dplyr::select(!scenario)
   areas <- areas %>% dplyr::left_join(squares, by = "area")
