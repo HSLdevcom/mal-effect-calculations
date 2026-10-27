@@ -13,6 +13,7 @@ zones <- readr::read_rds(here::here("results", sprintf("zones_%s.rds", scenario_
 
 links <- here::here(config::get("helmet_data"), scenario_attributes[["results"]], "links.txt") %>%
   readr::read_tsv(col_types = cols(Link = col_character(),
+                                   modes = col_character(),
                                    .default = col_double())) %>%
   dplyr::rename_with(~ gsub("@", "", .x, fixed = TRUE)) %>%
   dplyr::rename(geometry = Link) %>%
