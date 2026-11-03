@@ -47,14 +47,41 @@ matrices <- matrices %>%
     TRUE ~ "external"
   ))
 
-vehicle_cost_truck <- 0.3189 # e/km
-vehicle_cost_trailer_truck <- 0.6473 # e/km
+# #Vanhat arvot, MAL 2023
+# vehicle_cost_truck <- 0.3189 # e/km
+# vehicle_cost_trailer_truck <- 0.6473 # e/km
 
-capital_cost_truck <- 8.57 # e/h
-capital_cost_trailer_truck <- 11.20 # e/h
+# capital_cost_truck <- 8.57 # e/h
+# capital_cost_trailer_truck <- 11.20 # e/h
 
-travel_time_cost_truck <- 35.91 # e/h/auto
-travel_time_cost_trailer_truck <- 40.22 # e/h/auto
+# travel_time_cost_truck <- 35.91 # e/h/auto
+# travel_time_cost_trailer_truck <- 40.22 # e/h/auto
+
+#Väylä 2022 hankearviointi (44/2024)
+#Interpoloidut arvot
+#Uudet arvot, LJS 2027, 2023 scenario
+if (scenario_attributes[["year"]] == 2023) {
+  vehicle_cost_truck <- 0.90 # e/km
+  vehicle_cost_trailer_truck <- 1.039125 # e/km
+
+  capital_cost_truck <- 29.26 # e/h - new definition in Väylä 2022 guidance (44/2024)
+  capital_cost_trailer_truck <- 26.63 # e/h - new definition in Väylä 2022 guidance (44/2024)
+
+  travel_time_cost_truck <- 55.91 # e/h/auto
+  travel_time_cost_trailer_truck <- 60.87375 # e/h/auto
+}
+
+#Uudet arvot, LJS 2027, 2045 scenario
+if (scenario_attributes[["year"]] == 2045) {
+  vehicle_cost_truck <- 0.84 # e/km
+  vehicle_cost_trailer_truck <- 0.9815 # e/km
+
+  capital_cost_truck <- 29.26 # e/h - new definition in Väylä 2022 guidance (44/2024)
+  capital_cost_trailer_truck <- 26.63 # e/h - new definition in Väylä 2022 guidance (44/2024)
+
+  travel_time_cost_truck <- 61.29 # e/h/auto
+  travel_time_cost_trailer_truck <- 67.905 # e/h/auto
+}
 
 matrices <- matrices %>%
   dplyr::mutate(
