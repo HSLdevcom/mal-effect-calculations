@@ -46,7 +46,18 @@ co2 <- here::here("utilities", "co2.tsv") %>%
   dplyr::select(vehicle, co2)
 
 emissions <- kms %>%
-  dplyr::left_join(co2, by = "vehicle") %>%
+  dplyr::left_join(co2, by = "vehicle")
+
+if (anyNA(emissions$co2)) {
+  stop(sprintf(
+    "Missing CO2 factors for scenario '%s' (co2 = '%s'), vehicles: %s",
+    scenario_attributes[["scenario"]],
+    scenario_attributes[["co2"]],
+    paste(emissions$vehicle[is.na(emissions$co2)], collapse = ", ")
+  ))
+}
+
+emissions <- emissions %>%
   dplyr::mutate(emission = dist * co2 * 300)
 
 if (scenario_attributes[["present"]]) {
