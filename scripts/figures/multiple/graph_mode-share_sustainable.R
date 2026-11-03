@@ -227,13 +227,13 @@ ggplot(results_pnr, aes(x = area, y = value, fill = scenario)) +
     linewidth = 0.35
   ) +
   geom_text(
-    aes(y = value / 2, label = scales::label_percent(accuracy = 0.1, suffix = "%")(value)),
+    aes(y = value / 2, label = scales::label_percent(accuracy = 0.1, suffix = "", decimal.mark = ",")(value)),
     position = position_dodge2(width = 0.9),
     size = points2mm(8),
     color = "#333333"
   ) +
   scale_y_continuous(
-    labels = scales::label_percent(accuracy = 0.1, suffix = "%"),
+    labels = scales::label_percent(accuracy = 0.1, suffix = "", decimal.mark = ","),
     limits = c(0, 0.02),
     expand = expansion(mult = c(0.025, 0.1))
   ) +
@@ -242,7 +242,7 @@ ggplot(results_pnr, aes(x = area, y = value, fill = scenario)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = hsl_greens_fill
+    values = hsl_purples_fill
   ) +
   labs(
     title = "Liityntäpysäköinnin osuus alueelta alkavista kiertomatkoista",

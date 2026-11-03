@@ -17,7 +17,7 @@ results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
     names_to = "mode",
     names_prefix = "origin_share_"
   ) %>%
-  dplyr::filter(mode %in% c("transit", "bike", "walk")) %>%
+  dplyr::filter(mode %in% c("transit", "bike", "walk", "pnr")) %>%
   dplyr::mutate(mode = factor(mode, levels = translations$level, labels = translations$label))
 
 results_total <- results %>%
@@ -56,7 +56,8 @@ ggplot(results, aes(x = scenario, y = value)) +
     values = c(# "Henkilöauto" = "#f092cd",
                "Joukkoliikenne" = "#00b9e4",
                "Pyöräily" = "#fcb919",
-               "Kävely" = "#64be1e")
+               "Kävely" = "#64be1e",
+               "Liityntäpysäköinti" = "#8C4799")
                # "Muu" = "#999999"
   ) +
   scale_alpha_discrete(
