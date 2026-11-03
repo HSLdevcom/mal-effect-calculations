@@ -10,6 +10,7 @@ hsl_blues_fill <- c("#BFDDF1", "#7FBCE3", "#3F9BD6", "#007AC9")
 hsl_greens_fill <- c("#D8EEC6", "#B1DE8E", "#8ACE56", "#64BE1E")
 hsl_teals_fill <- c("#BFEDF8", "#7FDCF1", "#3FCAEA", "#00B9E4")
 hsl_yellows_fill <- c("#FEEDC5", "#FDDC8C", "#FCCA52", "#FCB919")
+hsl_purples_fill <- c("#E2D1E5", "#C5A3CC", "#A875B2", "#8C4799")
 
 region <- readr::read_rds(here::here("results", "region.rds"))
 bonus_region <- readr::read_rds(here::here("results", "bonus_region.rds"))
