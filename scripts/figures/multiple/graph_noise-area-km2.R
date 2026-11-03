@@ -40,14 +40,16 @@ ggplot(results, aes(x = scenario, y = noise_area_km2)) +
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("#3E8606", "#3E8606", "#BFD7AC", "#f092cd", "#007AC9", "#AAD3ED")
+    values = c("#3E8606", "#BFD7AC", "#f092cd", "#007AC9", "#AAD3ED"),
+    labels = function(x) stringr::str_wrap(x, width = 24)
   ) +
   labs(
     title = "Meluvyöhykkeiden pinta-ala",
+    subtitle = "Melutaso vähintään 55 dB",
     x =  NULL,
     y = "km2"
   ) +
   theme_mal_graph() +
-  theme(legend.position = "right")
+  theme(legend.position = "right", legend.key.height = unit(0.8, "cm"))
 
-ggsave_graph(here::here("figures", "graph_noise-area-km2.png"), width = 150, height = 84)
+ggsave_graph(here::here("figures", "graph_noise-area-km2.png"), width = 210, height = 110)

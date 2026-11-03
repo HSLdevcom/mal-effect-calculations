@@ -6,16 +6,19 @@ library(sf)
 
 # Data --------------------------------------------------------------------
 
-results <- readr::read_rds(here::here("results", "areas_all.rds"))
+results <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
+  dplyr::filter(area != "Pääkaupunkiseutu")
 
 
 # Plot --------------------------------------------------------------------
 
-ggplot(results, aes(x = area, y = noise_population, fill = scenario)) +
-  geom_col(position = position_dodge2()) +
+ggplot(results, aes(x = area, y = noise_population, fill = scenario, group = scenario)) +
+  geom_col(position = position_dodge(width = 0.9), width = 0.8) +
   geom_errorbar(
     mapping = aes(ymin = noise_population_lower, ymax = noise_population_upper),
-    position =  position_dodge2(width = 0.9, padding = 0.66),
+    position =  position_dodge(width = 0.9),
+    width = 0.2,
+    na.rm = TRUE,
     color = "#333333",
     linewidth = 0.35
   ) +
@@ -25,7 +28,7 @@ ggplot(results, aes(x = area, y = noise_population, fill = scenario)) +
       label = scales::label_number(scale = 0.001, accuracy = 1)(noise_population),
       color = scenario
     ),
-    position = position_dodge2(width = 0.9),
+    position = position_dodge(width = 0.9),
     size = points2mm(8)
   ) +
   scale_y_continuous(
@@ -34,7 +37,7 @@ ggplot(results, aes(x = area, y = noise_population, fill = scenario)) +
     expand = expansion(mult = c(0.025, 0.1))
   ) +
   scale_x_discrete(
-    labels = scales::label_wrap(5)
+    labels = function(x) stringr::str_wrap(x, width = 18)
   ) +
   scale_fill_manual(
     name = NULL,
@@ -46,9 +49,12 @@ ggplot(results, aes(x = area, y = noise_population, fill = scenario)) +
   ) +
   labs(
     title = "Meluvyöhykkeillä asuvien asukkaiden määrä",
+    subtitle = "Melutaso vähintään 55 dB",
     x =  NULL,
-    y = NULL
+    y = "tuhatta asukasta"
   ) +
-  theme_mal_graph()
+  guides(fill = guide_legend(nrow = 1)) +
+  theme_mal_graph() +
+  theme(axis.text.x = element_text(size = 8))
 
-ggsave_graph(here::here("figures", "graph_noise-population.png"), width = 150, height = 84)
+ggsave_graph(here::here("figures", "graph_noise-population.png"), width = 240, height = 120)

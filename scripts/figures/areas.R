@@ -51,13 +51,11 @@ workplace_accessibility <- read_tsv_helmet(
   first_col_name = "area"
 )
 
-noise <- read_tsv(
+source(here::here("scripts", "figures", "noise.R"), encoding = "utf-8")
+noise <- read_noise_areas(
   file.path(config::get("helmet_data"),
             scenario_attributes[["results"]],
-            "noise_areas.txt"),
-  skip = 1, # skip old column names
-  col_types = "cdd",
-  col_names = c("area", "noise_area_km2", "noise_population") # override column names
+            "noise_areas.txt")
 )
 aggregated_demand <- read_tsv(
   file.path(config::get("helmet_data"),
@@ -257,7 +255,7 @@ areas <- dplyr::bind_rows(areas, subset_row)
 
 # Join square areas --------------------------------------------------------
 
-if (!scenario_attributes[["present"]] & !scenario_attributes[["sensitivity"]] & !scenario_attributes[["target"]]) {
+if (!scenario_attributes[["present"]] & !scenario_attributes[["sensitivity"]]) {
   squares <- readr::read_rds(here::here("results", sprintf("squares_areas_%s.rds", scenario_attributes[["scenario"]]))) %>%
     dplyr::select(!scenario)
   areas <- areas %>% dplyr::left_join(squares, by = "area")
@@ -267,6 +265,7 @@ if (!scenario_attributes[["present"]] & !scenario_attributes[["sensitivity"]] & 
 # Translate data ----------------------------------------------------------
 
 areas <- areas %>%
+  dplyr::mutate(noise_population_share = noise_population / total_pop) %>%
   dplyr::mutate(area = factor(area, levels = translations$level, labels = translations$label)) %>%
   dplyr::arrange(area)
 
