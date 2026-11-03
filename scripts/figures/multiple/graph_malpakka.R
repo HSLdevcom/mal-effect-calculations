@@ -6,7 +6,8 @@ library(sf)
 
 # Data --------------------------------------------------------------------
 
-results0 <- readr::read_rds(here::here("results", "areas_all.rds"))
+results0 <- readr::read_rds(here::here("results", "areas_all.rds")) %>%
+  dplyr::filter(area != "Pääkaupunkiseutu")
 
 results_2017 <- results0 %>%
   # Is identical to all scenarios
