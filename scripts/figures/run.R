@@ -3,6 +3,7 @@ library(here)
 library(tidyverse)
 
 options(warn=1, scipen = 1000000)
+options(readr.show_progress = FALSE)
 Sys.setenv(R_CONFIG_ACTIVE = "default")
 
 
@@ -32,9 +33,9 @@ source(here::here("scripts", "figures", "map_hubs.R"), encoding = "utf-8")
 
 # scenario_list <- c("2023", "2045_ve0")
 # scenario_list <- c("2045_suunnitelma")
-scenario_list <- c("2023", "2045_ve0", "2045_suunnitelma")
+scenario_list <- c("2023", "2045_ve0", "2045_tavoiteverkko", "2045_suunnitelma")
 
-scenario <- "2023"
+scenario <- "2045_suunnitelma"
 scenario_attributes <- set_scenario(scenario)
 # message(sprintf("Prepare data in scenario %s...", scenario))
 # source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
@@ -61,7 +62,7 @@ for (scenario in scenario_list) {
 # Sensitivity analysis ----------------------------------------------------
 
 sensitivity_scenario_list <- scenarios$scenario[scenarios$sensitivity]
-sensitivity_scenario_list <- c()
+# sensitivity_scenario_list <- c()
 
 for (scenario in sensitivity_scenario_list) {
   scenario_attributes <- set_scenario(scenario)
@@ -103,7 +104,7 @@ for (skip in skipped) {
 }
 
 #TODO: Remove when plan scenarios are available
-skipped = c("ttime","malpakka","cba","speed","co2_time","delay", "twocenter")
+skipped = c("ensi","ttime","malpakka","cba","speed","co2_time","delay", "twocenter")
 for (skip in skipped) {
   multiples <- multiples[!grepl(skip, multiples)]
 }
