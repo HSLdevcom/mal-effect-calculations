@@ -232,7 +232,8 @@ ttimes_pt <- read_helmet_omx(file.path(config::get("helmet_data"),
                                        scenario_attributes[["results"]],
                                        "Matrices",
                                        "time_pt.omx"),
-                             matrix_name = c("car_work", "transit_work", "bike", "walk"))
+                             matrix_name = c("car_work", "transit_work_uncongested", "bike", "walk")) %>%
+  dplyr::rename(transit_work = transit_work_uncongested)
 
 # TODO: Maybe fix scenarios$scenario[...
 if (scenario_attributes[["projected"]]) {

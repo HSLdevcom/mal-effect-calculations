@@ -11,7 +11,8 @@ ttimes_aht <- read_helmet_omx(file.path(config::get("helmet_data"),
                                         scenario_attributes[["results"]],
                                         "Matrices",
                                         "time_aht.omx"),
-                              matrix_name = c("car_work", "transit_work")) %>%
+                              matrix_name = c("car_work", "transit_work_uncongested")) %>%
+  dplyr::rename(transit_work = transit_work_uncongested) %>%
   dplyr::select(origin, destination, car_work, transit_work) %>%
   dplyr::filter(origin %in% centers$level & destination %in% centers$level) %>%
   dplyr::rename(ttime_car_work_aht = car_work,
@@ -22,7 +23,8 @@ ttimes_pt <- read_helmet_omx(file.path(config::get("helmet_data"),
                                         scenario_attributes[["results"]],
                                         "Matrices",
                                         "time_pt.omx"),
-                             matrix_name = c("car_work", "transit_work")) %>%
+                             matrix_name = c("car_work", "transit_work_uncongested")) %>%
+  dplyr::rename(transit_work = transit_work_uncongested) %>%
   dplyr::select(origin, destination, car_work, transit_work) %>%
   dplyr::filter(origin %in% centers$level & destination %in% centers$level) %>%
   dplyr::rename(ttime_car_work_pt = car_work,
