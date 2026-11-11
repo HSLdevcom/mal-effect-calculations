@@ -1,0 +1,5 @@
+python scripts/terveysmittarit/terveys.py
+python scripts/terveysmittarit/terveys.py --template "data/LJS 2027 template.xlsx" --results "C:/Helmet/results" --check
+python scripts/terveysmittarit/terveys.py --baseline Vertailupohja_2045_Ruuhkainen_tieverkko_H51 --plan Suunnitelmaluonnos_2045_Ruuhkainen_tieverkko_H51 --target Tavoiteverkko_2045_Ruuhkainen_tieverkko_H51 --forecast Suunnitelmaluonnos_2045_Ruuhkainen_tieverkko_H51=2045_suunnitelma_ruuhkainen_tieverkko_cco45 --output "results/terveysmittarit/terveys_tieverkko.xlsx"
+python scripts/terveysmittarit/terveys.py --baseline Vertailupohja_2045_Taantuva_a_H51 --plan Suunnitelmaluonnos_2045_Taantuva_H51 --target Tavoiteverkko_2045_Taantuva_H51 --forecast Suunnitelmaluonnos_2045_Taantuva_H51=2045_suunnitelma_taantuva_cco23 --output "results/terveysmittarit/terveys_taantuva.xlsx"
+python scripts/terveysmittarit/terveys.py --baseline Vertailupohja_2045_Ruuhkainen_joukkoliikenne_H51 --plan Tavoiteverkko_2045_Ruuhkainen_joukkoliikenne_H51 --target Tavoiteverkko_2045_Ruuhkainen_joukkoliikenne_H51 --output "results/terveysmittarit/terveys_joukkoliikenne.xlsx"
