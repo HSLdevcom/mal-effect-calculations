@@ -31,11 +31,9 @@ source(here::here("scripts", "figures", "map_hubs.R"), encoding = "utf-8")
 
 # Prepare data ------------------------------------------------------------
 
-# scenario_list <- c("2023", "2045_ve0")
-# scenario_list <- c("2045_suunnitelma")
-scenario_list <- c("2023", "2045_ve0", "2045_tavoiteverkko", "2045_suunnitelma")
+scenario_list <- scenarios$scenario[!scenarios$sensitivity]
 
-scenario <- "2045_suunnitelma"
+scenario <- scenarios$scenario[scenarios$projected][1]
 scenario_attributes <- set_scenario(scenario)
 # message(sprintf("Prepare data in scenario %s...", scenario))
 # source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
@@ -62,7 +60,7 @@ for (scenario in scenario_list) {
 # Sensitivity analysis ----------------------------------------------------
 
 sensitivity_scenario_list <- scenarios$scenario[scenarios$sensitivity]
-# sensitivity_scenario_list <- c()
+# sensitivity_scenario_list <- c("Suunnitelma_2045_Ruuhkainen_joukkoliikenne_H51")
 
 for (scenario in sensitivity_scenario_list) {
   scenario_attributes <- set_scenario(scenario)
@@ -77,6 +75,7 @@ for (scenario in sensitivity_scenario_list) {
 
 #This generates _all.rds files
 source(here::here("scripts", "figures", "sensitivity.R"), encoding = "utf-8")
+source(here::here("scripts", "figures", "sensitivity_results.R"), encoding = "utf-8")
 
 
 # Plot figures -----------------------------------------------------------
@@ -119,14 +118,31 @@ invisible(lapply(differences, verbose_source, encoding = "utf-8"))
 invisible(lapply(multiples, verbose_source, encoding = "utf-8"))
 source(here::here("scripts", "figures", "multiple","graph_mode-share_sustainable_cap_reg.R"), encoding = "utf-8")
 source(here::here("scripts", "figures", "multiple","graph_weighted-delay-mode.R"), encoding = "utf-8")
+source(here::here("scripts", "figures", "multiple","graph_weighted-delay.R"), encoding = "utf-8")
 source(here::here("scripts", "figures", "multiple","graph_delay-car.R"), encoding = "utf-8")
 source(here::here("scripts", "figures", "multiple","graph_ttime-ratio.R"), encoding = "utf-8")
 source(here::here("scripts", "figures", "multiple","graph_ttime-transit.R"), encoding = "utf-8")
 source(here::here("scripts", "figures", "multiple","graph_ttime-car.R"), encoding = "utf-8")
-source(here::here("scripts", "figures", "multiple","graph_weighted-delay.R"), encoding = "utf-8")
 source(here::here("scripts", "figures", "multiple","graph_mode-share_sustainable.R"), encoding = "utf-8")
-source(here::here("scripts", "figures", "sustainable_accessibility.R"), encoding = "utf-8")
+source(here::here("scripts", "figures", "multiple","graph_car_density.R"), encoding = "utf-8")
 source(here::here("scripts", "figures", "single","map_relative-speed.R"), encoding = "utf-8")
 source(here::here("scripts", "figures", "difference","map_diff_cba.R"), encoding = "utf-8")
 source(here::here("scripts", "figures", "difference","map_diff_relative_speed.R"), encoding = "utf-8")
 source(here::here("scripts", "figures", "difference","map_diff_mode-share_sustainable2.R"), encoding = "utf-8")
+source(here::here("scripts", "basemap","health-centers.R"), encoding = "utf-8")
+source(here::here("scripts", "figures", "map_health-centers-overview.R"), encoding = "utf-8")
+source(here::here("scripts", "figures", "health-centers-accessibility.R"), encoding = "utf-8")
+source(here::here("scripts", "figures", "transfers.R"), encoding = "utf-8")
+source(here::here("scripts", "figures", "sustainable_accessibility.R"), encoding = "utf-8")
+
+#Transit crowding
+source(here::here("scripts", "figures", "validate_scenarios.R"),
+       encoding = "UTF-8")
+source(here::here("scripts", "utils.R"), encoding = "UTF-8")
+
+for (scenario in scenarios$scenario[!scenarios$sensitivity]) {
+  scenario_attributes <- set_scenario(scenario)
+  source(here::here("scripts", "figures", "single",
+                   "map_transit-crowding.R"),
+         encoding = "UTF-8")
+}
