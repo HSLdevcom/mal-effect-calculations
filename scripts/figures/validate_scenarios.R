@@ -22,4 +22,11 @@ stopifnot(sum(scenarios$present) == 1)
 stopifnot(sum(scenarios$baseline) == 1)
 stopifnot(sum(scenarios$projected) >= 1)
 stopifnot(all(rowSums(dplyr::select(scenarios, present, baseline, target, projected, sensitivity)) == 1))
-stopifnot(all(scenarios$root %in% scenarios$scenario))
+missing_roots <- setdiff(scenarios$root, scenarios$scenario)
+if (length(missing_roots) > 0) {
+  stop(
+    "scenarios.tsv: root values must match scenario IDs. Missing: ",
+    paste(missing_roots, collapse = ", "),
+    call. = FALSE
+  )
+}

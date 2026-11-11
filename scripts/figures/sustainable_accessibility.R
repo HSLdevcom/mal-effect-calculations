@@ -355,7 +355,7 @@ ggplot() +
   annotate_map(
     title = "Kestävän saavutettavuuden indeksi ja matalan sosioekonomisen statuksen alueet",
     subtitle = sprintf(
-      "%d %s; haavoittuvat alueet viivoitettu ja rajattu valkoisella",
+      "%d %s; matalan sosioekonomisen statuksen alueet viivoitettu ja rajattu valkoisella",
       projected_scenario$year[[1]],
       projected_scenario$name[[1]]
     )
@@ -375,6 +375,6 @@ plot_area_results(
 
 plot_area_results(
   vulnerable_results,
-  "Kestävän saavutettavuuden indeksi haavoittuvilla alueilla",
+  "Kestävän saavutettavuuden indeksi matalan sosioekonomisen statuksen alueilla",
   "graph_sustainable-accessibility_vulnerable-areas.png"
 )

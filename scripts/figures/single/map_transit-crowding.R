@@ -7,7 +7,10 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-results <- readr::read_rds(here::here("results", sprintf("links_%s.rds", scenario_attributes[["scenario"]])))
+# The toolbox export is saved before the road-only filters in links.R.
+# links_<scenario>.rds excludes rail (types 2:6), including train and metro.
+results <- sf::read_sf(here::here("results", sprintf("links_toolbox_%s.gpkg", scenario_attributes[["scenario"]]))) %>%
+  dplyr::filter(area != "peripheral")
 volume_factors <- readr::read_tsv(here::here("utilities", "volume_factors.tsv"), col_types = "cddd")
 
 capacity_columns <- c(
@@ -92,8 +95,17 @@ if (length(missing_capacity_columns) == 0) {
             demand >= minimum_demand & capacity_values > 0,
             demand / capacity_values,
             NA_real_
+          ),
+          buffer_width = dplyr::case_when(
+            capacity_values >= 1000 ~ 100,
+            capacity_values >= 200 ~ 50,
+            TRUE ~ 30
           )) %>%
-          dplyr::filter(!is.na(crowding))
+          dplyr::filter(!is.na(crowding)) %>%
+          # Buffer to the right of each directed link, as in the volume maps.
+          sf::st_buffer(dist = -.$buffer_width,
+                        endCapStyle = "FLAT",
+                        singleSide = TRUE)
       })
     )
 
@@ -104,15 +116,15 @@ if (length(missing_capacity_columns) == 0) {
                                       minimum_demand, demand, capacity_values, label, output, data) {
     plot <- ggplot() +
       geom_basemap(show_roads = FALSE) +
-      geom_sf(mapping = aes(color = crowding),
-              data = data, linewidth = 1) +
-      scale_color_stepsn(
-        colours = c("#7fde40", "#ffff08", "#ffa94c", "#ff0000", "#000000"),
-        values = seq(0.1, 0.9, 0.2),
+      geom_sf(mapping = aes(fill = crowding),
+              data = data, color = NA) +
+      scale_fill_stepsn(
+        colours = c("#7fde40", "#ffff08", "#ffa94c"),
+        values = c(0.1, 0.5, 0.9),
         labels = scales::label_percent(accuracy = 1, suffix = " %"),
         name = NULL,
-        breaks = seq(0.5, 2, by = 0.5),
-        limits = c(0, 2.5),
+        breaks = seq(0.2, 1, by = 0.2),
+        limits = c(0, 1),
         oob = scales::squish
       ) +
       coord_sf_mal() +
