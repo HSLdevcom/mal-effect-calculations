@@ -30,29 +30,40 @@ zone_centroids <- sf::st_centroid(zone_polygons)
 
 facility_groups <- list(
   hospitals = list(
-    label = "Sairaalat ja laboratoriot",
+    label = "Sairaalat",
+    destination_label = "lähimpään sairaalaan",
     purpose_names = c(
       "Keskussairaalat",
-      "Erikoissairaalat ja laboratoriorakennukset",
       "Muut sairaalat"
     )
   ),
   other_health = list(
-    label = "Terveys- ja hyvinvointikeskukset",
+    label = "Terveys- ja hyvinvointilaitokset",
+    destination_label = "lähimpään terveys- ja hyvinvointikeskukseen",
     purpose_names = c(
-      "Muut terveydenhuoltorakennukset",
-      "Terveys- ja hyvinvointikeskukset"
+      "Terveys- ja hyvinvointilaitokset",
+      "Kuntoutuslaitokset"
     )
   )
 )
 
 travel_modes <- c(
-  car_work = "auto",
-  transit_work = "joukkoliikenne"
+  car_leisure = "henkilöautolla",
+  transit_leisure = "joukkoliikenteellä"
 )
 
 read_travel_times <- function(scenario) {
   scenario_attributes <- set_scenario(scenario)
+
+  matrix_names <- names(travel_modes)
+  matrix_names <- stats::setNames(
+    ifelse(
+      matrix_names %in% c("transit_work", "transit_leisure"),
+      paste0(matrix_names, "_uncongested"),
+      matrix_names
+    ),
+    matrix_names
+  )
 
   read_helmet_omx(file.path(
     config::get("helmet_data"),
@@ -60,8 +71,8 @@ read_travel_times <- function(scenario) {
     "Matrices",
     "time_pt.omx"
   ),
-  matrix_name = c("car_work", "transit_work")) %>%
-    dplyr::select(origin, destination, car_work, transit_work) %>%
+  matrix_name = unname(matrix_names)) %>%
+    dplyr::select(origin, destination, dplyr::all_of(matrix_names)) %>%
     dplyr::mutate(
       origin = as.character(origin),
       destination = as.character(destination)
@@ -122,7 +133,7 @@ calculate_closest_travel_time <- function(zone_centroids, facilities,
     )
 }
 
-travel_time_scenarios <- c("2045_ve0", "2045_suunnitelma")
+travel_time_scenarios <- c("2023", "2045_ve0", "2045_suunnitelma")
 travel_times_by_scenario <- travel_time_scenarios %>%
   purrr::set_names() %>%
   purrr::map(read_travel_times)
@@ -169,6 +180,23 @@ readr::write_rds(
 figure_directory <- here::here("figures", "health-centers")
 dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 
+scenario_subtitle <- function(scenario) {
+  attributes <- set_scenario(scenario)
+  sprintf("%d %s", attributes[["year"]], attributes[["name"]])
+}
+
+plan_subtitle <- scenario_subtitle("2045_suunnitelma")
+travel_time_comparisons <- list(
+  list(
+    from = "2045_ve0", to = "2045_suunnitelma",
+    filename_suffix = ""
+  ),
+  list(
+    from = "2023", to = "2045_ve0",
+    filename_suffix = "_2045_ve0-2023"
+  )
+)
+
 plot_travel_time <- function(data, title, subtitle, fill_column) {
   ggplot() +
     geom_sf(
@@ -182,13 +210,14 @@ plot_travel_time <- function(data, title, subtitle, fill_column) {
       direction = 1,
       limits = c(0, 60),
       oob = scales::squish,
-      name = "matka-aika\n(min)",
+      name = "minuuttia",
       labels = scales::label_number(accuracy = 1)
     ) +
     geom_basemap() +
     coord_sf_mal() +
-    annotate_map(title = title, subtitle = subtitle) +
-    theme_mal_map()
+    annotate_map(title = stringr::str_wrap(title, width = 60), subtitle = subtitle) +
+    theme_mal_map() +
+    theme(legend.position = c(0, 0.85))
 }
 
 for (facility_group in names(facility_groups)) {
@@ -220,11 +249,11 @@ for (facility_group in names(facility_groups)) {
 
     plan_plot <- plot_travel_time(
       plan_data,
-      title = paste("Lähimmän kohteen matka-aika:", group$label),
-      subtitle = paste(
-        "2045 LJS-suunnitelma,",
+      title = paste(
+        "Matka-aika", group$destination_label,
         travel_modes[[travel_mode]]
       ),
+      subtitle = plan_subtitle,
       fill_column = "plan_travel_time_min"
     )
     ggsave_map(
@@ -239,71 +268,78 @@ for (facility_group in names(facility_groups)) {
       plot = plan_plot
     )
 
-    comparison_data <- zone_polygons %>%
-      dplyr::left_join(
-        scenario_results %>%
-          dplyr::filter(.data$travel_time_scenario == "2045_ve0") %>%
-          dplyr::select(
-            zone,
-            baseline_travel_time_min = closest_travel_time_min
-          ),
-        by = "zone"
-      ) %>%
-      dplyr::left_join(
-        scenario_results %>%
-          dplyr::filter(.data$travel_time_scenario == "2045_suunnitelma") %>%
-          dplyr::select(
-            zone,
-            plan_travel_time_min = closest_travel_time_min
-          ),
-        by = "zone"
-      ) %>%
-      dplyr::mutate(
-        travel_time_difference_min = (
-          plan_travel_time_min - baseline_travel_time_min
-        )
+    for (comparison in travel_time_comparisons) {
+      comparison_subtitle <- paste(
+        scenario_subtitle(comparison$to), "-", scenario_subtitle(comparison$from)
       )
-
-    difference_limit <- if (facility_group == "hospitals") 60 else 30
-
-    difference_plot <- ggplot() +
-      geom_sf(
-        mapping = aes(fill = .data$travel_time_difference_min),
-        data = comparison_data,
-        color = "#D0CCC0",
-        linewidth = 0.08
-      ) +
-      scale_fill_gradient2(
-        low = "#3E8606",
-        mid = "white",
-        high = "#7b1154",
-        midpoint = 0,
-        limits = c(-difference_limit, difference_limit),
-        oob = scales::squish,
-        name = "matka-ajan\nmuutos (min)",
-        labels = scales::label_number(accuracy = 1)
-      ) +
-      geom_basemap() +
-      coord_sf_mal() +
-      annotate_map(
-        title = paste("LJS-suunnitelman vaikutus:", group$label),
-        subtitle = paste(
-          "Matka-ajan muutos (min), 2045 LJS-suunnitelma - 2045 vertailupohja,",
-          travel_modes[[travel_mode]]
+      comparison_data <- zone_polygons %>%
+        dplyr::left_join(
+          scenario_results %>%
+            dplyr::filter(.data$travel_time_scenario == comparison$from) %>%
+            dplyr::select(
+              zone,
+              from_travel_time_min = closest_travel_time_min
+            ),
+          by = "zone"
+        ) %>%
+        dplyr::left_join(
+          scenario_results %>%
+            dplyr::filter(.data$travel_time_scenario == comparison$to) %>%
+            dplyr::select(
+              zone,
+              to_travel_time_min = closest_travel_time_min
+            ),
+          by = "zone"
+        ) %>%
+        dplyr::mutate(
+          travel_time_difference_min = (
+            to_travel_time_min - from_travel_time_min
+          )
         )
-      ) +
-      theme_mal_map()
 
-    ggsave_map(
-      here::here(
-        "figures", "health-centers",
-        sprintf(
-          "map_health-centers-accessibility-diff_%s_%s.png",
-          facility_group,
-          travel_mode
-        )
-      ),
-      plot = difference_plot
-    )
+      difference_limit <- if (facility_group == "hospitals") 60 else 30
+
+      difference_plot <- ggplot() +
+        geom_sf(
+          mapping = aes(fill = .data$travel_time_difference_min),
+          data = comparison_data,
+          color = "#D0CCC0",
+          linewidth = 0.08
+        ) +
+        scale_fill_gradient2(
+          low = "#3E8606",
+          mid = "white",
+          high = "#7b1154",
+          midpoint = 0,
+          limits = c(-difference_limit, difference_limit),
+          oob = scales::squish,
+          name = "minuuttia",
+          labels = scales::label_number(accuracy = 1)
+        ) +
+        geom_basemap() +
+        coord_sf_mal() +
+        annotate_map(
+          title = stringr::str_wrap(
+            paste("Matka-ajan muutos", group$destination_label, travel_modes[[travel_mode]]),
+            width = 60
+          ),
+          subtitle = comparison_subtitle
+        ) +
+        theme_mal_map() +
+        theme(legend.position = c(0, 0.85))
+
+      ggsave_map(
+        here::here(
+          "figures", "health-centers",
+          sprintf(
+            "map_health-centers-accessibility-diff_%s_%s%s.png",
+            facility_group,
+            travel_mode,
+            comparison$filename_suffix
+          )
+        ),
+        plot = difference_plot
+      )
+    }
   }
 }
