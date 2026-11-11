@@ -75,7 +75,8 @@ annotate_map <- function(title, subtitle) {
     annotate(
       "text",
       x = bbox$xmin,
-      y = bbox$ymax - 4000,
+      # Leave room for wrapped titles while preserving single-line placement.
+      y = bbox$ymax - 4000 * (stringr::str_count(title, "\n") + 1),
       hjust = 0,
       vjust = 1,
       label = subtitle,

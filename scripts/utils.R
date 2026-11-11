@@ -7,7 +7,15 @@ library(omxr)
 
 set_scenario <- function(scenario) {
   stopifnot(length(scenario) == 1)
-  dplyr::filter(scenarios, scenario == !!scenario)
+  attributes <- dplyr::filter(scenarios, scenario == !!scenario)
+  if (nrow(attributes) != 1) {
+    stop(
+      "Expected one matching scenario in scenarios.tsv for '", scenario,
+      "'. Available IDs: ", paste(scenarios$scenario, collapse = ", "),
+      call. = FALSE
+    )
+  }
+  attributes
 }
 
 read_and_bind <- function(scenario_list, prefix, suffix = "rds") {

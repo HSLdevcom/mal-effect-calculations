@@ -62,7 +62,7 @@ ggplot() +
     name = "eur / asukas / kk",
     limits = c(0, 400),
     breaks = seq(100, 300, 100),
-    high = hsl_cols("blue"),
+    high = hsl_cols("green"),
     low = hsl_cols("white"),
     na.value = hsl_cols("lightgray"),
     oob = scales::squish

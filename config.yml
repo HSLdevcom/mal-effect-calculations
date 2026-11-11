@@ -3,11 +3,11 @@ default:
   forecast_zonedata_path: "C:/Users/HajduPe/mal-effect-calculations2027/scenarios"
   housing_cost: "AsKustannukset_01062021.xlsx"
   income_data: "tulotiedot_2016_korjattu.xlsx"
-  present_scenario: "2023_agentti"
+  present_scenario: "Nykytila_2023_H51_agentti"
   present_name: "2023 Nykytila"
 
 2045_ve0-2045_suunnitelma:
-  projected_scenario: "2045_suunnitelma_agentti"
-  baseline_scenario: "2045_ve0_agentti"
-  projected_name: "2045 Suunnitelma"
+  projected_scenario: "Suunnitelmaluonnos_2045_H51_agentti"
+  baseline_scenario: "Vertailupohja_2045_H51_agentti"
+  projected_name: "2045 Luonnos"
   baseline_name: "2045 Vertailupohja"
