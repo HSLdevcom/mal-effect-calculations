@@ -315,7 +315,7 @@ transfer_difference_plot <- ggplot() +
     ),
     oob = scales::squish
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = c("2045_ve0", "2045_suunnitelma")) +
   coord_sf_mal() +
   annotate_map(
     title = "MAL-suunnitelman vaikutus joukkoliikenteen vaihtotapahtumiin",
@@ -357,7 +357,7 @@ relative_transfer_difference_plot <- ggplot() +
     na.value = "#D9D9D9",
     oob = scales::squish
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = c("2045_ve0", "2045_suunnitelma")) +
   coord_sf_mal() +
   annotate_map(
     title = "MAL-suunnitelman suhteellinen vaikutus vaihtotapahtumiin",

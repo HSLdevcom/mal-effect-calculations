@@ -24,7 +24,7 @@ plot_twocenters <- function(data, fill, title) {
       direction = -1,
       labels = c("1 (paras)", "2", "3", "4", "5")
     ) +
-    geom_basemap() +
+    geom_basemap(scenario_ids = scenario_attributes[["scenario"]]) +
     coord_sf_mal() +
     annotate_map(
       title = title,

@@ -16,7 +16,7 @@ results <- readr::read_rds(here::here("results", sprintf("buffers-vrk_%s.rds", s
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_basemap(show_roads = FALSE) +
+  geom_basemap(show_roads = FALSE, scenario_ids = scenario_attributes[["scenario"]]) +
   geom_sf(mapping = aes(fill = volume_vrk),
           data = results, color = NA) +
   scale_fill_viridis_b(

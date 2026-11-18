@@ -15,7 +15,7 @@ results <- readr::read_rds(here::here("results", sprintf("buffers-truck_all-vrk_
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_basemap(show_roads = FALSE) +
+  geom_basemap(show_roads = FALSE, scenario_ids = scenario_attributes[["scenario"]]) +
   geom_sf(data = results, color = NA, fill = "#2a5475") +
   scale_volume(binwidth = 9000, height = 2000/8,
                labels = c("2 000", "4 000", "6 000", "8 000", "ajon./h"),

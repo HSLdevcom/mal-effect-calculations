@@ -264,9 +264,9 @@ clip_to_helsinki_region <- function(data) {
   clipped
 }
 
-plot_distance_map <- function(data, distance_field, title, subtitle) {
+plot_distance_map <- function(data, distance_field, title, subtitle, scenario_id) {
   ggplot2::ggplot() +
-    geom_basemap(show_roads = FALSE) +
+    geom_basemap(show_roads = FALSE, scenario_ids = scenario_id) +
     ggplot2::geom_sf(
       data = data,
       mapping = ggplot2::aes(fill = .data[[distance_field]]),
@@ -314,7 +314,8 @@ plot_2024 <- plot_distance_map(
   map_2024,
   "greenery_distance_2024_m",
   "Etäisyys lähimpään viheralueeseen",
-  "2024 asukkaat; gridin keskipisteestä CORINE-ruutuun"
+  "2024 asukkaat; gridin keskipisteestä CORINE-ruutuun",
+  scenario_id = "2024"
 )
 ggsave_map(
   here::here("figures", "greenery", "map_greenery_accessibility_2024.png"),
@@ -325,7 +326,8 @@ plot_2045_ve0 <- plot_distance_map(
   map_2045_ve0,
   "greenery_distance_2045_ve0_m",
   "Etäisyys lähimpään viheralueeseen",
-  "2045 vertailupohja; gridin keskipisteestä CORINE-ruutuun"
+  "2045 vertailupohja; gridin keskipisteestä CORINE-ruutuun",
+  scenario_id = "2045_ve0"
 )
 ggsave_map(
   here::here("figures", "greenery","map_greenery_accessibility_2045_ve0.png"),
@@ -336,7 +338,8 @@ plot_2045_plan <- plot_distance_map(
   map_2045_plan,
   "greenery_distance_2045_plan_m",
   "Etäisyys lähimpään viheralueeseen",
-  "2045 MAL-suunnitelma; gridin keskipisteestä CORINE-ruutuun"
+  "2045 MAL-suunnitelma; gridin keskipisteestä CORINE-ruutuun",
+  scenario_id = "2045_suunnitelma"
 )
 ggsave_map(
   here::here("figures", "greenery","map_greenery_accessibility_2045_plan.png"),
@@ -353,7 +356,7 @@ effect_breaks <- if (max_effect_m == 0) 0 else pretty(
   n = 5
 )
 plot_plan_effect <- ggplot2::ggplot() +
-  geom_basemap(show_roads = FALSE) +
+  geom_basemap(show_roads = FALSE, scenario_ids = c("2045_ve0", "2045_suunnitelma")) +
   ggplot2::geom_sf(
     data = map_plan_effect,
     mapping = ggplot2::aes(fill = .data$greenery_distance_plan_effect_m),

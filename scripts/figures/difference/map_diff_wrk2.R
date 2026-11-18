@@ -58,7 +58,7 @@ ggplot() +
   scale_color_manual(
     values = NA
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = c(scenario0, scenario1)) +
   geom_sf(data = results, fill = NA, color = "#333333", linewidth = 0.05) +
   coord_sf_mal() +
   annotate_map(
@@ -86,7 +86,7 @@ ggplot() +
     labels = scales::label_percent(accuracy = 1, suffix = ""),
     oob = scales::oob_squish
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = c(scenario0, scenario1)) +
   coord_sf_mal() +
   annotate_map(
     title = "Suhteellinen muutos työpaikoissa",

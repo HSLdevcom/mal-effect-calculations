@@ -28,7 +28,7 @@ ggplot() +
     labels = scales::label_number(accuracy = 1),
     oob = scales::oob_squish_any
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = c(scenario0, scenario1)) +
   coord_sf_mal() +
   annotate_map(
     title = "Joukkoliikenteen matka-aikamuutos kiertomatkaa kohden",
@@ -57,7 +57,7 @@ ggplot() +
     labels = scales::label_number(accuracy = 1),
     oob = scales::oob_squish_any
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = c(scenario0, scenario1)) +
   coord_sf_mal() +
   annotate_map(
     title = "Henkilöauton matka-aikamuutos kiertomatkaa kohden",
@@ -86,7 +86,7 @@ ggplot() +
     labels = scales::label_number(accuracy = 1),
     oob = scales::oob_squish_any
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = c(scenario0, scenario1)) +
   coord_sf_mal() +
   annotate_map(
     title = "Joukkoliikenteen ja henkilöauton matka-aikamuutos kiertomatkaa kohden",
@@ -115,7 +115,7 @@ ggplot() +
     direction = -1,
     oob = scales::oob_squish_any
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = c(scenario0, scenario1)) +
   coord_sf_mal() +
   annotate_map(
     title = "Tulot joukkoliikenteestä kiertomatkaa kohden",

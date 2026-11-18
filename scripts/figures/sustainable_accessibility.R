@@ -307,7 +307,7 @@ ggplot() +
     direction = -1,
     oob = scales::squish
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = projected_scenario$scenario) +
   coord_sf_mal() +
   annotate_map(
     title = "Kestävän saavutettavuuden indeksi",
@@ -338,7 +338,7 @@ ggplot() +
     direction = -1,
     oob = scales::squish
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = projected_scenario$scenario) +
   geom_sf(
     data = vulnerable_hatching,
     color = "#FFFFFF",

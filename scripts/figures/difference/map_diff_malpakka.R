@@ -38,7 +38,7 @@ ggplot() +
     breaks = c(-2, -1, -0.6, -0.3, 0.3, 0.6, 1, 2),
     oob = scales::squish
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = c(scenario0, scenario1)) +
   coord_sf_mal() +
   annotate_map(
     title = "Muutos kestävien kulkutapojen mahdollistamassa tonttitehokkuudessa",

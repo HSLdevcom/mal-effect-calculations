@@ -60,7 +60,7 @@ ggplot() +
     values = values,
     oob = scales::squish
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = c(scenario0, scenario1)) +
   coord_sf_mal() +
   annotate_map(
     title = "Muutos polkupyörällä tehtyjen kiertomatkojen osuuksissa alueelta alkavista kiertomatkoista",

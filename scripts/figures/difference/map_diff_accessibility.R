@@ -64,7 +64,7 @@ ggplot() +
                                order = 99,
                                override.aes = list(color = "grey35",
                                                    fill = "#636363"))) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = c(scenario0, scenario1)) +
   coord_sf_mal() +
   annotate_map(
     title = "Muutos saavutettavuudessa asukkaiden näkökulmasta",

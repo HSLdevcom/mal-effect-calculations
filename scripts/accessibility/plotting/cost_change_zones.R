@@ -81,7 +81,7 @@ ggplot() +
     na.value = hsl_cols("lightgray"),
     oob = scales::squish
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = c(config::get("baseline_scenario"), config::get("projected_scenario"))) +
   coord_sf_mal() +
   annotate_map(
     title = "Liikkumisen suorat kustannukset (eur)",

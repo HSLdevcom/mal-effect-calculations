@@ -29,7 +29,7 @@
 # ggplot() +
 #   geom_sf(mapping = aes(fill = diff_pop),
 #           data = results, color = NA) +
-#   geom_basemap() +
+#   geom_basemap(scenario_ids = "2045_ve1") +
 #   scale_fill_fermenter(
 #     palette = "PRGn",
 #     name = "asukasta",

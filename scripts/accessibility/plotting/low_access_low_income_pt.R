@@ -210,7 +210,7 @@ ggplot() +
     fill = "#dddddc",
     linewidth = NA
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = config::get("projected_scenario")) +
   geom_sf(
     data = zones_centroids_pks,
     mapping = aes(size = low_access),
@@ -241,7 +241,7 @@ ggplot() +
     fill = "#dddddc",
     linewidth = NA
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = config::get("projected_scenario")) +
   geom_sf(
     data = zones_centroids_kehys,
     mapping = aes(size = low_access),

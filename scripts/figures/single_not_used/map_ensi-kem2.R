@@ -29,7 +29,7 @@ category_colors <- RColorBrewer::brewer.pal(5, "PiYG")[c(5, 1)]
 ggplot() +
   geom_sf(mapping = aes(fill = apartments_diff),
           data = results, color = NA) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = scenario_attributes[["scenario"]]) +
   geom_sf(mapping = aes(),
           data = ensi, color = "#333333", fill = NA, linewidth = 0.4) +
   scale_fill_fermenter(

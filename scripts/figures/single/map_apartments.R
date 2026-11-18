@@ -27,7 +27,7 @@ ggplot() +
   scale_color_manual(
     values = NA
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = scenario_attributes[["scenario"]]) +
   geom_sf(data = results, fill = NA, color = "#333333", linewidth = 0.05) +
   coord_sf_mal() +
   annotate_map(

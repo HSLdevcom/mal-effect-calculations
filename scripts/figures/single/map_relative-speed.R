@@ -15,7 +15,7 @@ results <- readr::read_rds(here::here("results", sprintf("buffers_%s.rds", scena
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_basemap(show_roads = FALSE) +
+  geom_basemap(show_roads = FALSE, scenario_ids = scenario_attributes[["scenario"]]) +
   geom_sf(mapping = aes(fill = relative_speed),
           data = results, color = NA) +
   scale_fill_stepsn(

@@ -40,7 +40,7 @@ ggplot() +
     palette = "RdGy",
     name = NULL,
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = c(scenario0, scenario1)) +
   coord_sf_mal() +
   annotate_map(
     title = "Muutos SAVU-vyöhykkeessä",

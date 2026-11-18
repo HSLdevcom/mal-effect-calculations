@@ -26,7 +26,7 @@ ggplot() +
     breaks = c(0, 1000, 2000, 3000, 4000),
     limits = c(0, 4000),
     guide = guide_legend(override.aes = list(fill = "#646464"), order = 1)) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = scenario_attributes[["scenario"]]) +
   coord_sf_mal() +
   annotate_map(
     title = "Työpaikkatiheys hyvillä ja heikoilla SAVU-vyöhykkeillä maa-alaa kohden",

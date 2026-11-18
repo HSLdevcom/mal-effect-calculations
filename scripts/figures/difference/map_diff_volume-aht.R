@@ -48,7 +48,7 @@ buffers <- results %>%
 # Plot --------------------------------------------------------------------
 
 ggplot() +
-  geom_basemap(show_roads = FALSE) +
+  geom_basemap(show_roads = FALSE, scenario_ids = c(scenario0, scenario1)) +
   geom_sf(mapping = aes(fill = diff_volume_aht),
           data = buffers, color = NA) +
   scale_fill_fermenter(

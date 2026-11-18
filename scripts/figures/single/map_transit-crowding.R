@@ -115,7 +115,7 @@ if (length(missing_capacity_columns) == 0) {
   purrr::pwalk(crowding_maps, function(period, period_name, capacity_field, capacity_name,
                                       minimum_demand, demand, capacity_values, label, output, data) {
     plot <- ggplot() +
-      geom_basemap(show_roads = FALSE) +
+      geom_basemap(show_roads = FALSE, scenario_ids = scenario_attributes[["scenario"]]) +
       geom_sf(mapping = aes(fill = crowding),
               data = data, color = NA) +
       scale_fill_stepsn(

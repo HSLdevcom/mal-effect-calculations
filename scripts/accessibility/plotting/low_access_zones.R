@@ -124,7 +124,7 @@ zones_centroids_kehys <- zones_centroids %>%
 
 ggplot() +
   geom_sf(data = st_union(dplyr::filter(zones, area %in% kehys)), fill = "#dddddc", linewidth = NA) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = config::get("projected_scenario")) +
   geom_sf(
     data = zones_centroids_pks,
     mapping = aes(size = low_access),
@@ -150,7 +150,7 @@ ggsave_map(
 
 ggplot() +
   geom_sf(data = st_union(dplyr::filter(zones, area %in% pks)), fill = "#dddddc", linewidth = NA) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = config::get("projected_scenario")) +
   geom_sf(
     data = zones_centroids_kehys,
     mapping = aes(size = low_access),

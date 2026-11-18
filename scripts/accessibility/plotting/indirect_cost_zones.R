@@ -59,7 +59,7 @@ plot_indirect_cost <- function(cost_column, scenario_name, scenario_id,
       na.value = hsl_cols("lightgray"),
       oob = scales::squish
     ) +
-    geom_basemap() +
+    geom_basemap(scenario_ids = scenario_id) +
     coord_sf_mal() +
     annotate_map(
       title = cost_title,
@@ -100,7 +100,8 @@ ggplot() +
     na.value = hsl_cols("lightgray"),
     oob = scales::squish
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = c(config::get("baseline_scenario"),
+                                  config::get("projected_scenario"))) +
   coord_sf_mal() +
   annotate_map(
     title = "Liikkumisen epäsuorat kustannukset (eur)",

@@ -67,7 +67,7 @@ ggplot() +
     na.value = hsl_cols("lightgray"),
     oob = scales::squish
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = config::get("projected_scenario")) +
   coord_sf_mal() +
   annotate_map(
     title = "Liikkumisen suorat kustannukset (eur)",
@@ -96,7 +96,7 @@ ggplot() +
     na.value = hsl_cols("lightgray"),
     oob = scales::squish
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = config::get("projected_scenario")) +
   coord_sf_mal() +
   annotate_map(
     title = "Liikkumisen ja asumisen suorat menot (eur)",
@@ -126,7 +126,7 @@ ggplot() +
     na.value = hsl_cols("lightgray"),
     oob = scales::squish
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = config::get("projected_scenario")) +
   coord_sf_mal() +
   annotate_map(
     title = "Osuus tuloista liikkumiseen ja asumiseen",

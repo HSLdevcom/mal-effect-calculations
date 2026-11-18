@@ -2,29 +2,71 @@
 library(here)
 library(tidyverse)
 
-squares <- here::here("data", "Tavoiteverkkojen yhdistetty maankäyttöaineisto",
-                          "aineistopyynto_siuntio_ruudukko_yhdistetty.gpkg") %>%
-  sf::read_sf() %>%
-  sf::st_transform(3879)
+grid_directory <- here::here("data", "maankayttoruudukot_2026-11-06_suunnitelma")
 
-# Use an internal row identifier to preserve alignment during spatial matching.
-# The input baseline is 2024; keep the historical 2023 column names for consumers.
-squares <- squares %>%
-  tibble::rownames_to_column(var = "xyind") %>%
-  dplyr::mutate(xyind = as.integer(xyind)) %>%
-  dplyr::select(xyind, asukkaat_24, asukkaat_45) %>%
-  dplyr::rename(asuk23 = asukkaat_24,
-                asuk45 = asukkaat_45)
+# Read the packaged grids without requiring manually extracted directories.
+read_squares <- function(filename, archived = FALSE) {
+  path <- file.path(grid_directory, filename)
+  if (archived) {
+    members <- utils::unzip(path, list = TRUE)$Name
+    gpkg <- members[grepl("\\.gpkg$", members, ignore.case = TRUE)]
+    stopifnot(length(gpkg) == 1L)
+    path <- paste0("/vsizip/", normalizePath(path, winslash = "/"), "/", gpkg)
+  }
+  grid <- sf::read_sf(path) %>% sf::st_transform(3067)
+  # Not every source has a reliable grid identifier. Match the 250 m cells
+  # by their centres in the source CRS, before transforming for the maps.
+  coordinates <- sf::st_coordinates(sf::st_centroid(sf::st_geometry(grid)))
+  grid$grid_id <- paste(round(coordinates[, 1], 2), round(coordinates[, 2], 2), sep = "_")
+  stopifnot(!anyDuplicated(grid$grid_id))
+  grid %>% sf::st_transform(3879)
+}
 
-# If you need the row index as a character instead, use:
-# squares <- squares %>%
-#   tibble::rownames_to_column(var = "xyind") %>%
-#   dplyr::mutate(xyind = as.character(xyind))
+squares_siuntio <- read_squares("aineistopyynto_siuntio_ruudukko_yhdistetty.gpkg")
 
-# squares <- squares %>%
-#   dplyr::select(xyind, asukkaat_24, asukkaat_45) %>%
-#   dplyr::rename(asuk24 = asukkaat_24,
-#                 asuk45 = asukkaat_45)
+# The Siuntio file includes the other 14 municipalities too. Append only
+# missing cells so their scenario-specific forecasts are never overwritten.
+add_siuntio <- function(grid) {
+  missing <- squares_siuntio %>%
+    dplyr::filter(!grid_id %in% grid$grid_id)
+  dplyr::bind_rows(grid, missing)
+}
+
+squares_vertailupohja <- read_squares(
+  "MAL2027_korjattu_vertailupohja_231026.zip", archived = TRUE
+) %>%
+  add_siuntio() %>%
+  # Empty current-year cells in this source are encoded as NA.
+  dplyr::mutate(asukkaat_24 = tidyr::replace_na(asukkaat_24, 0))
+
+squares_tavoiteverkko <- read_squares("MAL27_tavverk_abcy_r250_Hki260821.gpkg") %>%
+  dplyr::rename(asukkaat_45 = Y_asukkaat_45, tyopaikat_45 = Y_tyopaikat_45) %>%
+  add_siuntio()
+
+squares_suunnitelma <- read_squares(
+  "MAL2027_suunnitelmamaankaytto_281026.zip", archived = TRUE
+) %>%
+  add_siuntio()
+
+stopifnot(setequal(squares_vertailupohja$grid_id, squares_tavoiteverkko$grid_id),
+          setequal(squares_vertailupohja$grid_id, squares_suunnitelma$grid_id))
+
+# Use vertailupohja's current population for every scenario and align future
+# populations by cell, rather than relying on the input files' row order.
+# Keep historical 2023 column names for consumers; the input baseline is 2024.
+squares <- squares_vertailupohja %>%
+  dplyr::select(grid_id, asuk23 = asukkaat_24, asuk45 = asukkaat_45) %>%
+  dplyr::left_join(
+    squares_tavoiteverkko %>% sf::st_drop_geometry() %>%
+      dplyr::select(grid_id, asuk45_tavoiteverkko = asukkaat_45),
+    by = "grid_id"
+  ) %>%
+  dplyr::left_join(
+    squares_suunnitelma %>% sf::st_drop_geometry() %>%
+      dplyr::select(grid_id, asuk45_suunnitelma = asukkaat_45),
+    by = "grid_id"
+  ) %>%
+  dplyr::mutate(xyind = dplyr::row_number(), .before = 1)
 
 zones <- readr::read_rds(here::here("results", "zones.rds")) %>%
   dplyr::select(SIJ2023) %>%
@@ -33,8 +75,8 @@ zones <- readr::read_rds(here::here("results", "zones.rds")) %>%
 squares <- squares %>%
   dplyr::mutate(
     pop_diff_2023_2045_ve0 = asuk45 - asuk23,
-    pop_diff_2023_2045_tavoiteverkko = asuk45 - asuk23,
-    pop_diff_2023_2045_suunnitelma = asuk45 - asuk23
+    pop_diff_2023_2045_tavoiteverkko = asuk45_tavoiteverkko - asuk23,
+    pop_diff_2023_2045_suunnitelma = asuk45_suunnitelma - asuk23
   ) %>%
   dplyr::mutate(
     pop_increase_2023_2045_ve0 = pmax(pop_diff_2023_2045_ve0, 0.0),

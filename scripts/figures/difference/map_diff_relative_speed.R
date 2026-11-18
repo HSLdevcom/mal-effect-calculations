@@ -51,7 +51,7 @@ buffers <- results %>%
 
 ggplot() +
   geom_sf(data = region, color = "#000000", fill = "#21292D", linewidth = 0.46) +
-  geom_basemap(show_roads = FALSE) +
+  geom_basemap(show_roads = FALSE, scenario_ids = c(scenario0, scenario1)) +
   geom_sf(mapping = aes(fill = diff_relative_speed),
           data = buffers, color = NA) +
   scale_fill_fermenter(

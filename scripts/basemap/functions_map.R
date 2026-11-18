@@ -23,13 +23,30 @@ water <- readr::read_rds(here::here("results", "water.rds"))
 
 bbox <- sf::st_bbox(region)
 
-geom_basemap <- function(show_roads = TRUE) {
+# Pass every scenario represented by a map, including both sides of a difference.
+# Scenario IDs cover aggregate, sensitivity, and agent runs (Suunnitelmaluonnos).
+# Maps without a scenario use the network without plan-only railway features.
+train_for_scenarios <- function(scenario_ids = character()) {
+  plan_column <- names(train)[tolower(names(train)) == "suunnitelma"]
+  if (length(plan_column) != 1) {
+    stop("Railway data is missing 'suunnitelma'. Re-run scripts/basemap/train.R.",
+         call. = FALSE)
+  }
+  includes_plan <- any(grepl("suunnitelma", scenario_ids, ignore.case = TRUE))
+  if (includes_plan) {
+    return(train)
+  }
+  train[!train[[plan_column]] %in% 1, ]
+}
+
+geom_basemap <- function(show_roads = TRUE, scenario_ids = character()) {
+  scenario_train <- train_for_scenarios(scenario_ids)
   list(
     geom_sf(data = water, fill = "#a6cee3", color = NA, linewidth = 0),
     geom_sf(data = municipalities, color = "#9b3b6b", fill = NA, linewidth = 0.26),
     if (show_roads) { geom_sf(data = roads, color = "#64a5a5", linewidth = 0.2) },
-    geom_sf(data = train, color = "#000000", linetype = "solid", linewidth = 0.66),
-    geom_sf(data = train, color = "#ffffff", linetype = "22", linewidth = 0.53),
+    geom_sf(data = scenario_train, color = "#000000", linetype = "solid", linewidth = 0.66),
+    geom_sf(data = scenario_train, color = "#ffffff", linetype = "22", linewidth = 0.53),
     geom_sf(data = metro, color = "#ff7f00", linetype = "solid", linewidth = 0.66),
     geom_sf(data = metro, color = "#ffffff", linetype = "22", linewidth = 0.53),
 #    geom_sf(data = metro_2040_ve0, color = "#ff7f00", linetype = "solid", linewidth = 0.66),

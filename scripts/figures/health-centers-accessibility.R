@@ -213,7 +213,7 @@ plot_travel_time <- function(data, title, subtitle, fill_column) {
       name = "minuuttia",
       labels = scales::label_number(accuracy = 1)
     ) +
-    geom_basemap() +
+    geom_basemap(scenario_ids = "2045_suunnitelma") +
     coord_sf_mal() +
     annotate_map(title = stringr::str_wrap(title, width = 60), subtitle = subtitle) +
     theme_mal_map() +
@@ -316,7 +316,7 @@ for (facility_group in names(facility_groups)) {
           name = "minuuttia",
           labels = scales::label_number(accuracy = 1)
         ) +
-        geom_basemap() +
+        geom_basemap(scenario_ids = c(comparison$from, comparison$to)) +
         coord_sf_mal() +
         annotate_map(
           title = stringr::str_wrap(

@@ -29,7 +29,7 @@ category_colors <- RColorBrewer::brewer.pal(5, "PRGn")[c(5, 1)]
 ggplot() +
   geom_sf(mapping = aes(fill = diff_pop),
           data = results, color = NA) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = "2045_ve2") +
   scale_fill_fermenter(
     palette = "PRGn",
     name = "asukasta",

@@ -24,7 +24,7 @@ ggplot() +
     direction = -1,
     oob = scales::squish
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = scenario_attributes[["scenario"]]) +
   coord_sf_mal() +
   annotate_map(
     title = "Työpaikkojen kasautuminen",

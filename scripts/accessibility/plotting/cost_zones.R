@@ -67,7 +67,7 @@ ggplot() +
     na.value = hsl_cols("lightgray"),
     oob = scales::squish
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = config::get("present_scenario")) +
   coord_sf_mal() +
   annotate_map(
     title = "Liikkumisen suorat kustannukset (eur)",
@@ -94,7 +94,7 @@ ggplot() +
     low = hsl_cols("white"),
     na.value = hsl_cols("lightgray")
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = config::get("present_scenario")) +
   coord_sf_mal() +
   annotate_map(
     title = "Asumisen menot (eur)",
@@ -123,7 +123,7 @@ ggplot() +
     na.value = hsl_cols("lightgray"),
     oob = scales::squish
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = config::get("present_scenario")) +
   coord_sf_mal() +
   annotate_map(
     title = "Liikkumisen ja asumisen suorat menot (eur)",
@@ -150,7 +150,7 @@ ggplot() +
     low = hsl_cols("white"),
     na.value = hsl_cols("lightgray")
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = config::get("present_scenario")) +
   coord_sf_mal() +
   annotate_map(
     title = "Mediaanitulot (eur)",
@@ -180,7 +180,7 @@ ggplot() +
     na.value = hsl_cols("lightgray"),
     oob = scales::squish
   ) +
-  geom_basemap() +
+  geom_basemap(scenario_ids = config::get("present_scenario")) +
   coord_sf_mal() +
   annotate_map(
     title = "Osuus tuloista liikkumiseen ja asumiseen",
