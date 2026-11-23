@@ -37,6 +37,12 @@ Assessment scenarios are controlled in `scenarios.tsv`. Agent model scenarios
 are defined in `config.yml` and they can be changed in
 `scripts/accessibility/run.R`.
 
+Railway overlays use the scenarios shown in each map. Features marked
+`suunnitelma = 1` in the railway GeoPackage (KeniRata) appear only when a
+suunnitelma scenario is included. Difference maps check both scenarios;
+maps without a scenario omit plan-only railways. New scenario maps should pass
+`scenario_ids` to `geom_basemap()` explicitly.
+
 ## Version control
 
 We using R-package `renv` that locks versions of packages. When doing analysis
