@@ -39,7 +39,7 @@ facility_groups <- list(
   ),
   other_health = list(
     label = "Terveys- ja hyvinvointilaitokset",
-    destination_label = "lähimpään terveys- ja hyvinvointikeskukseen",
+    destination_label = "lähimpään terveys- tai hyvinvointikeskukseen",
     purpose_names = c(
       "Terveys- ja hyvinvointilaitokset",
       "Kuntoutuslaitokset"
@@ -133,7 +133,13 @@ calculate_closest_travel_time <- function(zone_centroids, facilities,
     )
 }
 
-travel_time_scenarios <- c("2023", "2045_ve0", "2045_suunnitelma")
+travel_time_scenarios <- scenarios$scenario[!scenarios$sensitivity]
+travel_time_scenarios <- c(
+  travel_time_scenarios,
+  scenarios$scenario[
+    scenarios$sensitivity & scenarios$root %in% travel_time_scenarios
+  ]
+)
 travel_times_by_scenario <- travel_time_scenarios %>%
   purrr::set_names() %>%
   purrr::map(read_travel_times)
@@ -175,6 +181,9 @@ readr::write_rds(
   file = here::here("results", "health-centers-accessibility.rds")
 )
 
+source(here::here("scripts", "figures", "health-centers-accessibility-graphs.R"),
+       encoding = "utf-8")
+
 # Maps --------------------------------------------------------------------
 
 figure_directory <- here::here("figures", "health-centers")
@@ -205,13 +214,14 @@ plot_travel_time <- function(data, title, subtitle, fill_column) {
       color = "#D0CCC0",
       linewidth = 0.08
     ) +
-    scale_fill_viridis(
-      option = "magma",
-      direction = 1,
+    scale_fill_stepsn(
+      colors = viridis::magma(7),
+      breaks = seq(10, 50, by = 10),
       limits = c(0, 60),
       oob = scales::squish,
       name = "minuuttia",
-      labels = scales::label_number(accuracy = 1)
+      labels = scales::label_number(accuracy = 1),
+      guide = guide_colorsteps(show.limits = TRUE)
     ) +
     geom_basemap(scenario_ids = "2045_suunnitelma") +
     coord_sf_mal() +
@@ -270,7 +280,7 @@ for (facility_group in names(facility_groups)) {
 
     for (comparison in travel_time_comparisons) {
       comparison_subtitle <- paste(
-        scenario_subtitle(comparison$to), "-", scenario_subtitle(comparison$from)
+        scenario_subtitle(comparison$from), "\u2192", scenario_subtitle(comparison$to)
       )
       comparison_data <- zone_polygons %>%
         dplyr::left_join(
@@ -297,7 +307,9 @@ for (facility_group in names(facility_groups)) {
           )
         )
 
-      difference_limit <- if (facility_group == "hospitals") 60 else 30
+      # Use the same range across facilities, modes and comparisons. Finer
+      # classes near zero reveal small changes; larger outliers are squished.
+      difference_limit <- 15
 
       difference_plot <- ggplot() +
         geom_sf(
@@ -306,15 +318,19 @@ for (facility_group in names(facility_groups)) {
           color = "#D0CCC0",
           linewidth = 0.08
         ) +
-        scale_fill_gradient2(
-          low = "#3E8606",
-          mid = "white",
-          high = "#7b1154",
-          midpoint = 0,
+        scale_fill_stepsn(
+          colors = c("#3E8606", "white", "#7b1154"),
+          breaks = c(-10, -5, -2, -0.5, 0.5, 2, 5, 10),
           limits = c(-difference_limit, difference_limit),
           oob = scales::squish,
           name = "minuuttia",
-          labels = scales::label_number(accuracy = 1)
+          labels = function(x) {
+            labels <- scales::label_number(accuracy = 0.1, decimal.mark = ",")(x)
+            labels[x == -difference_limit] <- "\u2264 -15"
+            labels[x == difference_limit] <- "\u2265 15"
+            labels
+          },
+          guide = guide_colorsteps(show.limits = TRUE)
         ) +
         geom_basemap(scenario_ids = c(comparison$from, comparison$to)) +
         coord_sf_mal() +

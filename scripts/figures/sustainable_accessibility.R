@@ -23,11 +23,12 @@ scenario_definitions <- readr::read_tsv(
     .default = col_character()
   )
 ) %>%
-  filter(present | baseline | projected) %>%
+  filter(present | baseline | projected | sensitivity) %>%
+  filter(root %in% scenario[present | baseline | projected]) %>%
   mutate(scenario_name = sprintf("%d %s", year, name)) %>%
   select(
     scenario, year, name, forecast, results, present, baseline, projected,
-    scenario_name
+    sensitivity, root, scenario_name
   )
 
 if (sum(scenario_definitions$present) != 1 ||
@@ -117,7 +118,7 @@ if (any(!is.finite(reference_range)) || diff(reference_range) <= 0) {
 scenario_results <- purrr::pmap_dfr(
   scenario_definitions,
   function(scenario, year, name, forecast, results, present, baseline,
-           projected, scenario_name) {
+           projected, sensitivity, root, scenario_name) {
     read_sustainable_accessibility(results) %>%
       inner_join(read_population(forecast), by = "zone") %>%
       mutate(
@@ -140,6 +141,9 @@ scenario_results <- purrr::pmap_dfr(
         ),
         scenario_id = scenario,
         scenario = scenario_name,
+        sensitivity = sensitivity,
+        root = root,
+        present = present,
         projected = projected
       )
   }
@@ -156,12 +160,12 @@ area_levels <- c(
   "Junaliikenteen kehyskunnat",
   "Bussiliikenteen kehyskunnat"
 )
-scenario_levels <- scenario_definitions$scenario_name
+scenario_levels <- scenario_definitions$scenario_name[!scenario_definitions$sensitivity]
 
 aggregate_accessibility <- function(data) {
-  data %>%
+  aggregated <- data %>%
     filter(!is.na(area)) %>%
-    group_by(area, scenario) %>%
+    group_by(area, scenario_id, scenario, root, present, sensitivity) %>%
     summarise(
       accessibility_index = weighted.mean(
         accessibility_index,
@@ -169,7 +173,22 @@ aggregate_accessibility <- function(data) {
         na.rm = TRUE
       ),
       .groups = "drop"
-    ) %>%
+    )
+
+  # Aggregate each sensitivity separately, then include the main scenario in
+  # the range, just as in sensitivity.R. The present day has no interval.
+  limits <- aggregated %>%
+    filter(!present) %>%
+    group_by(area, root) %>%
+    summarise(
+      accessibility_index_lower = min(accessibility_index),
+      accessibility_index_upper = max(accessibility_index),
+      .groups = "drop"
+    )
+
+  aggregated %>%
+    filter(!sensitivity) %>%
+    left_join(limits, by = c("area", "root")) %>%
     mutate(
       area = factor(area, levels = area_levels),
       scenario = factor(scenario, levels = scenario_levels)
@@ -244,6 +263,13 @@ vulnerable_results <- scenario_results %>%
 plot_area_results <- function(data, title, filename) {
   plot <- ggplot(data, aes(x = area, y = accessibility_index, fill = scenario)) +
     geom_col(position = position_dodge2()) +
+    geom_errorbar(
+      aes(ymin = accessibility_index_lower, ymax = accessibility_index_upper),
+      position = position_dodge2(width = 0.9, padding = 0.66),
+      color = "#333333",
+      linewidth = 0.35,
+      na.rm = TRUE
+    ) +
     geom_text(
       aes(
         y = accessibility_index / 2,
