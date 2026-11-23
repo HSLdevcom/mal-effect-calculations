@@ -6,76 +6,82 @@ options(warn=1, scipen = 1000000)
 options(readr.show_progress = FALSE)
 Sys.setenv(R_CONFIG_ACTIVE = "default")
 
+rerun_preparation <- FALSE # TRUE: rebuild results; FALSE: load existing RDS files.
 
-# Validate scenarios ------------------------------------------------------
+if (rerun_preparation) {
+  # Validate scenarios ------------------------------------------------------
 
-source(here::here("scripts", "figures", "validate_scenarios.R"), encoding = "utf-8")
-
-
-# Utility functions -------------------------------------------------------
-
-source(here::here("scripts", "utils.R"), encoding = "utf-8")
-source(here::here("scripts", "basemap", "run.R"), encoding = "utf-8")
-source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
-source(here::here("scripts", "basemap", "ensi.R"), encoding = "utf-8")
-source(here::here("scripts", "basemap", "centers-and-stations.R"), encoding = "utf-8")
-source(here::here("scripts", "figures", "squares.R"), encoding = "utf-8")
+  source(here::here("scripts", "figures", "validate_scenarios.R"), encoding = "utf-8")
 
 
-# Plot common figures -----------------------------------------------------
+  # Utility functions -------------------------------------------------------
 
-source(here::here("scripts", "figures", "map_centers.R"), encoding = "utf-8")
-source(here::here("scripts", "figures", "map_centers_uusimaa-2050.R"), encoding = "utf-8")
-source(here::here("scripts", "figures", "map_hubs.R"), encoding = "utf-8")
+  source(here::here("scripts", "utils.R"), encoding = "utf-8")
+  source(here::here("scripts", "basemap", "run.R"), encoding = "utf-8")
+  source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
+  source(here::here("scripts", "basemap", "ensi.R"), encoding = "utf-8")
+  source(here::here("scripts", "basemap", "centers-and-stations.R"), encoding = "utf-8")
+  source(here::here("scripts", "figures", "squares.R"), encoding = "utf-8")
 
 
-# Prepare data ------------------------------------------------------------
+  # Plot common figures -----------------------------------------------------
 
-scenario_list <- scenarios$scenario[!scenarios$sensitivity]
+  source(here::here("scripts", "figures", "map_centers.R"), encoding = "utf-8")
+  source(here::here("scripts", "figures", "map_centers_uusimaa-2050.R"), encoding = "utf-8")
+  source(here::here("scripts", "figures", "map_hubs.R"), encoding = "utf-8")
 
-scenario <- scenarios$scenario[scenarios$projected][1]
-scenario_attributes <- set_scenario(scenario)
-# message(sprintf("Prepare data in scenario %s...", scenario))
-# source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
-# source(here::here("scripts", "figures", "links.R"), encoding = "utf-8")
-# source(here::here("scripts", "figures", "areas.R"), encoding = "utf-8")
-# source(here::here("scripts", "figures", "vdfs.R"), encoding = "utf-8")
-#source(here::here("scripts", "figures", "emissions.R"), encoding = "utf-8")
-# source(here::here("scripts", "figures", "cargo.R"), encoding = "utf-8")
-# source(here::here("scripts", "figures", "centers.R"), encoding = "utf-8")
 
-for (scenario in scenario_list) {
+  # Prepare data ------------------------------------------------------------
+
+  scenario_list <- scenarios$scenario[!scenarios$sensitivity]
+
+  scenario <- scenarios$scenario[scenarios$projected][1]
   scenario_attributes <- set_scenario(scenario)
-  message(sprintf("Prepare data in scenario %s...", scenario))
-  source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
-  source(here::here("scripts", "figures", "links.R"), encoding = "utf-8")
-  source(here::here("scripts", "figures", "areas.R"), encoding = "utf-8")
-  source(here::here("scripts", "figures", "vdfs.R"), encoding = "utf-8")
-  source(here::here("scripts", "figures", "emissions.R"), encoding = "utf-8")
-  source(here::here("scripts", "figures", "cargo.R"), encoding = "utf-8")
-  source(here::here("scripts", "figures", "centers.R"), encoding = "utf-8")
+  # message(sprintf("Prepare data in scenario %s...", scenario))
+  # source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
+  # source(here::here("scripts", "figures", "links.R"), encoding = "utf-8")
+  # source(here::here("scripts", "figures", "areas.R"), encoding = "utf-8")
+  # source(here::here("scripts", "figures", "vdfs.R"), encoding = "utf-8")
+  #source(here::here("scripts", "figures", "emissions.R"), encoding = "utf-8")
+  # source(here::here("scripts", "figures", "cargo.R"), encoding = "utf-8")
+  # source(here::here("scripts", "figures", "centers.R"), encoding = "utf-8")
+
+  for (scenario in scenario_list) {
+    scenario_attributes <- set_scenario(scenario)
+    message(sprintf("Prepare data in scenario %s...", scenario))
+    source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
+    source(here::here("scripts", "figures", "links.R"), encoding = "utf-8")
+    source(here::here("scripts", "figures", "areas.R"), encoding = "utf-8")
+    source(here::here("scripts", "figures", "vdfs.R"), encoding = "utf-8")
+    source(here::here("scripts", "figures", "emissions.R"), encoding = "utf-8")
+    source(here::here("scripts", "figures", "cargo.R"), encoding = "utf-8")
+    source(here::here("scripts", "figures", "centers.R"), encoding = "utf-8")
+  }
+
+
+  # Sensitivity analysis ----------------------------------------------------
+
+  sensitivity_scenario_list <- scenarios$scenario[scenarios$sensitivity]
+  # sensitivity_scenario_list <- c("Suunnitelma_2045_Ruuhkainen_joukkoliikenne_H51")
+
+  for (scenario in sensitivity_scenario_list) {
+    scenario_attributes <- set_scenario(scenario)
+    message(sprintf("Prepare data in scenario %s...", scenario))
+    source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
+    source(here::here("scripts", "figures", "links.R"), encoding = "utf-8")
+    source(here::here("scripts", "figures", "areas.R"), encoding = "utf-8")
+    source(here::here("scripts", "figures", "vdfs.R"), encoding = "utf-8")
+    source(here::here("scripts", "figures", "emissions.R"), encoding = "utf-8")
+    source(here::here("scripts", "figures", "cargo.R"), encoding = "utf-8")
+  }
+
+  #This generates _all.rds files
+  source(here::here("scripts", "figures", "sensitivity.R"), encoding = "utf-8")
+  source(here::here("scripts", "figures", "sensitivity_results.R"), encoding = "utf-8")
+
+} else {
+  source(here::here("scripts", "figures", "load_cache.R"), encoding = "utf-8")
 }
-
-
-# Sensitivity analysis ----------------------------------------------------
-
-sensitivity_scenario_list <- scenarios$scenario[scenarios$sensitivity]
-# sensitivity_scenario_list <- c("Suunnitelma_2045_Ruuhkainen_joukkoliikenne_H51")
-
-for (scenario in sensitivity_scenario_list) {
-  scenario_attributes <- set_scenario(scenario)
-  message(sprintf("Prepare data in scenario %s...", scenario))
-  source(here::here("scripts", "figures", "zones.R"), encoding = "utf-8")
-  source(here::here("scripts", "figures", "links.R"), encoding = "utf-8")
-  source(here::here("scripts", "figures", "areas.R"), encoding = "utf-8")
-  source(here::here("scripts", "figures", "vdfs.R"), encoding = "utf-8")
-  source(here::here("scripts", "figures", "emissions.R"), encoding = "utf-8")
-  source(here::here("scripts", "figures", "cargo.R"), encoding = "utf-8")
-}
-
-#This generates _all.rds files
-source(here::here("scripts", "figures", "sensitivity.R"), encoding = "utf-8")
-source(here::here("scripts", "figures", "sensitivity_results.R"), encoding = "utf-8")
 
 
 # Plot figures -----------------------------------------------------------
@@ -91,7 +97,7 @@ multiples <- list.files(here::here("scripts", "figures", "multiple"),
                       full.names = TRUE)
 
 #TODO: Remove when plan scenarios are available
-skipped = c("apartments", "twocenter")
+skipped = c("apartments", "twocenter","crowding")
 for (skip in skipped) {
   singles <- singles[!grepl(skip, singles)]
 }
