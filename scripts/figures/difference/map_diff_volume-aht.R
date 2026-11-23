@@ -3,6 +3,7 @@ library(here)
 library(tidyverse)
 library(sf)
 source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
+source(here::here("scripts", "figures", "link_difference_blacklist.R"), encoding = "utf-8")
 
 
 # Data --------------------------------------------------------------------
@@ -11,12 +12,12 @@ scenario0 <- "2045_ve0"
 scenario1 <- "2045_suunnitelma"
 
 results0 <- readr::read_rds(here::here("results", sprintf("links_%s.rds", scenario0))) %>%
-  dplyr::select(volume_aht) %>%
+  dplyr::select(node_i, node_j, volume_aht) %>%
   dplyr::mutate(wkt = sf::st_as_text(geometry)) %>%
   sf::st_drop_geometry()
 
 results1 <- readr::read_rds(here::here("results", sprintf("links_%s.rds", scenario1))) %>%
-  dplyr::select(volume_aht) %>%
+  dplyr::select(node_i, node_j, volume_aht) %>%
   dplyr::mutate(wkt = sf::st_as_text(geometry)) %>%
   sf::st_drop_geometry()
 
@@ -29,7 +30,8 @@ results <- results0 %>%
   dplyr::mutate(volume_aht0 = tidyr::replace_na(volume_aht0, 0.0),
                 volume_aht1 = tidyr::replace_na(volume_aht1, 0.0)) %>%
   dplyr::mutate(diff_volume_aht = volume_aht1 - volume_aht0,
-                diff_rel_volume_aht = diff_volume_aht / volume_aht0)
+                diff_rel_volume_aht = diff_volume_aht / volume_aht0) %>%
+  filter_link_difference_blacklist(scenario0, scenario1)
 
 
 # Absolute difference -----------------------------------------------------
@@ -41,7 +43,6 @@ buffers <- results %>%
   # Filter for improved plotting
   dplyr::filter(matrix_col_to_vector(sf::st_intersects(., sf::st_as_sf(region), sparse = FALSE))) %>%
   dplyr::filter(abs(diff_volume_aht) > 0.01) %>%
-  dplyr::filter(in0 & in1) %>%
   dplyr::arrange(diff_volume_aht)
 
 
