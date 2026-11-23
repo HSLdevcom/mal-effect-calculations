@@ -9,7 +9,9 @@ source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
-scenario_names <- c("2023","2045_ve0", "2045_suunnitelma")
+main_scenarios <- scenarios %>%
+  dplyr::filter(!sensitivity)
+scenario_names <- scenarios$scenario
 transfer_matrix_name <- "transit_transit_work_avg_boardings"
 
 read_scenario_transfers <- function(scenario) {
@@ -149,17 +151,17 @@ if (length(missing_zone_origins) > 0) {
   )
 }
 
-scenario_labels <- c(
-  "2023" = "2023 nykytilanne",
-  "2045_ve0" = "2045 vertailupohja",
-  "2045_suunnitelma" = "2045 MAL-suunnitelma"
+scenario_labels <- stats::setNames(
+  sprintf("%i %s", main_scenarios$year, main_scenarios$name),
+  main_scenarios$scenario
 )
-scenario_order <- c("2023", "2045_ve0", "2045_suunnitelma")
+scenario_order <- main_scenarios$scenario
 scenario_label_levels <- unname(scenario_labels[scenario_order])
 
 zone_results <- zone_polygons %>%
   dplyr::left_join(
     transfers_by_scenario %>%
+      dplyr::filter(scenario %in% scenario_order) %>%
       dplyr::mutate(
         scenario_label = factor(
           scenario_labels[scenario],
@@ -180,9 +182,6 @@ scenario_totals <- transfers_by_scenario %>%
     transit_demand = sum(transit_demand),
     transfer_events = sum(transfer_events),
     .groups = "drop"
-  ) %>%
-  dplyr::mutate(
-    scenario_label = factor(scenario_labels[scenario], levels = scenario_label_levels)
   )
 
 # Graph -------------------------------------------------------------------
@@ -198,17 +197,43 @@ graph_data <- scenario_totals %>%
     cols = c(transit_demand, transfer_events),
     names_to = "measure",
     values_to = "amount"
+  )
+
+# As in sensitivity.R, include the main result in the sensitivity range.
+graph_limits <- graph_data %>%
+  dplyr::left_join(
+    scenarios %>% dplyr::select(scenario, root, present),
+    by = "scenario"
   ) %>%
+  dplyr::filter(!present) %>%
+  dplyr::group_by(root, measure) %>%
+  dplyr::summarise(
+    amount_lower = min(amount),
+    amount_upper = max(amount),
+    .groups = "drop"
+  )
+
+graph_data <- graph_data %>%
+  dplyr::filter(scenario %in% scenario_order) %>%
+  dplyr::left_join(graph_limits, by = c("scenario" = "root", "measure")) %>%
   dplyr::mutate(
+    scenario_label = factor(scenario_labels[scenario], levels = scenario_label_levels),
     measure = factor(
       measure,
       levels = c("transit_demand", "transfer_events"),
-      labels = c("Joukkoliikennematkat", "Arvioidut vaihtotapahtumat")
+      labels = c("Joukkoliikennematkat", "Vaihtojen määrä")
     )
   )
 
 ggplot(graph_data, aes(x = measure, y = amount, fill = scenario_label)) +
   geom_col(position = position_dodge2()) +
+  geom_errorbar(
+    mapping = aes(ymin = amount_lower, ymax = amount_upper),
+    position = position_dodge2(width = 0.9, padding = 0.66),
+    color = "#333333",
+    linewidth = 0.35,
+    na.rm = TRUE
+  ) +
   geom_text(
     aes(
       y = amount / 2,
@@ -220,7 +245,7 @@ ggplot(graph_data, aes(x = measure, y = amount, fill = scenario_label)) +
       color = scenario_label
     ),
     position = position_dodge2(width = 0.9),
-    size = points2mm(8),
+    size = points2mm(8)
   ) +
   scale_y_continuous(
     labels = scales::label_number(
@@ -239,23 +264,17 @@ ggplot(graph_data, aes(x = measure, y = amount, fill = scenario_label)) +
     values = mal_color
   ) +
   scale_x_discrete(
-    labels = scales::label_wrap(25)
+    labels = scales::label_wrap(5)
   ) +
   labs(
-    title = "Joukkoliikennematkat ja arvioidut vaihtotapahtumat",
-    subtitle = paste(
-      "Vaihtotapahtumat estimoitu keskimääräisistä nousuista",
-      "painottamalla transit_work-kysynnällä"
-    ),
+    title = "Joukkoliikennematkat ja vaihtojen määrä",
     x = NULL,
-    y = "Tuhatta matkaa / vaihtotapahtumaa"
+    y = "1000 matkaa / vaihtoa"
   ) +
   theme_mal_graph()
 
 ggsave_graph(
-  file.path(transfer_figures_directory, "graph_transfers_2045.png"),
-  width = 180,
-  height = 100
+  file.path(transfer_figures_directory, "graph_transfers_2045.png")
 )
 
 # Maps --------------------------------------------------------------------
@@ -294,6 +313,7 @@ if (!is.finite(difference_limit) || difference_limit == 0) {
   difference_limit <- 1
 }
 
+# Blue and orange distinguish decreases and increases without a good/bad colour cue.
 transfer_difference_plot <- ggplot() +
   geom_sf(
     mapping = aes(fill = diff_transfer_events),
@@ -302,12 +322,12 @@ transfer_difference_plot <- ggplot() +
     linewidth = 0.08
   ) +
   scale_fill_gradient2(
-    low = "#3E8606",
+    low = "#2166AC",
     mid = "white",
-    high = "#7b1154",
+    high = "#B35806",
     midpoint = 0,
     limits = c(-difference_limit, difference_limit),
-    name = "Vaihtotapahtumien\nmuutos",
+    name = "Vaihtojen määrän\nmuutos",
     labels = scales::label_number(
       accuracy = 1,
       big.mark = " ",
@@ -318,11 +338,8 @@ transfer_difference_plot <- ggplot() +
   geom_basemap(scenario_ids = c("2045_ve0", "2045_suunnitelma")) +
   coord_sf_mal() +
   annotate_map(
-    title = "MAL-suunnitelman vaikutus joukkoliikenteen vaihtotapahtumiin",
-    subtitle = paste(
-      "Arvioitujen vaihtotapahtumien muutos alueelta alkavissa matkoissa:",
-      "2045 MAL-suunnitelma - 2045 vertailupohja"
-    )
+    title = "Vaihtojen määrän muutos",
+    subtitle = "2045 Vertailupohja -> 2045 Luonnos"
   ) +
   theme_mal_map()
 
@@ -342,13 +359,13 @@ relative_transfer_difference_plot <- ggplot() +
     linewidth = 0.08
   ) +
   scale_fill_gradient2(
-    low = "#3E8606",
+    low = "#2166AC",
     mid = "white",
-    high = "#7b1154",
+    high = "#B35806",
     midpoint = 0,
     limits = c(-1, 1),
     breaks = seq(-1, 1, by = 0.5),
-    name = "Vaihtotapahtumien\nsuhteellinen muutos",
+    name = "Vaihtojen määrän\nsuhteellinen muutos",
     labels = scales::label_percent(
       accuracy = 1,
       suffix = " %",
@@ -360,11 +377,8 @@ relative_transfer_difference_plot <- ggplot() +
   geom_basemap(scenario_ids = c("2045_ve0", "2045_suunnitelma")) +
   coord_sf_mal() +
   annotate_map(
-    title = "MAL-suunnitelman suhteellinen vaikutus vaihtotapahtumiin",
-    subtitle = paste(
-      "Muutos suhteessa 2045 vertailupohjaan;",
-      "harmailla alueilla ei ollut vertailupohjassa vaihtoja"
-    )
+    title = "Vaihtojen määrän muutos",
+    subtitle = "2045 Vertailupohja -> 2045 Luonnos"
   ) +
   theme_mal_map()
 
