@@ -1,4 +1,10 @@
 scenario0	scenario1	location	node_i	node_j
+2045_ve0	2045_suunnitelma	Hameentulli	205306	213936
+2045_ve0	2045_suunnitelma	Hameentulli	213936	205306
+2045_ve0	2045_suunnitelma	Hameentulli	205306	322728
+2045_ve0	2045_suunnitelma	Hameentulli	213936	322728
+2045_ve0	2045_suunnitelma	Hameentulli	322728	205306
+2045_ve0	2045_suunnitelma	Hameentulli	322728	213936
 2045_ve0	2045_suunnitelma	Oulunkyla	40646	239372
 2045_ve0	2045_suunnitelma	Oulunkyla	40647	50304
 2045_ve0	2045_suunnitelma	Oulunkyla	40648	239430
