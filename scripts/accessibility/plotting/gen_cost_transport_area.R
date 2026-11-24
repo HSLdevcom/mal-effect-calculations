@@ -20,12 +20,14 @@ summarise_transport_costs <- function(agent_data, scenario_name) {
 areas <- bind_rows(
   summarise_transport_costs(agents, config::get("present_name")),
   summarise_transport_costs(agents_0, config::get("baseline_name")),
-  summarise_transport_costs(agents_1, config::get("projected_name"))
+  summarise_transport_costs(agents_1, config::get("projected_name")),
+  summarise_transport_costs(agents_target, config::get("target_name"))
 ) %>%
   mutate(scenario = factor(scenario,
                            levels = c(config::get("present_name"),
                                       config::get("baseline_name"),
-                                      config::get("projected_name"))))
+                                      config::get("projected_name"),
+                                      config::get("target_name"))))
 
 results <- areas %>%
   pivot_longer(c(cost, indirect_cost), names_to = "type", values_to = "value") %>%

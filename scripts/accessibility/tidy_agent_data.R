@@ -27,10 +27,12 @@ tour_data_factors <- function(df){
 agents <- read_helmet_files("present_scenario", "agents")
 agents_0 <- read_helmet_files("baseline_scenario", "agents")
 agents_1 <- read_helmet_files("projected_scenario", "agents")
+agents_target <- read_helmet_files("target_scenario", "agents")
 
 tours <- read_helmet_files("present_scenario", "tours")
 tours_0 <- read_helmet_files("baseline_scenario", "tours")
 tours_1 <- read_helmet_files("projected_scenario", "tours")
+tours_target <- read_helmet_files("target_scenario", "tours")
 
 # Calculate income group ----
 
@@ -46,6 +48,10 @@ agents_1 <- agents_1 %>%
   add_inc_group() %>%
   agent_data_factors()
 
+agents_target <- agents_target %>%
+  add_inc_group() %>%
+  agent_data_factors()
+
 tours <- tours %>%
   tour_data_factors()
 
@@ -53,6 +59,9 @@ tours_0 <- tours_0 %>%
   tour_data_factors()
 
 tours_1 <- tours_1 %>%
+  tour_data_factors()
+
+tours_target <- tours_target %>%
   tour_data_factors()
 
 # Join tours to agents data ----
@@ -73,10 +82,13 @@ agents_0 <- agents_0 %>%
 agents_1 <- agents_1 %>%
   join_tours(tours_1, res_var)
 
+agents_target <- agents_target %>%
+  join_tours(tours_target, res_var)
+
 # Write to file ----
 
-save(agents, agents_0, agents_1,
-     tours, tours_0, tours_1,
+save(agents, agents_0, agents_1, agents_target,
+     tours, tours_0, tours_1, tours_target,
      file = here(
        "results",
        config::get("projected_scenario"),
