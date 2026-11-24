@@ -6,6 +6,7 @@ library(sf)
 source(here::here("scripts", "figures", "validate_scenarios.R"), encoding = "utf-8")
 source(here::here("scripts", "utils.R"), encoding = "utf-8")
 source(here::here("scripts", "basemap", "functions_map.R"), encoding = "utf-8")
+source(here::here("scripts", "figures", "transfers_helpers.R"), encoding = "utf-8")
 
 # Data --------------------------------------------------------------------
 
@@ -13,6 +14,18 @@ main_scenarios <- scenarios %>%
   dplyr::filter(!sensitivity)
 scenario_names <- scenarios$scenario
 transfer_matrix_name <- "transit_transit_work_avg_boardings"
+
+# Use the same municipal groups as the other impact assessment figures.
+zone_polygons <- readr::read_rds(
+  here::here("results", "zones_2045_ve0.rds")
+) %>%
+  dplyr::mutate(zone = as.character(zone)) %>%
+  dplyr::select(zone, area, geometry)
+
+if (anyDuplicated(zone_polygons$zone) || anyNA(zone_polygons$area)) {
+  rlang::abort("The baseline zones must have unique IDs and municipal groups.")
+}
+regional_zone_ids <- zone_polygons$zone
 
 read_scenario_transfers <- function(scenario) {
   scenario_attributes <- set_scenario(scenario)
@@ -97,20 +110,7 @@ read_scenario_transfers <- function(scenario) {
     )
   }
 
-  origin_totals <- od_transfers %>%
-    dplyr::mutate(
-      transfer_events = dplyr::if_else(
-        transit_demand > 0,
-        transit_demand * pmax(average_boardings - 1, 0),
-        0
-      )
-    ) %>%
-    dplyr::group_by(origin) %>%
-    dplyr::summarise(
-      transit_demand = sum(transit_demand),
-      transfer_events = sum(transfer_events),
-      .groups = "drop"
-    ) %>%
+  origin_totals <- summarise_transfer_origins(od_transfers, regional_zone_ids) %>%
     dplyr::mutate(scenario = scenario)
 
   if (any(!is.finite(origin_totals$transfer_events))) {
@@ -120,23 +120,16 @@ read_scenario_transfers <- function(scenario) {
   origin_totals
 }
 
-transfers_by_scenario <- purrr::map_dfr(
-  scenario_names,
-  read_scenario_transfers
-)
-
-zone_polygons <- readr::read_rds(
-  here::here("results", "zones_2045_ve0.rds")
-) %>%
-  dplyr::mutate(zone = as.character(zone)) %>%
-  dplyr::select(zone, geometry)
-
-if (anyDuplicated(zone_polygons$zone)) {
-  rlang::abort("The 2045 baseline zone geometry contains duplicate zone IDs.")
-}
+transfers_by_scenario <- purrr::map_dfr(scenario_names, function(scenario) {
+  message(sprintf("Read transfer matrices: %s", scenario))
+  read_scenario_transfers(scenario)
+})
 
 transfers_by_scenario <- transfers_by_scenario %>%
   dplyr::mutate(origin = as.character(origin))
+readr::write_rds(
+  transfers_by_scenario, here::here("results", "transfers_origins_all.rds")
+)
 
 missing_zone_origins <- setdiff(
   zone_polygons$zone,
@@ -276,6 +269,109 @@ ggplot(graph_data, aes(x = measure, y = amount, fill = scenario_label)) +
 ggsave_graph(
   file.path(transfer_figures_directory, "graph_transfers_2045.png")
 )
+
+# Municipal groups: internal regional trips, grouped by trip origin.
+area_translations <- readr::read_tsv(
+  here::here("utilities", "areas.tsv"), col_types = "cc"
+) %>%
+  dplyr::filter(level != "capital_region")
+
+area_totals <- summarise_transfer_areas(
+  transfers_by_scenario,
+  sf::st_drop_geometry(zone_polygons) %>% dplyr::select(zone, area)
+)
+area_limits <- area_totals %>%
+  dplyr::left_join(
+    scenarios %>% dplyr::select(scenario, root, present), by = "scenario"
+  ) %>%
+  dplyr::filter(!present) %>%
+  dplyr::group_by(root, area) %>%
+  dplyr::summarise(
+    dplyr::across(
+      c(transfer_events, boardings_per_trip),
+      list(lower = min, upper = max), .names = "{.col}_{.fn}"
+    ),
+    .groups = "drop"
+  )
+
+area_graph_data <- area_totals %>%
+  dplyr::filter(scenario %in% scenario_order) %>%
+  dplyr::left_join(area_limits, by = c("scenario" = "root", "area")) %>%
+  dplyr::left_join(
+    area_totals %>%
+      dplyr::filter(scenario == scenarios$scenario[scenarios$baseline]) %>%
+      dplyr::select(area, baseline_boardings_per_trip = boardings_per_trip),
+    by = "area"
+  ) %>%
+  dplyr::mutate(
+    boardings_per_trip_change = boardings_per_trip - baseline_boardings_per_trip,
+    scenario_label = factor(scenario_labels[scenario], levels = scenario_label_levels),
+    area_label = factor(area, levels = area_translations$level, labels = area_translations$label)
+  ) %>%
+  dplyr::arrange(area_label, scenario_label)
+
+readr::write_rds(area_totals, here::here("results", "transfers_areas_all.rds"))
+readr::write_tsv(area_graph_data, here::here("results", "transfers_areas.tsv"))
+
+for (measure in c("transfer_events", "boardings_per_trip")) {
+  is_ratio <- measure == "boardings_per_trip"
+  number_label <- scales::label_number(
+    scale = if (is_ratio) 1 else 1e-3,
+    accuracy = if (is_ratio) 0.01 else 1,
+    decimal.mark = ","
+  )
+  measure_data <- area_graph_data %>%
+    dplyr::mutate(
+      small_bar = !is_ratio & .data[[measure]] < max(.data[[measure]]) * 0.1,
+      label_y = dplyr::if_else(
+        small_bar,
+        pmax(.data[[measure]], .data[[paste0(measure, "_upper")]], na.rm = TRUE) +
+          max(.data[[measure]]) * 0.03,
+        .data[[measure]] / 2
+      ),
+      label_color = dplyr::if_else(
+        small_bar, "#333333", mal_color[as.integer(scenario_label)]
+      )
+    )
+  area_plot <- ggplot(
+    measure_data,
+    aes(x = area_label, y = .data[[measure]], fill = scenario_label)
+  ) +
+    geom_col(position = position_dodge2()) +
+    geom_errorbar(
+      aes(ymin = .data[[paste0(measure, "_lower")]],
+          ymax = .data[[paste0(measure, "_upper")]]),
+      position = position_dodge2(width = 0.9, padding = 0.66),
+      color = "#333333", linewidth = 0.35, na.rm = TRUE
+    ) +
+    geom_text(
+      aes(y = label_y, label = number_label(.data[[measure]]), color = label_color),
+      position = position_dodge2(width = 0.9),
+      size = points2mm(8)
+    ) +
+    scale_y_continuous(labels = number_label, expand = expansion(mult = c(0.025, 0.1))) +
+    scale_x_discrete(labels = scales::label_wrap(12)) +
+    scale_fill_manual(name = NULL, values = mal_greens_fill) +
+    scale_color_identity(guide = "none") +
+    labs(
+      title = if (is_ratio) "Nousuja joukkoliikennematkaa kohden" else "Vaihtojen määrä",
+      subtitle = "Aamuhuipputunti, transit_work; seudun sisäiset matkat",
+      x = NULL,
+      y = if (is_ratio) "nousua / joukkoliikennematka" else "1000 vaihtoa"
+    ) +
+    theme_mal_graph() +
+    theme(axis.text.x = element_text(size = 8))
+  ggsave_graph(
+    file.path(transfer_figures_directory, if (is_ratio) {
+      "graph_boardings_per_trip_2045.png"
+    } else {
+      "graph_transfers_by_area_2045.png"
+    }),
+    plot = area_plot,
+    width = 200,
+    height = 90
+  )
+}
 
 # Maps --------------------------------------------------------------------
 
