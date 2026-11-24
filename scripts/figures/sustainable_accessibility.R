@@ -7,8 +7,6 @@ source(here("scripts", "utils.R"),
 source(here("scripts", "basemap", "functions_map.R"),
        encoding = "utf-8")
 
-scenario_colors <- grDevices::colorRampPalette(c("#bee4f8", "#007AC9"))(3)
-
 # Read data ----
 
 scenario_definitions <- readr::read_tsv(
@@ -18,13 +16,14 @@ scenario_definitions <- readr::read_tsv(
     year = col_integer(),
     present = col_logical(),
     baseline = col_logical(),
+    target = col_logical(),
     projected = col_logical(),
     sensitivity = col_logical(),
     .default = col_character()
   )
 ) %>%
-  filter(present | baseline | projected | sensitivity) %>%
-  filter(root %in% scenario[present | baseline | projected]) %>%
+  filter(present | baseline | target | projected | sensitivity) %>%
+  filter(root %in% scenario[present | baseline | target | projected]) %>%
   mutate(scenario_name = sprintf("%d %s", year, name)) %>%
   select(
     scenario, year, name, forecast, results, present, baseline, projected,
@@ -161,6 +160,9 @@ area_levels <- c(
   "Bussiliikenteen kehyskunnat"
 )
 scenario_levels <- scenario_definitions$scenario_name[!scenario_definitions$sensitivity]
+scenario_colors <- grDevices::colorRampPalette(c("#bee4f8", "#007AC9"))(
+  length(scenario_levels)
+)
 
 aggregate_accessibility <- function(data) {
   aggregated <- data %>%
@@ -336,7 +338,7 @@ ggplot() +
   geom_basemap(scenario_ids = projected_scenario$scenario) +
   coord_sf_mal() +
   annotate_map(
-    title = "Kestävän saavutettavuuden indeksi",
+    title = "Saavutettavuus kestävillä kulkutavoilla asukkaiden näkökulmasta",
     subtitle = sprintf(
       "%d %s",
       projected_scenario$year[[1]],
@@ -401,6 +403,6 @@ plot_area_results(
 
 plot_area_results(
   vulnerable_results,
-  "Kestävän saavutettavuuden indeksi matalan sosioekonomisen statuksen alueilla",
+  "Saavutettavuus kestävillä kulkutavoilla matalan sosioekonomisen statuksen alueilla",
   "graph_sustainable-accessibility_vulnerable-areas.png"
 )

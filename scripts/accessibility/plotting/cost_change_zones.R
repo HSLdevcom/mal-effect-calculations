@@ -69,6 +69,7 @@ breaks <- seq(-45, 45, 10)
 # transport costs
 
 ggplot() +
+  missing_cost_legend(zones) +
   geom_sf(mapping = aes(fill = cost_diff),
           data = zones, color = NA) +
   scale_fill_steps2(

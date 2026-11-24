@@ -27,7 +27,7 @@ results <- results0 %>%
 
 # Plot --------------------------------------------------------------------
 
-breaks <- seq(from = 0.15, to = 0.55, by = 0.05)
+breaks <- seq(from = 0, to = 0.20, by = 0.05)
 colors <- c("#ffffff", "#3E8606")
 nbreaks <- length(breaks)
 values <- scales::rescale(

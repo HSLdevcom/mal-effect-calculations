@@ -56,7 +56,19 @@ ggplot() +
   geom_sf(data = region, color = "#000000", fill = "#21292D", linewidth = 0.46) +
   geom_basemap(show_roads = FALSE, scenario_ids = c(scenario0, scenario1)) +
   geom_sf(mapping = aes(fill = diff_relative_speed),
-          data = buffers, color = NA) +
+          data = dplyr::filter(buffers, in0), color = NA) +
+  geom_sf(mapping = aes(color = "Uusi linkki"),
+          data = dplyr::filter(buffers, !in0 & in1),
+          fill = "#999999", linewidth = 0) +
+  scale_color_manual(
+    name = NULL,
+    values = c("Uusi linkki" = "#999999"),
+    guide = guide_legend(
+      order = 1,
+      keyheight = unit(5 / 7, "cm"),
+      override.aes = list(fill = "#999999", color = NA)
+    )
+  ) +
   scale_fill_fermenter(
     type = "div",
     palette = "RdYlGn",
@@ -65,7 +77,8 @@ ggplot() +
     limits = c(-0.07, 0.07),
     labels = scales::label_percent(accuracy = 1, suffix = " %"),
     direction = -1,
-    oob = scales::oob_squish
+    oob = scales::oob_squish,
+    guide = guide_colorsteps(order = 2, barheight = unit(5, "cm"))
   ) +
   coord_sf_mal() +
   annotate_map(
@@ -76,6 +89,7 @@ ggplot() +
                        scenarios$year[scenarios$scenario == scenario1],
                        scenarios$name[scenarios$scenario == scenario1])
   ) +
-  theme_mal_map()
+  theme_mal_map() +
+  theme(legend.position = c(0.00, 0.93))
 
 ggsave_map(here::here("figures", sprintf("map_diff_relative-speed_%s-%s.png", scenario0, scenario1)))

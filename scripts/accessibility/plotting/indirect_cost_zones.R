@@ -50,6 +50,7 @@ plot_indirect_cost <- function(cost_column, scenario_name, scenario_id,
   }
 
   plot <- ggplot() +
+    missing_cost_legend(zones) +
     geom_sf(data = zones, aes(fill = .data[[cost_column]]), color = NA) +
     scale_fill_stepsn(
       name = "eur / asukas / kk",
@@ -88,6 +89,7 @@ plot_indirect_cost("combined_cost_1", config::get("projected_name"),
 # Projected minus baseline, matching the direct-cost change map ----
 
 ggplot() +
+  missing_cost_legend(zones) +
   geom_sf(data = filter_outliers(zones, "indirect_cost_diff"),
           aes(fill = indirect_cost_diff), color = NA) +
   scale_fill_steps2(

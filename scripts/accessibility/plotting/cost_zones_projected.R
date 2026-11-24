@@ -56,6 +56,7 @@ zones <- zones %>%
 # transport costs
 
 ggplot() +
+  missing_cost_legend(zones) +
   geom_sf(mapping = aes(fill = cost),
           data = zones, color = NA) +
   scale_fill_steps(

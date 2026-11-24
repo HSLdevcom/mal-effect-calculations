@@ -65,6 +65,25 @@ group_sum <- function(df, group_var, res_var){
     as_tibble()
 }
 
+# Missing-value key for the transport cost maps ----
+# Use a separate colour guide, as in map_accessibility.R, so the numeric
+# fill scale can retain its stepped colour bar and its existing NA colour.
+missing_cost_legend <- function(zones) {
+  list(
+    geom_sf(data = head(zones, 1), aes(colour = ""),
+            fill = NA, show.legend = TRUE),
+    scale_colour_manual(values = NA),
+    guides(
+      fill = guide_colorsteps(order = 1),
+      colour = guide_legend(
+        "Tieto\npuuttuu",
+        order = 99,
+        override.aes = list(colour = "grey35", fill = hsl_cols("lightgray"))
+      )
+    )
+  )
+}
+
 # Filter outliers ----
 filter_outliers <- function(df, var){
   df %>%
