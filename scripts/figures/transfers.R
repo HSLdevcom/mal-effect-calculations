@@ -70,11 +70,6 @@ read_scenario_transfers <- function(scenario) {
   demand <- demand %>%
     dplyr::select(origin, destination, transit_demand = transit_work)
 
-  if (anyDuplicated(boardings[c("origin", "destination")]) ||
-      anyDuplicated(demand[c("origin", "destination")])) {
-    rlang::abort(sprintf("OD pairs are duplicated in scenario %s.", scenario))
-  }
-
   od_transfers <- demand %>%
     dplyr::left_join(boardings, by = c("origin", "destination"))
 
