@@ -127,4 +127,4 @@ p3 <- ggplot(data = results) +
 # Join plots --------------------------------------------------------------
 
 plot_grid(p1, p2, p3, ncol = 1, align = 'v', rel_widths = c(1), rel_heights = c(1, 1, 1.62))
-ggsave_map(here::here("figures", sprintf("graph_ttime-transit_%s.png", projected)))
+ggsave_map(here::here("figures", sprintf("graph_ttime-transit_%s.png", projected)), bg = "white")

@@ -134,4 +134,4 @@ p3 <- ggplot(data = results) +
 # Join plots --------------------------------------------------------------
 
 plot_grid(p1, p2, p3, ncol = 1, align = 'v', rel_widths = c(1), rel_heights = c(1, 1, 1.48))
-ggsave_map(here::here("figures", sprintf("graph_ttime-ratio_%s.png", projected)))
+ggsave_map(here::here("figures", sprintf("graph_ttime-ratio_%s.png", projected)), bg = "white")
