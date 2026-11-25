@@ -207,21 +207,34 @@ travel_time_comparisons <- list(
 )
 
 plot_travel_time <- function(data, title, subtitle, fill_column) {
+  travel_time_labels <- c(
+    paste0(seq(0, 50, by = 10), "\u2013", seq(10, 60, by = 10)),
+    "60+"
+  )
+  data <- data %>%
+    dplyr::mutate(travel_time_class = cut(
+      .data[[fill_column]],
+      breaks = c(seq(0, 60, by = 10), Inf),
+      labels = travel_time_labels,
+      right = FALSE
+    ))
+
   ggplot() +
     geom_sf(
-      mapping = aes(fill = .data[[fill_column]]),
+      mapping = aes(fill = .data$travel_time_class),
       data = data,
       color = "#D0CCC0",
       linewidth = 0.08
     ) +
-    scale_fill_stepsn(
-      colors = viridis::magma(7),
-      breaks = seq(10, 50, by = 10),
-      limits = c(0, 60),
-      oob = scales::squish,
+    scale_fill_manual(
+      values = stats::setNames(viridis::magma(7), travel_time_labels),
+      drop = FALSE,
       name = "minuuttia",
-      labels = scales::label_number(accuracy = 1),
-      guide = guide_colorsteps(show.limits = TRUE)
+      guide = guide_legend(
+        reverse = TRUE,
+        keyheight = grid::unit(0.5, "cm"),
+        keywidth = grid::unit(0.5, "cm")
+      )
     ) +
     geom_basemap(scenario_ids = "2045_suunnitelma") +
     coord_sf_mal() +
@@ -307,9 +320,9 @@ for (facility_group in names(facility_groups)) {
           )
         )
 
-      # Use the same range across facilities, modes and comparisons. Finer
-      # classes near zero reveal small changes; larger outliers are squished.
-      difference_limit <- 15
+      # Seven equal four-minute classes, with a neutral white class at -2..2.
+      # Use the same range for every comparison and squish larger outliers.
+      difference_limit <- 14
 
       difference_plot <- ggplot() +
         geom_sf(
@@ -320,14 +333,14 @@ for (facility_group in names(facility_groups)) {
         ) +
         scale_fill_stepsn(
           colors = c("#3E8606", "white", "#7b1154"),
-          breaks = c(-10, -5, -2, -0.5, 0.5, 2, 5, 10),
+          breaks = seq(-10, 10, by = 4),
           limits = c(-difference_limit, difference_limit),
           oob = scales::squish,
           name = "minuuttia",
           labels = function(x) {
-            labels <- scales::label_number(accuracy = 0.1, decimal.mark = ",")(x)
-            labels[x == -difference_limit] <- "\u2264 -15"
-            labels[x == difference_limit] <- "\u2265 15"
+            labels <- scales::label_number(accuracy = 1, decimal.mark = ",")(x)
+            labels[x == -difference_limit] <- sprintf("\u2264 -%d", difference_limit)
+            labels[x == difference_limit] <- sprintf("\u2265 %d", difference_limit)
             labels
           },
           guide = guide_colorsteps(show.limits = TRUE)
