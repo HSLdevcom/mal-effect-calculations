@@ -397,7 +397,7 @@ ggsave_map(here(
 
 plot_area_results(
   area_results,
-  "Kestävän saavutettavuuden indeksi väestöpainotettuna",
+  "Saavutettavuus kestävillä kulkutavoilla asukkaiden näkökulmasta",
   "graph_sustainable-accessibility_areas.png"
 )
 
